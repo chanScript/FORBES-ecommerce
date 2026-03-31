@@ -1,0 +1,329 @@
+# Production-Ready System Architecture & Technical Documentation
+
+> **Stack:** React (Vite) + TailwindCSS | Node.js + Express | PRISMA ORM | POSTGRES | JWT Auth | RBAC | Nodemailer
+>
+> **Hosting Target:** cPanel (Node.js Application)
+
+---
+
+## 1. System Overview
+
+This system is a **secure, scalable, role-based web application** designed with a clear separation between **Client (Frontend)** and **Server (Backend)**. It supports:
+
+* JWT-based authentication
+* Role & permission-based authorization (**Super Admin / Admin / User**)
+* **Trashbin (Soft Delete) system for sub-domains**
+* Audit trail logging for compliance and traceability
+* Optimized database querying with pagination & filtering
+* Email notifications via Nodemailer
+* Production-ready structure suitable for **cPanel deployment**
+
+---
+
+## 2. High-Level Architecture (Text-Based Diagram)
+
+```
+[ Browser (React + Vite) ]
+|
+| HTTPS (JWT)
+v
+[ Express API Server ]
+|
+| Sequelize ORM
+v
+[ MySQL Database ]
+|   |
+|   +--> Trashbin (Soft Deleted Records)
+|   +--> Audit Logs
+|   +--> Users / Roles / Permissions
+|
+[ Nodemailer ] --> SMTP Server --> User Emails
+```
+
+---
+
+## 3. Project Structure (Production-Ready)
+
+```
+project-root/
+├── client/ # React (Vite)
+└── backend/ # Node.js + Express (cPanel ready)
+```
+
+---
+
+## 4. Backend Folder Structure (cPanel Compatible)
+
+```
+server/
+├── .env
+├── server.js
+├── package.json
+└── src/
+    ├── config/
+    ├── controllers/
+    ├── middleware/
+    │   ├── auth.middleware.js
+    │   ├── rbac.middleware.js
+    │   ├── trash.middleware.js
+    │   └── audit.middleware.js
+    ├── models/
+    ├── routes/
+    ├── seeders/
+    └── utils/
+```
+
+---
+
+## 5. Frontend Folder Structure (Vite + Tailwind)
+
+```
+client/
+├── src/
+│   ├── api/
+│   ├── components/
+│   ├── pages/
+│   ├── hooks/
+│   ├── context/
+│   ├── routes/
+│   └── main.jsx
+├── index.html
+└── vite.config.js
+```
+
+---
+
+## 6. Database Schema Overview (Updated)
+
+### users
+
+* id (PK)
+* name
+* email (unique)
+* password
+* roleId (FK)
+* createdAt
+* updatedAt
+
+### roles
+
+* id (PK)
+* name (**Super Admin, Admin, User**)
+
+### permissions
+
+* id (PK)
+* key
+* description
+
+### role_permissions
+
+* roleId (FK)
+* permissionId (FK)
+
+### sub_domains
+
+* id (PK)
+* name
+* ownerId (FK → users.id)
+* **isDeleted (TINYINT, default: 0)**
+ 
+* `0` → Active (Visible)
+* `1` → Soft Deleted (Trashbin)
+* deletedAt (nullable)
+* deletedBy (FK → users.id, nullable)
+* createdAt
+* updatedAt
+
+### audit_logs
+
+* id (PK)
+* userId (FK)
+* action
+* module
+* recordId
+* ipAddress
+* createdAt
+
+---
+
+## 7. Trashbin (Soft Delete) System – Sub Domains
+
+### Purpose
+
+Prevents permanent deletion while allowing **Admin** and **Super Admin** to manage recovery and cleanup safely.
+
+---
+
+### Deletion Rules
+
+* **Users**: ❌ No delete access
+* **Admin**: ✅ Can soft-delete & restore
+* **Super Admin**: ✅ Full control (delete, restore, permanent purge)
+
+---
+
+### Soft Delete Logic
+
+* Record is **never removed** from database
+* `isDeleted = 1` marks record as trashed
+* `deletedAt` & `deletedBy` are populated
+
+---
+
+### Default Query Rule (IMPORTANT)
+
+All standard queries **MUST include**:
+
+```
+WHERE isDeleted = 0
+```
+
+This ensures trashed records are **never visible** to normal users.
+
+---
+
+### Trashbin Endpoints (Admin / Super Admin Only)
+
+```
+GET    /api/sub-domains/trash        # List trashed records
+PATCH  /api/sub-domains/:id/restore  # Restore record
+DELETE /api/sub-domains/:id/force    # Permanent delete (Super Admin only)
+```
+
+---
+
+## 8. Trash Middleware
+
+### trash.middleware.js
+
+Responsibilities:
+
+* Auto-filter `isDeleted = 0`
+* Block access to deleted records for non-admins
+* Enforce role-based restore & purge
+
+Middleware Order:
+
+```
+JWT → RBAC → Trash Check → Controller
+```
+
+---
+
+## 9. Authentication & Authorization Flow
+
+1. User logs in
+2. JWT issued
+3. Role checked
+4. Permission validated
+5. Trash rules applied
+
+---
+
+## 10. Audit Trail (Extended)
+
+Additional Logged Actions:
+
+* SUB_DOMAIN_SOFT_DELETE
+* SUB_DOMAIN_RESTORE
+* SUB_DOMAIN_FORCE_DELETE
+
+---
+
+## 11. Pagination & Optimization (Trash-Aware)
+
+### Active Records
+
+```
+GET /api/sub-domains?page=1&limit=10
+```
+
+### Trashbin
+
+```
+GET /api/sub-domains/trash?page=1&limit=10
+```
+
+* Max limit: **100**
+* Indexed on: `isDeleted`, `deletedAt`, `createdAt`
+
+---
+
+## 12. Email Notifications (Optional)
+
+Triggered on:
+
+* Admin deletes sub-domain
+* Super Admin permanently removes record
+
+---
+
+## 13. Security Best Practices (Extended)
+
+* Soft delete instead of hard delete
+* Role-gated trash access
+* No direct DB delete except Super Admin
+* Full audit logging
+
+---
+
+## 14. Environment Variables
+
+```
+NODE_ENV=production
+PORT=3000
+DB_HOST=localhost
+DB_USER=db_user
+DB_PASS=secure_password
+DB_NAME=app_db
+JWT_SECRET=super_secret_key
+JWT_EXPIRES_IN=1h
+SMTP_HOST=smtp.example.com
+SMTP_USER=email@example.com
+SMTP_PASS=email_password
+```
+
+---
+
+## 15. Auto Schema Sync (IMPORTANT)
+
+### server.js Behavior
+
+* Sequelize `sync({ alter: true })`
+* Ensures new fields like `isDeleted` auto-apply
+* Runs **once on server startup**
+
+---
+
+## 16. Deployment (cPanel Ready)
+
+1. Upload backend
+2. Set Node.js version
+3. Entry file: `server.js`
+4. Add environment variables
+5. Install dependencies
+6. Build & deploy frontend
+
+---
+
+## 17. Production Readiness Checklist (Updated)
+
+* [x] JWT Auth
+* [x] RBAC (User / Admin / Super Admin)
+* [x] Trashbin (Soft Delete)
+* [x] Restore & Force Delete
+* [x] Audit Logging
+* [x] Pagination & Limits
+* [x] Auto Schema Sync
+* [x] cPanel Compatible
+
+---
+
+## 18. Final Notes
+
+* **Active = isDeleted 0**
+* **Trash = isDeleted 1**
+* Admin & Super Admin only
+* No data loss
+* Fully compliant & production-safe

@@ -1,0 +1,286 @@
+// ============================================================
+// Prisma Schema — Ecommerceplace
+// ============================================================
+// Stack: Prisma ORM + MySQL
+// Features: JWT Auth, RBAC, Soft Delete, Audit Logs, Cloudinary
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// Auth & RBAC
+// ============================================================
+
+model Role {
+  id          Int              @id @default(autoincrement())
+  name        String           @unique
+  users       User[]
+  permissions RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("roles")
+}
+
+model Permission {
+  id          Int              @id @default(autoincrement())
+  key         String           @unique
+  description String?
+  roles       RolePermission[]
+  createdAt   DateTime         @default(now())
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       Int
+  permissionId Int
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.VarChar(36)
+  name      String   @db.VarChar(255)
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  phone     String?  @db.VarChar(50)
+  roleId    Int
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  listings  Car[]      @relation("SellerCars")
+  favorites Favorite[]
+  auditLogs AuditLog[]
+
+  // Seller request system
+  sellerRequests         SellerRequest[] @relation("UserSellerRequests")
+  reviewedSellerRequests SellerRequest[] @relation("ReviewedSellerRequests")
+
+  // Soft delete tracking (who deleted what)
+  deletedCars    Car[] @relation("DeletedByCars")
+  approvedCars   Car[] @relation("ApprovedByCars")
+
+  @@index([email])
+  @@index([roleId])
+  @@map("users")
+}
+
+// ============================================================
+// Ecommerceplace
+// ============================================================
+
+model Brand {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String   @unique
+  logoUrl   String?
+  createdAt DateTime @default(now())
+
+  models Model[]
+  cars   Car[]
+
+  @@map("brands")
+}
+
+model Model {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  brandId   Int
+  brand     Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  cars Car[]
+
+  @@index([brandId])
+  @@map("models")
+}
+
+model VehicleType {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  slug String @unique
+
+  cars Car[]
+
+  @@map("vehicle_types")
+}
+
+enum FuelType {
+  Gasoline
+  Diesel
+  Electric
+  Hybrid
+  LPG
+}
+
+enum Transmission {
+  Automatic
+  Manual
+}
+
+enum CarCondition {
+  New
+  Used
+}
+
+enum ListingStatus {
+  Pending
+  Approved
+  Rejected
+  Sold
+}
+
+model Car {
+  id              String        @id @default(uuid()) @db.VarChar(36)
+  title           String        @db.VarChar(500)
+  slug            String        @unique @db.VarChar(500)
+  description     String?       @db.Text
+  price           Decimal       @db.Decimal(12, 2)
+  year            Int
+  mileage         Int
+  fuelType        FuelType
+  transmission    Transmission
+  engineCapacity  Int?
+  color           String?
+  seats           Int?
+  city            String        @db.VarChar(255)
+  condition       CarCondition  @default(Used)
+  status          ListingStatus @default(Pending)
+
+  // Foreign keys
+  brandId       Int
+  brand         Brand       @relation(fields: [brandId], references: [id])
+  modelId       Int
+  model         Model       @relation(fields: [modelId], references: [id])
+  vehicleTypeId Int
+  vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id])
+  sellerId      String      @db.VarChar(36)
+  seller        User        @relation("SellerCars", fields: [sellerId], references: [id])
+
+  // Approval tracking
+  approvedAt    DateTime?
+  approvedBy    String?     @db.VarChar(36)
+  approvedByUser User?     @relation("ApprovedByCars", fields: [approvedBy], references: [id])
+  rejectionReason String?  @db.Text
+
+  // Soft delete (Trashbin)
+  isDeleted  Boolean   @default(false)
+  deletedAt  DateTime?
+  deletedBy  String?   @db.VarChar(36)
+  deletedByUser User?  @relation("DeletedByCars", fields: [deletedBy], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  images    CarImage[]
+  favorites Favorite[]
+
+  @@index([status])
+  @@index([brandId])
+  @@index([modelId])
+  @@index([vehicleTypeId])
+  @@index([sellerId])
+  @@index([isDeleted])
+  @@index([createdAt])
+  @@index([price])
+  @@index([year])
+  @@index([city])
+  @@map("cars")
+}
+
+model CarImage {
+  id        Int      @id @default(autoincrement())
+  carId     String   @db.VarChar(36)
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  url       String   @db.VarChar(500)
+  publicId  String   @db.VarChar(255)
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([carId])
+  @@map("car_images")
+}
+
+// ============================================================
+// Favorites (Wishlist)
+// ============================================================
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    String   @db.VarChar(36)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  carId     String   @db.VarChar(36)
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, carId])
+  @@index([userId])
+  @@map("favorites")
+}
+
+// ============================================================
+// Audit Logs
+// ============================================================
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    String   @db.VarChar(36)
+  user      User     @relation(fields: [userId], references: [id])
+  action    String   @db.VarChar(100)
+  module    String   @db.VarChar(100)
+  recordId  String?  @db.VarChar(36)
+  ipAddress String?  @db.VarChar(45)
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([module])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ============================================================
+// Seller Request System
+// ============================================================
+
+enum SellerRequestStatus {
+  Pending
+  Approved
+  Rejected
+}
+
+model SellerRequest {
+  id         Int                 @id @default(autoincrement())
+  userId     String              @db.VarChar(36)
+  user       User                @relation("UserSellerRequests", fields: [userId], references: [id], onDelete: Cascade)
+  status     SellerRequestStatus @default(Pending)
+  reason     String?             @db.Text
+  adminNote  String?             @db.Text
+  reviewedBy String?             @db.VarChar(36)
+  reviewer   User?               @relation("ReviewedSellerRequests", fields: [reviewedBy], references: [id])
+  reviewedAt DateTime?
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("seller_requests")
+}
