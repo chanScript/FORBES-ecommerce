@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Loan Calculator — Estimate your monthly payments quickly and easily with Forbes Financial Consultancy Corporation's loan calculator." />
+  <title>Loan Calculator — Forbes Financial Consultancy Corporation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
+            accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
+            success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
+          },
+        },
+      },
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-heading { font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif; }
+    .text-gradient { background: linear-gradient(135deg, #c9a84c, #d4b96a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-scrolled { background-color: rgba(255,255,255,0.97) !important; box-shadow: 0 1px 12px rgba(0,0,0,0.08); }
+    .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .mobile-menu.open { max-height: 800px; }
+    .dropdown-menu { opacity:0; visibility:hidden; transform:translateY(10px); transition:all 0.3s ease; pointer-events:none; }
+    .dropdown:hover .dropdown-menu, .dropdown.active .dropdown-menu { opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
+    .dropdown button { position: relative; z-index: 52; }
+    .dropdown-menu { z-index: 51; }
+    .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.active { opacity:1; transform:translateY(0); }
+  </style>
+</head>
+<body class="bg-white text-gray-800 antialiased">
+  <!-- ====== NAVIGATION (rendered by app.js) ====== -->
+  <div id="navbar-container"></div>
+
+  <!-- ====== HERO ====== -->
+  <section class="relative pt-32 pb-20 bg-primary-900 overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-20 right-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+        <span class="text-accent text-sm font-medium">Financial Tool</span>
+      </div>
+      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">Loan <span class="text-gradient">Calculator</span></h1>
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto">Estimate your monthly payments quickly and easily</p>
+    </div>
+  </section>
+
+  <!-- ====== CALCULATOR SECTION ====== -->
+  <section class="py-20 lg:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Calculator Form -->
+        <div class="reveal">
+          <div class="bg-gray-50 border border-gray-100 rounded-2xl p-8 lg:p-10">
+            <h2 class="font-heading text-2xl font-bold text-primary-900 mb-6">Calculate Your Loan</h2>
+            <form id="loan-calculator" novalidate>
+              <div class="mb-6">
+                <label for="product_type" class="block text-sm font-medium text-gray-700 mb-2">Product Type</label>
+                <select id="product_type"
+                  class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all">
+                  <option value="generic">Generic Loan Marketing</option>
+                  <option value="ofw">OFW Loan</option>
+                  <option value="real_estate">Real Estate Mortgage</option>
+                </select>
+                <p class="text-gray-400 text-xs mt-1">Select the type of loan product</p>
+              </div>
+
+              <div class="mb-6">
+                <label for="loan_price" class="block text-sm font-medium text-gray-700 mb-2">Loan Price (&#8369;)</label>
+                <input type="number" id="loan_price" min="0" step="1000" required
+                  class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all"
+                  placeholder="e.g., 500000" />
+                <p class="text-gray-400 text-xs mt-1">Total price of the loan</p>
+              </div>
+
+              <div class="mb-6">
+                <label for="down_payment" class="block text-sm font-medium text-gray-700 mb-2">Down Payment (&#8369;)</label>
+                <input type="number" id="down_payment" min="0" step="1000" value="0"
+                  class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all"
+                  placeholder="e.g., 50000" />
+                <p class="text-gray-400 text-xs mt-1">Upfront payment by the buyer</p>
+              </div>
+
+              <div class="mb-6">
+                <label for="loan_term" class="block text-sm font-medium text-gray-700 mb-2">Loan Term (Months)</label>
+                <select id="loan_term"
+                  class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all">
+                  <option value="3">3 Months</option>
+                  <option value="6">6 Months</option>
+                  <option value="9">9 Months</option>
+                  <option value="12" selected>12 Months</option>
+                  <option value="15">15 Months</option>
+                  <option value="18">18 Months</option>
+                  <option value="21">21 Months</option>
+                  <option value="24">24 Months</option>
+                  <option value="27">27 Months</option>
+                  <option value="30">30 Months</option>
+                  <option value="33">33 Months</option>
+                  <option value="36">36 Months</option>
+                </select>
+                <p class="text-gray-400 text-xs mt-1">Duration of the loan (3 to 36 months)</p>
+              </div>
+
+              <div class="mb-8">
+                <label for="interest_rate" class="block text-sm font-medium text-gray-700 mb-2">Interest Rate (% per month)</label>
+                <select id="interest_rate"
+                  class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all">
+                  <!-- Dynamically populated based on product type -->
+                </select>
+                <p class="text-gray-400 text-xs mt-1">Monthly interest rate for selected product</p>
+              </div>
+
+              <button type="button" id="calc-btn" class="w-full bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg shadow-accent/25 flex items-center justify-center gap-2">
+                <i data-lucide="calculator" class="w-5 h-5"></i>
+                Calculate
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div class="reveal">
+          <div class="bg-gradient-to-br from-primary-900 to-primary-800 rounded-2xl p-8 lg:p-10 shadow-2xl sticky top-28">
+            <h2 class="font-heading text-2xl font-bold text-white mb-8">Payment Breakdown</h2>
+
+            <!-- Net Monthly Payment (highlighted) -->
+            <div class="bg-accent/10 border border-accent/30 rounded-xl p-6 mb-8 text-center">
+              <p class="text-accent text-sm uppercase tracking-wider mb-1">Net Monthly Payment</p>
+              <p id="monthly-payment" class="text-4xl lg:text-5xl font-bold text-accent">&#8369;0.00</p>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex justify-between items-center py-3 border-b border-primary-700">
+                <span class="text-gray-400 text-sm">Loan Price</span>
+                <span id="result-loan-price" class="text-white font-semibold">&#8369;0.00</span>
+              </div>
+              <div class="flex justify-between items-center py-3 border-b border-primary-700">
+                <span class="text-gray-400 text-sm">Down Payment</span>
+                <span id="result-down-payment" class="text-white font-semibold">&#8369;0.00</span>
+              </div>
+              <div class="flex justify-between items-center py-3 border-b border-primary-700">
+                <span class="text-gray-400 text-sm">Financed Amount (Net BIP)</span>
+                <span id="result-financed" class="text-white font-semibold">&#8369;0.00</span>
+              </div>
+              <div class="flex justify-between items-center py-3 border-b border-primary-700">
+                <span class="text-gray-400 text-sm">Product Type</span>
+                <span id="result-product" class="text-white font-semibold">—</span>
+              </div>
+              <div class="flex justify-between items-center py-3 border-b border-primary-700">
+                <span class="text-gray-400 text-sm">Interest Rate</span>
+                <span id="result-rate" class="text-white font-semibold">—</span>
+              </div>
+              <div class="flex justify-between items-center py-3 border-b border-primary-700">
+                <span class="text-gray-400 text-sm">Loan Term</span>
+                <span id="result-term" class="text-white font-semibold">—</span>
+              </div>
+              <div class="flex justify-between items-center py-3">
+                <span class="text-gray-400 text-sm">Total Interest</span>
+                <span id="result-interest" class="text-accent font-semibold">&#8369;0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Disclaimer -->
+          <div class="mt-6 bg-accent/5 border border-accent/20 rounded-xl p-4">
+            <div class="flex items-start gap-3">
+              <i data-lucide="info" class="w-5 h-5 text-accent flex-shrink-0 mt-0.5"></i>
+              <p class="text-gray-600 text-xs leading-relaxed"><strong>Disclaimer:</strong> This calculator uses a flat-rate/add-on interest method. All monetary values are in Philippine Peso (&#8369;). Actual loan terms may vary. Please consult with your chosen financial institution for exact figures.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How to Use -->
+      <div class="mt-20 reveal">
+        <h3 class="font-heading text-2xl font-bold text-primary-900 mb-8 text-center">How to Use This Calculator</h3>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div class="text-center p-4">
+            <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center mx-auto mb-3 text-primary-900 font-bold text-sm">1</div>
+            <p class="text-gray-600 text-sm">Select the loan product type</p>
+          </div>
+          <div class="text-center p-4">
+            <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-3 text-accent font-bold text-sm">2</div>
+            <p class="text-gray-600 text-sm">Input the loan price and down payment</p>
+          </div>
+          <div class="text-center p-4">
+            <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-3 text-accent font-bold text-sm">3</div>
+            <p class="text-gray-600 text-sm">Select your preferred loan term</p>
+          </div>
+          <div class="text-center p-4">
+            <div class="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-3 text-accent font-bold text-sm">4</div>
+            <p class="text-gray-600 text-sm">Choose the interest rate</p>
+          </div>
+          <div class="text-center p-4">
+            <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center mx-auto mb-3 text-primary-900 font-bold text-sm">5</div>
+            <p class="text-gray-600 text-sm">Click Calculate to see results</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <section class="py-20 bg-primary-900 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-white mb-6">Ready to Explore Loan Options?</h2>
+      <p class="text-gray-400 text-lg mb-8">Discover loan options that suit your needs through our Loan Marketing services.</p>
+      <a href="services.html#loan-marketing" class="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg shadow-accent/25">
+        View Loan Marketing Services
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+  </section>
+  <!-- ====== FOOTER (rendered by app.js) ====== -->
+  <div id="footer-container"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

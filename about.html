@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="About Forbes Financial Consultancy Corporation — Over two decades of excellence in credit information, business intelligence, and financial consulting since 2003." />
+  <title>About Us — Forbes Financial Consultancy Corporation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
+            accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
+            success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
+          },
+        },
+      },
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-heading { font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif; }
+    .text-gradient { background: linear-gradient(135deg, #c9a84c, #d4b96a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-scrolled { background-color: rgba(255,255,255,0.97) !important; box-shadow: 0 1px 12px rgba(0,0,0,0.08); }
+    .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .mobile-menu.open { max-height: 800px; }
+    .dropdown-menu { opacity:0; visibility:hidden; transform:translateY(10px); transition:all 0.3s ease; pointer-events:none; }
+    .dropdown:hover .dropdown-menu, .dropdown.active .dropdown-menu { opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
+    .dropdown button { position: relative; z-index: 52; }
+    .dropdown-menu { z-index: 51; }
+    .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.active { opacity:1; transform:translateY(0); }
+    /* Carousel */
+    .carousel-slide { opacity: 0; position: absolute; inset: 0; transition: opacity 0.6s ease; }
+    .carousel-slide.active { opacity: 1; position: relative; }
+    /* Timeline */
+    .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #c9a84c, #1e3a5f); transform: translateX(-50%); }
+    @media (max-width: 768px) { .timeline-line { left: 1rem; } }
+  </style>
+</head>
+<body class="bg-white text-gray-800 antialiased">
+  <!-- ====== NAVIGATION (rendered by app.js) ====== -->
+  <div id="navbar-container"></div>
+
+  <!-- ====== HERO SECTION ====== -->
+  <section class="relative pt-32 pb-20 bg-primary-900 overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-20 right-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 left-10 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+        <span class="text-accent text-sm font-medium">Our Story</span>
+      </div>
+      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">About <span class="text-gradient">FFCC</span></h1>
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto">Integrity, Innovation, and Intelligence — delivering value-driven financial information services since 2003</p>
+    </div>
+  </section>
+
+  <!-- ====== OUR JOURNEY ====== -->
+  <section class="py-20 lg:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-start">
+        <div class="reveal">
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900 mb-8">Our Journey</h2>
+          <div class="space-y-5 text-gray-600 leading-relaxed">
+            <p>Established in 2003, Forbes Financial Consultancy Corporation (FFCC) was built on a single, unwavering foundation: <strong class="text-primary-900">INTEGRITY</strong>. This core value continues to guide our governance, operations, and client relationships more than two decades later.</p>
+            <p>From the outset, FFCC positioned itself as a trusted partner of businesses, financial institutions, and key stakeholders by delivering accurate, reliable, and professionally prepared financial and credit information reports. Our commitment to precision, confidentiality, and ethical standards earned the confidence of institutions across multiple industries.</p>
+            <p>Over the past 22 years, FFCC has evolved into one of the country's fastest-growing Credit Information Agencies, expanding its services to include comprehensive business intelligence solutions, credit investigation, risk assessment support, and financial consulting.</p>
+            <p>As we move forward, our commitment remains clear: <strong class="text-primary-900">To combine Integrity, Innovation and Intelligence in delivering value-driven financial information services.</strong></p>
+            <p>With a strong legacy, strengthened leadership, and a technology-focused future, FFCC continues to grow—adaptive, resilient, and ready for the next era of financial intelligence.</p>
+            <p>FFCC is expanding into integrated credit intelligence and recovery management solutions, bridging information services with innovative collection strategies — offering end-to-end credit lifecycle support, from evaluation to recovery.</p>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="reveal">
+          <div class="relative pl-8 md:pl-0">
+            <!-- Timeline milestones -->
+            <div class="space-y-12">
+              <div class="relative flex items-start gap-6">
+                <div class="flex-shrink-0 w-16 h-16 bg-accent rounded-2xl flex items-center justify-center shadow-lg shadow-accent/20">
+                  <span class="text-primary-900 font-bold text-sm">2003</span>
+                </div>
+                <div>
+                  <h4 class="font-heading text-lg font-bold text-primary-900 mb-1">Founded</h4>
+                  <p class="text-gray-500 text-sm">FFCC established with core value of INTEGRITY as foundation for all operations and client relationships.</p>
+                </div>
+              </div>
+              <div class="relative flex items-start gap-6">
+                <div class="flex-shrink-0 w-16 h-16 bg-primary-800 rounded-2xl flex items-center justify-center shadow-lg">
+                  <span class="text-accent font-bold text-sm">2010</span>
+                </div>
+                <div>
+                  <h4 class="font-heading text-lg font-bold text-primary-900 mb-1">Expansion</h4>
+                  <p class="text-gray-500 text-sm">Expanded services and client base nationwide across multiple industries and sectors.</p>
+                </div>
+              </div>
+              <div class="relative flex items-start gap-6">
+                <div class="flex-shrink-0 w-16 h-16 bg-primary-800 rounded-2xl flex items-center justify-center shadow-lg">
+                  <span class="text-accent font-bold text-sm">2023</span>
+                </div>
+                <div>
+                  <h4 class="font-heading text-lg font-bold text-primary-900 mb-1">New Leadership</h4>
+                  <p class="text-gray-500 text-sm">Strategic leadership restructuring begins, bringing fresh vision and direction.</p>
+                </div>
+              </div>
+              <div class="relative flex items-start gap-6">
+                <div class="flex-shrink-0 w-16 h-16 bg-accent rounded-2xl flex items-center justify-center shadow-lg shadow-accent/20">
+                  <span class="text-primary-900 font-bold text-sm">2025</span>
+                </div>
+                <div>
+                  <h4 class="font-heading text-lg font-bold text-primary-900 mb-1">Modernization</h4>
+                  <p class="text-gray-500 text-sm">Digital infrastructure, AI-assisted systems, and advanced analytics integration for future-ready operations.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CAROUSEL SECTION ====== -->
+  <section class="py-20 lg:py-28 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="reveal">
+        <div class="relative overflow-hidden bg-gradient-to-br from-primary-900 to-primary-800 rounded-2xl shadow-2xl">
+          <!-- Carousel Container -->
+          <div id="about-carousel" class="relative min-h-[500px] md:min-h-[400px]">
+            <!-- Slide 1 -->
+            <div class="carousel-slide active p-8 md:p-12 lg:p-16">
+              <div class="max-w-4xl">
+                <p class="text-accent text-sm uppercase tracking-widest mb-2">The Forbes Advantage</p>
+                <h3 class="font-heading text-2xl md:text-3xl font-bold text-white mb-2">A Commitment to Financial Excellence</h3>
+                <p class="text-accent-light italic mb-6">"Precision in Every Decision. Confidence in Every Result."</p>
+                <p class="text-gray-300 leading-relaxed mb-4">Forbes Financial Consultancy Corp stands at the forefront of financial advisory and credit investigation services, delivering strategic solutions that empower businesses to make confident, data-driven decisions. Our strength lies in combining operational precision, regulatory compliance, and market intelligence to support institutions across Luzon, Visayas, and Mindanao.</p>
+                <p class="text-gray-400 leading-relaxed mb-6">Our portfolio spans Credit Investigation, Risk Assessment, Due Diligence, Financial Verification, and Business Intelligence Solutions—designed to safeguard assets, reduce exposure, and enhance portfolio quality.</p>
+                <div class="bg-accent/10 border-l-4 border-accent rounded-r-lg p-4">
+                  <p class="text-accent-light text-sm italic">"At Forbes Financial Consultancy Corp, we don't just deliver reports, we deliver clarity, confidence and competitive advantage."</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-slide p-8 md:p-12 lg:p-16">
+              <div class="max-w-4xl">
+                <p class="text-accent text-sm uppercase tracking-widest mb-2">Multi-Sector Financial Expertise</p>
+                <h3 class="font-heading text-2xl md:text-3xl font-bold text-white mb-2">Nationwide Execution</h3>
+                <p class="text-accent-light italic mb-6">"Institutional-Grade Solutions. Nationwide Execution. Measurable Results."</p>
+                <p class="text-gray-300 leading-relaxed mb-4">Forbes Financial Consultancy Corp operates as a trusted strategic partner to banks, non-bank financial institutions, lending companies and corporate enterprises across the Philippines.</p>
+                <p class="text-gray-400 leading-relaxed mb-6">With active coverage across Luzon, Visayas, and Mindanao, we deliver standardized methodologies, disciplined field operations and quality-controlled reporting frameworks aligned with institutional risk governance standards.</p>
+                <div class="bg-accent/10 border-l-4 border-accent rounded-r-lg p-4">
+                  <p class="text-accent-light text-sm italic">"We position ourselves not merely as a service provider, but as a long-term risk management partner dedicated to protecting institutional value."</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-slide p-8 md:p-12 lg:p-16">
+              <div class="max-w-4xl">
+                <p class="text-accent text-sm uppercase tracking-widest mb-2">Digital Integration</p>
+                <h3 class="font-heading text-2xl md:text-3xl font-bold text-white mb-2">Across Company Services</h3>
+                <p class="text-accent-light italic mb-6">"Building Smarter Systems. Delivering Stronger Performance."</p>
+                <p class="text-gray-300 leading-relaxed mb-4">As financial institutions demand greater speed, transparency, and accountability, service providers must evolve beyond traditional operational models. Digital integration is no longer optional, it is a strategic necessity.</p>
+                <p class="text-gray-400 leading-relaxed mb-6">Forbes Financial Consultancy Corp is embedding digital capability across its core service lines to enhance efficiency, governance and scalability.</p>
+                <div class="bg-accent/10 border-l-4 border-accent rounded-r-lg p-4">
+                  <p class="text-accent-light text-sm italic">"This integration enables improved turnaround time, enhanced report accuracy, stronger audit trails, and greater operational visibility for partner institutions."</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 4 -->
+            <div class="carousel-slide p-8 md:p-12 lg:p-16">
+              <div class="max-w-4xl">
+                <p class="text-accent text-sm uppercase tracking-widest mb-2">Empowering Clients</p>
+                <h3 class="font-heading text-2xl md:text-3xl font-bold text-white mb-2">Focus on Core Financial Goals</h3>
+                <p class="text-accent-light italic mb-6">"Growth. Sustainability. Core Business Excellence."</p>
+                <p class="text-gray-300 leading-relaxed mb-4">At its core, Forbes Financial Consultancy Corp. is committed to empowering clients to focus on what matters most—the growth and sustainability of their core business.</p>
+                <p class="text-gray-400 leading-relaxed mb-6">Through strong collaboration and a results-driven approach, Forbes Financial Consultancy Corp. remains dedicated to helping organizations optimize performance while mitigating risks.</p>
+                <div class="bg-accent/10 border-l-4 border-accent rounded-r-lg p-4">
+                  <p class="text-accent-light text-sm italic">"This commitment reflects our broader vision: to contribute meaningfully to national economic progress by strengthening financial systems, promoting responsible credit practices, and fostering sustainable growth across industries."</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Carousel Controls -->
+          <div class="absolute bottom-6 right-6 md:bottom-10 md:right-10 flex items-center gap-3">
+            <div id="carousel-dots" class="flex gap-2 mr-4">
+              <button class="carousel-dot w-3 h-3 rounded-full bg-accent transition-all" data-slide="0"></button>
+              <button class="carousel-dot w-3 h-3 rounded-full bg-gray-600 hover:bg-gray-500 transition-all" data-slide="1"></button>
+              <button class="carousel-dot w-3 h-3 rounded-full bg-gray-600 hover:bg-gray-500 transition-all" data-slide="2"></button>
+              <button class="carousel-dot w-3 h-3 rounded-full bg-gray-600 hover:bg-gray-500 transition-all" data-slide="3"></button>
+            </div>
+            <button id="carousel-prev" class="w-10 h-10 bg-primary-700 hover:bg-accent text-white hover:text-primary-900 rounded-full flex items-center justify-center transition-colors" aria-label="Previous slide">
+              <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            </button>
+            <button id="carousel-next" class="w-10 h-10 bg-primary-700 hover:bg-accent text-white hover:text-primary-900 rounded-full flex items-center justify-center transition-colors" aria-label="Next slide">
+              <i data-lucide="chevron-right" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== MISSION / VISION / PURPOSE ====== -->
+  <section class="py-20 lg:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-3 gap-8 reveal">
+        <!-- Mission -->
+        <div class="bg-gradient-to-br from-primary-900 to-primary-800 rounded-2xl p-8 lg:p-10 text-center shadow-xl">
+          <div class="w-16 h-16 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="target" class="w-8 h-8 text-accent"></i>
+          </div>
+          <h3 class="font-heading text-2xl font-bold text-white mb-4">Our Mission</h3>
+          <p class="text-gray-300 text-sm leading-relaxed">We facilitate Business Intelligence and Recovery Solutions with precision, professionalism and transparency, enabling our clients to make informed financial decisions and achieve sustainable growth.</p>
+        </div>
+
+        <!-- Vision -->
+        <div class="bg-accent rounded-2xl p-8 lg:p-10 text-center shadow-xl">
+          <div class="w-16 h-16 bg-primary-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="eye" class="w-8 h-8 text-primary-900"></i>
+          </div>
+          <h3 class="font-heading text-2xl font-bold text-primary-900 mb-4">Our Vision</h3>
+          <p class="text-primary-900/80 text-sm leading-relaxed">To be the premier source of accurate Comprehensive Credit &amp; Business Solutions enabling businesses to thrive with trust, confidence and integrity.</p>
+        </div>
+
+        <!-- Purpose -->
+        <div class="bg-gradient-to-br from-primary-900 to-primary-800 rounded-2xl p-8 lg:p-10 text-center shadow-xl">
+          <div class="w-16 h-16 bg-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="compass" class="w-8 h-8 text-accent"></i>
+          </div>
+          <h3 class="font-heading text-2xl font-bold text-white mb-4">Our Purpose</h3>
+          <p class="text-gray-300 text-sm leading-relaxed">To provide reliable intelligence and strategic solutions that safeguard investments, mitigate risks and reinforce financial stability of our clients and their business partners.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CORE VALUES ====== -->
+  <section class="py-20 lg:py-28 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 reveal">
+        <h2 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-900 mb-4">Our Core Values</h2>
+        <p class="text-accent text-2xl font-heading font-bold">T.I.T.A.N.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 reveal">
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100 hover:shadow-lg hover:border-accent/30 transition-all">
+          <div class="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-accent font-bold text-2xl">T</span>
+          </div>
+          <h4 class="font-heading text-lg font-bold text-primary-900 mb-2">Teamwork</h4>
+          <p class="text-gray-500 text-sm">Collaboration that drives success</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100 hover:shadow-lg hover:border-accent/30 transition-all">
+          <div class="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-accent font-bold text-2xl">I</span>
+          </div>
+          <h4 class="font-heading text-lg font-bold text-primary-900 mb-2">Integrity</h4>
+          <p class="text-gray-500 text-sm">Honesty in everything we do</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100 hover:shadow-lg hover:border-accent/30 transition-all">
+          <div class="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-accent font-bold text-2xl">T</span>
+          </div>
+          <h4 class="font-heading text-lg font-bold text-primary-900 mb-2">Trust</h4>
+          <p class="text-gray-500 text-sm">Building lasting relationships</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100 hover:shadow-lg hover:border-accent/30 transition-all">
+          <div class="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-accent font-bold text-2xl">A</span>
+          </div>
+          <h4 class="font-heading text-lg font-bold text-primary-900 mb-2">Adaptability</h4>
+          <p class="text-gray-500 text-sm">Embracing change and innovation</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100 hover:shadow-lg hover:border-accent/30 transition-all">
+          <div class="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-accent font-bold text-2xl">N</span>
+          </div>
+          <h4 class="font-heading text-lg font-bold text-primary-900 mb-2">New Leaders</h4>
+          <p class="text-gray-500 text-sm">Nurturing future excellence</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== STATS ====== -->
+  <section class="py-16 bg-primary-900 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-primary-950 via-primary-900 to-primary-950"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="text-center"><p class="text-4xl lg:text-5xl font-bold text-accent mb-2">22+</p><p class="text-gray-400 text-sm uppercase tracking-wide">Years of Excellence</p></div>
+        <div class="text-center"><p class="text-4xl lg:text-5xl font-bold text-accent mb-2">100+</p><p class="text-gray-400 text-sm uppercase tracking-wide">Clients Served</p></div>
+        <div class="text-center"><p class="text-4xl lg:text-5xl font-bold text-accent mb-2">50+</p><p class="text-gray-400 text-sm uppercase tracking-wide">Corporate Partners</p></div>
+        <div class="text-center"><p class="text-4xl lg:text-5xl font-bold text-accent mb-2">99%</p><p class="text-gray-400 text-sm uppercase tracking-wide">Client Satisfaction</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <section class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900 mb-6">Ready to Partner With Us?</h2>
+      <p class="text-gray-500 text-lg mb-8">Discover the people behind our success and how we can help your business.</p>
+      <a href="contact.html" class="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg shadow-accent/25">
+        Get In Touch
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+  </section>
+  <!-- ====== FOOTER (rendered by app.js) ====== -->
+  <div id="footer-container"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

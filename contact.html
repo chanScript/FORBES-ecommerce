@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact Forbes Financial Consultancy Corporation — Get in touch to discuss how we can help your business make informed financial decisions." />
+  <title>Contact Us — Forbes Financial Consultancy Corporation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
+            accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
+            success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
+          },
+        },
+      },
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-heading { font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif; }
+    .text-gradient { background: linear-gradient(135deg, #c9a84c, #d4b96a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-scrolled { background-color: rgba(255,255,255,0.97) !important; box-shadow: 0 1px 12px rgba(0,0,0,0.08); }
+    .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .mobile-menu.open { max-height: 800px; }
+    .dropdown-menu { opacity:0; visibility:hidden; transform:translateY(10px); transition:all 0.3s ease; pointer-events:none; }
+    .dropdown:hover .dropdown-menu, .dropdown.active .dropdown-menu { opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
+    .dropdown button { position: relative; z-index: 52; }
+    .dropdown-menu { z-index: 51; }
+    .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.active { opacity:1; transform:translateY(0); }
+    /* Toast notification */
+    .toast { transform: translateX(100%); transition: transform 0.4s ease; }
+    .toast.show { transform: translateX(0); }
+  </style>
+</head>
+<body class="bg-white text-gray-800 antialiased">
+  <!-- ====== NAVIGATION (rendered by app.js) ====== -->
+  <div id="navbar-container"></div>
+
+  <!-- ====== HERO ====== -->
+  <section class="relative pt-32 pb-20 bg-primary-900 overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-20 right-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-20 left-10 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+        <span class="text-accent text-sm font-medium">Get In Touch</span>
+      </div>
+      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">Contact <span class="text-gradient">Us</span></h1>
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto">Let's discuss how we can help your business make informed financial decisions</p>
+    </div>
+  </section>
+
+  <!-- ====== CONTACT SECTION ====== -->
+  <section class="py-20 lg:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-3 gap-12">
+        <!-- Contact Info -->
+        <div class="lg:col-span-1 reveal">
+          <h2 class="font-heading text-2xl font-bold text-primary-900 mb-6">Contact Information</h2>
+          <div class="space-y-6">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i data-lucide="map-pin" class="w-5 h-5 text-accent"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-primary-900 mb-1">Our Location</h4>
+                <p class="text-gray-500 text-sm">Philippines</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i data-lucide="phone" class="w-5 h-5 text-accent"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-primary-900 mb-1">Phone Number</h4>
+                <p class="text-gray-500 text-sm">Contact for inquiry</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i data-lucide="mail" class="w-5 h-5 text-accent"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-primary-900 mb-1">Email Address</h4>
+                <a href="mailto:rsalas@forbesfinancial.com.ph" class="text-accent hover:text-accent-dark text-sm transition-colors">rsalas@forbesfinancial.com.ph</a>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i data-lucide="clock" class="w-5 h-5 text-accent"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-primary-900 mb-1">Business Hours</h4>
+                <p class="text-gray-500 text-sm">Mon-Fri: 8AM-5PM</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social -->
+          <div class="mt-10">
+            <h4 class="font-semibold text-primary-900 mb-4">Follow Us</h4>
+            <div class="flex gap-3">
+              <a href="https://facebook.com/profile.php?id=61584665866351" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-100 hover:bg-accent rounded-lg flex items-center justify-center transition-colors group">
+                <i data-lucide="facebook" class="w-5 h-5 text-gray-500 group-hover:text-primary-900"></i>
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-100 hover:bg-accent rounded-lg flex items-center justify-center transition-colors group">
+                <i data-lucide="linkedin" class="w-5 h-5 text-gray-500 group-hover:text-primary-900"></i>
+              </a>
+              <a href="mailto:rsalas@forbesfinancial.com.ph" class="w-10 h-10 bg-gray-100 hover:bg-accent rounded-lg flex items-center justify-center transition-colors group">
+                <i data-lucide="mail" class="w-5 h-5 text-gray-500 group-hover:text-primary-900"></i>
+              </a>
+              <a href="https://tiktok.com/@ffcc.ortigas" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-100 hover:bg-accent rounded-lg flex items-center justify-center transition-colors group">
+                <i data-lucide="music" class="w-5 h-5 text-gray-500 group-hover:text-primary-900"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="lg:col-span-2 reveal">
+          <div class="bg-gray-50 border border-gray-100 rounded-2xl p-8 lg:p-10">
+            <h2 class="font-heading text-2xl font-bold text-primary-900 mb-6">Send Us a Message</h2>
+            <form id="contact-form" action="php/contact.php" method="POST" novalidate>
+              <div class="grid sm:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label for="full_name" class="block text-sm font-medium text-gray-700 mb-2">Full Name <span class="text-error">*</span></label>
+                  <input type="text" id="full_name" name="full_name" required
+                    class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all"
+                    placeholder="Enter your full name" />
+                  <p class="text-error text-xs mt-1 hidden" id="full_name-error">Full name is required</p>
+                </div>
+                <div>
+                  <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address <span class="text-error">*</span></label>
+                  <input type="email" id="email" name="email" required
+                    class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all"
+                    placeholder="you@email.com" />
+                  <p class="text-error text-xs mt-1 hidden" id="email-error">Valid email is required</p>
+                </div>
+                <div>
+                  <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                  <input type="tel" id="phone" name="phone"
+                    class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all"
+                    placeholder="e.g., +63 XXX XXX XXXX" />
+                </div>
+                <div>
+                  <label for="company" class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                  <input type="text" id="company" name="company"
+                    class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all"
+                    placeholder="Your company name" />
+                </div>
+              </div>
+              <div class="mb-6">
+                <label for="service" class="block text-sm font-medium text-gray-700 mb-2">Service Interested In</label>
+                <select id="service" name="service"
+                  class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all text-gray-500">
+                  <option value="">Select a service</option>
+                  <option value="Credit Investigation">Credit Investigation</option>
+                  <option value="Background Investigation">Background Investigation</option>
+                  <option value="Appraisal Service">Appraisal Service</option>
+                  <option value="Liaison Services">Liaison Services</option>
+                  <option value="Loan Marketing">Loan Marketing</option>
+                  <option value="Collection Services">Collection Services</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="mb-6">
+                <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message <span class="text-error">*</span></label>
+                <textarea id="message" name="message" rows="5" required minlength="10"
+                  class="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all resize-none"
+                  placeholder="How can we help you? (minimum 10 characters)"></textarea>
+                <p class="text-error text-xs mt-1 hidden" id="message-error">Message must be at least 10 characters</p>
+              </div>
+              <button type="submit" id="submit-btn"
+                class="w-full sm:w-auto bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg shadow-accent/25 flex items-center justify-center gap-2">
+                <span>Send Message</span>
+                <i data-lucide="send" class="w-4 h-4"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ====== FOOTER (rendered by app.js) ====== -->
+  <div id="footer-container"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

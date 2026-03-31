@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Forbes Financial Consultancy Corporation — Your Premier Source of Credit Intelligence, Business Intelligence, Financial Consulting, and Recovery Management since 2003." />
+  <title>Forbes Financial Consultancy Corporation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50:'#f0f4ff',100:'#e0e9ff',200:'#c7d6fe',300:'#a3b8fc',400:'#7a95f8',500:'#5b73f0',600:'#3b4fe4',700:'#2d3dca',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
+            accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
+            success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
+          },
+        },
+      },
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-heading { font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif; }
+    .text-gradient { background: linear-gradient(135deg, #c9a84c, #d4b96a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* Transparent nav → solid on scroll */
+    #navbar { background: transparent; border-color: transparent; }
+    #navbar.nav-scrolled { background-color: rgba(255,255,255,0.97) !important; border-color: rgba(229,231,235,1); box-shadow: 0 1px 12px rgba(0,0,0,0.08); }
+    #navbar.nav-scrolled .nav-link { color: #4b5563; }
+    #navbar.nav-scrolled .nav-link:hover { color: #0f172a; }
+    #navbar.nav-scrolled .nav-brand { color: #0f172a; }
+    #navbar.nav-scrolled .nav-accent { color: #c9a84c; }
+    #navbar.nav-scrolled .nav-cta { background: #0f172a; color: #fff; }
+    #navbar.nav-scrolled .nav-mobile-btn { color: #374151; }
+    .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .mobile-menu.open { max-height: 800px; }
+    .dropdown-menu { opacity:0; visibility:hidden; transform:translateY(10px); transition:all 0.3s ease; pointer-events:none; }
+    .dropdown:hover .dropdown-menu, .dropdown.active .dropdown-menu { opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
+    .dropdown button { position: relative; z-index: 52; }
+    .dropdown-menu { z-index: 51; }
+    .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.active { opacity:1; transform:translateY(0); }
+
+    /* Typewriter cursor */
+    #typewriter::after { content:'|'; animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity:0; } }
+
+    /* Hero carousel */
+    .hero-slide { position:absolute; inset:0; opacity:0; transition:opacity 1s ease; }
+    .hero-slide.active { opacity:1; }
+
+    /* Honeycomb */
+    .honeycomb { display:flex; flex-wrap:wrap; justify-content:center; margin:0 auto; max-width:750px; }
+    .honeycomb-cell { position:relative; width:140px; height:162px; margin:4px 2px; clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%); background:#fff; display:flex; align-items:center; justify-content:center; transition:transform 0.3s ease, box-shadow 0.3s ease; overflow:hidden; }
+    .honeycomb-cell::before { content:''; position:absolute; inset:3px; clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%); background:#f8fafc; z-index:0; }
+    .honeycomb-cell:hover { transform:scale(1.08); }
+    .honeycomb-cell img { position:relative; z-index:1; max-width:70%; max-height:50%; object-fit:contain; filter:grayscale(30%); transition:filter 0.3s ease; }
+    .honeycomb-cell:hover img { filter:grayscale(0%); }
+    .honeycomb-row { display:flex; justify-content:center; width:100%; }
+    .honeycomb-row.offset { margin-top:-40px; margin-left:72px; }
+
+    @media(max-width:640px) {
+      .honeycomb-cell { width:110px; height:127px; }
+      .honeycomb-row.offset { margin-left:57px; margin-top:-31px; }
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-700 antialiased">
+
+  <!-- ====== NAVIGATION (rendered by app.js) ====== -->
+  <div id="navbar-container" data-transparent="true"></div>
+
+  <!-- ====== HERO CAROUSEL ====== -->
+  <section id="hero-carousel" class="relative w-full h-[100vh] min-h-[600px] overflow-hidden">
+    <!-- Slide 1 -->
+    <div class="hero-slide active">
+      <img src="images/assets/pexels-jakubzerdzicki-24017830.jpg" alt="Forbes Financial — Credit Intelligence" class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-r from-primary-900/85 via-primary-900/50 to-transparent"></div>
+      <div class="absolute inset-0 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-2 bg-accent/15 border border-accent/25 rounded-full px-4 py-1.5 mb-6">
+              <span class="text-accent text-sm font-medium">Established 2003</span>
+            </div>
+            <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-5 leading-tight drop-shadow-lg">
+              Your Premier Source of <span class="text-accent">Credit Intelligence</span>
+            </h1>
+            <p class="text-white/80 text-lg sm:text-xl leading-relaxed mb-8 max-w-xl">Combining Integrity, Innovation and Intelligence in delivering value-driven financial information services for over two decades.</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <a href="services.html" class="bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg">Explore Services</a>
+              <a href="contact.html" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide backdrop-blur-sm transition-all">Get Started</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Slide 2 -->
+    <div class="hero-slide">
+      <img src="images/assets/pexels-luis-ruiz-1774937.jpg" alt="Forbes Financial — Financial Consulting" class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-r from-primary-900/85 via-primary-900/50 to-transparent"></div>
+      <div class="absolute inset-0 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-2 bg-accent/15 border border-accent/25 rounded-full px-4 py-1.5 mb-6">
+              <span class="text-accent text-sm font-medium">22+ Years of Excellence</span>
+            </div>
+            <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-5 leading-tight drop-shadow-lg">
+              Comprehensive <span class="text-accent">Business Intelligence</span> Solutions
+            </h1>
+            <p class="text-white/80 text-lg sm:text-xl leading-relaxed mb-8 max-w-xl">From credit investigation and risk assessment to due diligence — we deliver data-driven insights that empower sound financial decisions.</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <a href="about.html" class="bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg">About Us</a>
+              <a href="services.html" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide backdrop-blur-sm transition-all">Our Services</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Slide 3 -->
+    <div class="hero-slide">
+      <img src="images/assets/pexels-mikhail-nilov-8101929.jpg" alt="Forbes Financial — Recovery Management" class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-r from-primary-900/85 via-primary-900/50 to-transparent"></div>
+      <div class="absolute inset-0 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-2 bg-accent/15 border border-accent/25 rounded-full px-4 py-1.5 mb-6">
+              <span class="text-accent text-sm font-medium">End-to-End Solutions</span>
+            </div>
+            <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-5 leading-tight drop-shadow-lg">
+              Strategic <span class="text-accent">Recovery Management</span> &amp; Collection
+            </h1>
+            <p class="text-white/80 text-lg sm:text-xl leading-relaxed mb-8 max-w-xl">Bridging information services with innovative collection strategies — offering end-to-end credit lifecycle support, from evaluation to recovery.</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <a href="contact.html" class="bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg">Book Appointment</a>
+              <a href="calculator.html" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide backdrop-blur-sm transition-all">Loan Calculator</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Carousel Indicators -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+      <button class="hero-dot w-10 h-1.5 rounded-full bg-white/80 transition-all duration-300" data-slide="0"></button>
+      <button class="hero-dot w-10 h-1.5 rounded-full bg-white/30 transition-all duration-300" data-slide="1"></button>
+      <button class="hero-dot w-10 h-1.5 rounded-full bg-white/30 transition-all duration-300" data-slide="2"></button>
+    </div>
+  </section>
+
+  <!-- ====== ABOUT SECTION ====== -->
+  <section class="py-20 lg:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="reveal">
+          <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+            <span class="text-accent text-sm font-medium">About Our Company</span>
+          </div>
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900 mb-4">Building Trust <span class="text-gradient">Since 2003</span></h2>
+          <p class="text-gray-500 text-lg mb-6">Over two decades of excellence in credit information and financial consulting</p>
+          <p class="text-gray-600 leading-relaxed mb-4">Established in 2003, Forbes Financial Consultancy Corporation (FFCC) was built on a single, unwavering foundation: INTEGRITY. This core value continues to guide our governance, operations, and client relationships more than two decades later.</p>
+          <p class="text-gray-600 leading-relaxed mb-6">FFCC has evolved into one of the country's fastest-growing Credit Information Agencies, expanding its services to include comprehensive business intelligence solutions, credit investigation, risk assessment support, and financial consulting.</p>
+          <a href="about.html" class="inline-flex items-center gap-2 text-primary-900 font-semibold text-sm hover:text-accent transition-colors">
+            Learn More About Us <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+        <div class="reveal">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-gray-50 border border-gray-100 rounded-2xl p-6 text-center">
+              <div class="text-3xl font-bold text-primary-900 mb-1"><span data-count="22">0</span>+</div>
+              <p class="text-gray-500 text-sm">Years of Excellence</p>
+            </div>
+            <div class="bg-gray-50 border border-gray-100 rounded-2xl p-6 text-center">
+              <div class="text-3xl font-bold text-primary-900 mb-1"><span data-count="100">0</span>+</div>
+              <p class="text-gray-500 text-sm">Satisfied Clients</p>
+            </div>
+            <div class="bg-gray-50 border border-gray-100 rounded-2xl p-6 text-center">
+              <div class="text-3xl font-bold text-primary-900 mb-1"><span data-count="50">0</span>+</div>
+              <p class="text-gray-500 text-sm">Corporate Partners</p>
+            </div>
+            <div class="bg-gray-50 border border-gray-100 rounded-2xl p-6 text-center">
+              <div class="text-3xl font-bold text-primary-900 mb-1"><span data-count="99">0</span>%</div>
+              <p class="text-gray-500 text-sm">Client Retention</p>
+            </div>
+          </div>
+          <!-- Core Values -->
+          <div class="mt-6 bg-primary-900 rounded-2xl p-6">
+            <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-4">Core Values — TITAN</h3>
+            <div class="grid grid-cols-5 gap-2 text-center">
+              <div><span class="block text-accent font-bold text-lg">T</span><span class="text-gray-400 text-[10px] uppercase">Teamwork</span></div>
+              <div><span class="block text-accent font-bold text-lg">I</span><span class="text-gray-400 text-[10px] uppercase">Integrity</span></div>
+              <div><span class="block text-accent font-bold text-lg">T</span><span class="text-gray-400 text-[10px] uppercase">Trust</span></div>
+              <div><span class="block text-accent font-bold text-lg">A</span><span class="text-gray-400 text-[10px] uppercase">Adaptability</span></div>
+              <div><span class="block text-accent font-bold text-lg">N</span><span class="text-gray-400 text-[10px] uppercase">New Leaders</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SERVICES SECTION ====== -->
+  <section class="py-20 lg:py-28 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 reveal">
+        <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+          <span class="text-accent text-sm font-medium">What We Offer</span>
+        </div>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900 mb-4">Our Services</h2>
+        <p class="text-gray-500 text-lg max-w-2xl mx-auto">Comprehensive solutions designed with the highest standards of professionalism, integrity, and accuracy</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Card 1 -->
+        <div class="group bg-white border border-gray-100 rounded-2xl p-8 hover:shadow-xl hover:border-accent/30 transition-all duration-300 reveal">
+          <div class="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+            <i data-lucide="search" class="w-7 h-7 text-accent"></i>
+          </div>
+          <h3 class="font-heading text-xl font-bold text-primary-900 mb-3">Credit Investigation</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Comprehensive and systematic credit investigation services designed to support informed, risk-aware lending and business decisions.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Business Verification</span>
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Employment Verification</span>
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Residence Verification</span>
+          </div>
+          <a href="services.html#credit-investigation" class="inline-flex items-center gap-1 text-sm font-semibold text-primary-900 hover:text-accent transition-colors">Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+        </div>
+        <!-- Card 2 -->
+        <div class="group bg-white border border-gray-100 rounded-2xl p-8 hover:shadow-xl hover:border-accent/30 transition-all duration-300 reveal">
+          <div class="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+            <i data-lucide="shield-check" class="w-7 h-7 text-accent"></i>
+          </div>
+          <h3 class="font-heading text-xl font-bold text-primary-900 mb-3">Background Investigation</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Reliable, fact-based insights on individuals and corporate entities through structured due diligence processes.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Consumer Report</span>
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Individual BI</span>
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Corporate BI</span>
+          </div>
+          <a href="services.html#background-investigation" class="inline-flex items-center gap-1 text-sm font-semibold text-primary-900 hover:text-accent transition-colors">Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+        </div>
+        <!-- Card 3 -->
+        <div class="group bg-white border border-gray-100 rounded-2xl p-8 hover:shadow-xl hover:border-accent/30 transition-all duration-300 reveal">
+          <div class="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+            <i data-lucide="home" class="w-7 h-7 text-accent"></i>
+          </div>
+          <h3 class="font-heading text-xl font-bold text-primary-900 mb-3">Appraisal Services</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Professional and independent appraisal services for accurate asset valuation in lending, investment, and risk management.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Real Estate Appraisal</span>
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Vehicle Appraisal</span>
+          </div>
+          <a href="services.html#appraisal-services" class="inline-flex items-center gap-1 text-sm font-semibold text-primary-900 hover:text-accent transition-colors">Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+        </div>
+        <!-- Card 4 -->
+        <div class="group bg-white border border-gray-100 rounded-2xl p-8 hover:shadow-xl hover:border-accent/30 transition-all duration-300 reveal">
+          <div class="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+            <i data-lucide="file-text" class="w-7 h-7 text-accent"></i>
+          </div>
+          <h3 class="font-heading text-xl font-bold text-primary-900 mb-3">Liaison Services</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Smooth, accurate, and timely processing of regulatory and documentation requirements for mortgage and motor vehicle transactions.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">REM Annotation</span>
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">LTO Encumbrance</span>
+          </div>
+          <a href="services.html#liaison-services" class="inline-flex items-center gap-1 text-sm font-semibold text-primary-900 hover:text-accent transition-colors">Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+        </div>
+        <!-- Card 5 -->
+        <div class="group bg-white border border-gray-100 rounded-2xl p-8 hover:shadow-xl hover:border-accent/30 transition-all duration-300 reveal">
+          <div class="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+            <i data-lucide="trending-up" class="w-7 h-7 text-accent"></i>
+          </div>
+          <h3 class="font-heading text-xl font-bold text-primary-900 mb-3">Loan Marketing</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Connecting borrowers with suitable financing solutions through strategic partnerships with banks and financing institutions.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Auto Loans</span>
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Business Loans</span>
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">OFW &amp; Seaman</span>
+          </div>
+          <a href="services.html#loan-marketing" class="inline-flex items-center gap-1 text-sm font-semibold text-primary-900 hover:text-accent transition-colors">Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+        </div>
+        <!-- Card 6 -->
+        <div class="group bg-white border border-gray-100 rounded-2xl p-8 hover:shadow-xl hover:border-accent/30 transition-all duration-300 reveal">
+          <div class="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+            <i data-lucide="banknote" class="w-7 h-7 text-accent"></i>
+          </div>
+          <h3 class="font-heading text-xl font-bold text-primary-900 mb-3">Collection Services</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Professional debt collection and recovery services on a "No Collection – No Pay" basis for efficient account recovery.</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Debt Recovery</span>
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Asset Recovery</span>
+            <span class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Legal Support</span>
+          </div>
+          <a href="services.html#collection-services" class="inline-flex items-center gap-1 text-sm font-semibold text-primary-900 hover:text-accent transition-colors">Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CLIENTS SECTION (HONEYCOMB) ====== -->
+  <section class="py-20 lg:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 reveal">
+        <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+          <span class="text-accent text-sm font-medium">Trusted Partners</span>
+        </div>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900 mb-4">Our Clients</h2>
+        <p class="text-gray-500 text-lg max-w-2xl mx-auto">Trusted by leading financial institutions and corporations across the Philippines</p>
+      </div>
+
+      <!-- Company Logo Featured -->
+      <div class="flex justify-center mb-12 reveal">
+        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 inline-flex items-center gap-4">
+          <img src="images/logo.png" alt="FFCC Logo" class="w-16 h-16 rounded-lg object-contain" />
+          <div>
+            <p class="text-primary-900 font-bold text-lg leading-tight">FORBES FINANCIAL</p>
+            <p class="text-accent text-xs tracking-widest uppercase">Consultancy Corporation</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Honeycomb Layout -->
+      <div class="reveal">
+        <!-- Row 1: 4 cells -->
+        <div class="honeycomb-row">
+          <div class="honeycomb-cell"><img src="images/client/Cocogen.jpg" alt="Cocogen Insurance" /></div>
+          <div class="honeycomb-cell"><img src="images/client/Asialink.jpg" alt="Asialink Finance" /></div>
+          <div class="honeycomb-cell"><img src="images/client/manulife.jpg" alt="Manulife" /></div>
+          <div class="honeycomb-cell"><img src="images/client/Pru-Life-UK.jpg" alt="Pru-Life UK" /></div>
+        </div>
+        <!-- Row 2: 3 cells (offset) -->
+        <div class="honeycomb-row offset">
+          <div class="honeycomb-cell"><img src="images/client/wisefund.png" alt="Wisefund Finance" /></div>
+          <div class="honeycomb-cell"><img src="images/client/q2hrsolution.png" alt="Q2HR Solutions" /></div>
+          <div class="honeycomb-cell"><img src="images/client/global-dominion.png" alt="Global Dominion" /></div>
+        </div>
+        <!-- Row 3: 3 cells -->
+        <div class="honeycomb-row">
+          <div class="honeycomb-cell"><img src="images/client/Picture15.png" alt="Avvanz" /></div>
+          <div class="honeycomb-cell"><img src="images/client/southasialink.png" alt="SAFC" /></div>
+          <div class="honeycomb-cell"><img src="images/client/gooddeal.jpg" alt="GD Express" /></div>
+        </div>
+      </div>
+
+      <!-- Trust Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 reveal">
+        <div class="text-center p-4">
+          <div class="text-3xl font-bold text-primary-900"><span data-count="100">0</span>+</div>
+          <p class="text-gray-500 text-sm mt-1">Satisfied Clients</p>
+        </div>
+        <div class="text-center p-4">
+          <div class="text-3xl font-bold text-primary-900"><span data-count="50">0</span>+</div>
+          <p class="text-gray-500 text-sm mt-1">Corporate Partners</p>
+        </div>
+        <div class="text-center p-4">
+          <div class="text-3xl font-bold text-primary-900"><span data-count="22">0</span>+</div>
+          <p class="text-gray-500 text-sm mt-1">Years of Excellence</p>
+        </div>
+        <div class="text-center p-4">
+          <div class="text-3xl font-bold text-primary-900"><span data-count="99">0</span>%</div>
+          <p class="text-gray-500 text-sm mt-1">Client Retention</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA SECTION ====== -->
+  <section class="py-20 bg-primary-900 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 w-72 h-72 bg-accent/5 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+      <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+        <span class="text-accent text-sm font-medium">Let's Work Together</span>
+      </div>
+      <h2 class="font-heading text-3xl sm:text-4xl font-bold text-white mb-6">Ready to Make Informed Financial Decisions?</h2>
+      <p class="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">Partner with Forbes Financial Consultancy Corporation and experience the difference that integrity, expertise, and reliability can make.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="contact.html" class="bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg shadow-accent/25">Get Started Today</a>
+        <a href="services.html" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all backdrop-blur-sm">Explore Services</a>
+      </div>
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-400 text-sm">
+        <span class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-accent"></i> Call Us Today</span>
+        <span class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4 text-accent"></i> rsalas@forbesfinancial.com.ph</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER (rendered by app.js) ====== -->
+  <div id="footer-container"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
