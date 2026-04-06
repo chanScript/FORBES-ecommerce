@@ -2,7 +2,9 @@
  * Format a number as currency (PHP).
  */
 export function formatPrice(price) {
+  if (price == null) return '₱0';
   const num = typeof price === 'string' ? parseFloat(price) : price;
+  if (isNaN(num)) return '₱0';
   if (num >= 1_000_000) {
     return `₱${(num / 1_000_000).toFixed(3)} Million`;
   }

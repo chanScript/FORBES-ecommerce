@@ -1,19 +1,25 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { carsAPI, favoritesAPI } from '../api/cars';
+import { inquiriesAPI } from '../api/inquiries';
 import { useAuth } from '../context/AuthContext';
 import ImageGallery from '../components/cars/ImageGallery';
+import SellerDetailsModal from '../components/cars/SellerDetailsModal';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { formatPrice, formatMileage } from '../utils/helpers';
 import {
   Heart, MapPin, Fuel, Gauge, Calendar, Settings, Palette,
-  Users, Phone, Mail, ArrowLeft, Share2, Car
+  Users, Phone, Mail, ArrowLeft, Share2, Car, Eye, Send, CheckCircle
 } from 'lucide-react';
 
 export default function CarDetailsPage() {
   const { slug } = useParams();
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
+  const [sellerModalId, setSellerModalId] = useState(null);
+  const [inquiryMessage, setInquiryMessage] = useState('');
+  const [showInquiryForm, setShowInquiryForm] = useState(false);
 
   const { data: car, isLoading, error } = useQuery({
     queryKey: ['car', slug],
@@ -28,6 +34,22 @@ export default function CarDetailsPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['car', slug] });
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
+    },
+  });
+
+  // Check if current user already sent an inquiry for this car
+  const { data: inquiryCheck } = useQuery({
+    queryKey: ['inquiryCheck', car?.id],
+    queryFn: () => inquiriesAPI.check(car.id).then(r => r.data),
+    enabled: isAuthenticated && !!car?.id,
+  });
+
+  const inquiryMutation = useMutation({
+    mutationFn: ({ carId, message }) => inquiriesAPI.submit(carId, message),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['inquiryCheck', car?.id] });
+      setShowInquiryForm(false);
+      setInquiryMessage('');
     },
   });
 
@@ -155,13 +177,60 @@ export default function CarDetailsPage() {
                   <Phone className="h-4 w-4" /> Call Seller
                 </a>
               )}
-              {car.seller?.email && (
-                <a
-                  href={`mailto:${car.seller.email}?subject=Inquiry about ${car.title}`}
-                  className="btn-outline flex w-full items-center justify-center gap-2"
-                >
-                  <Mail className="h-4 w-4" /> Email Seller
-                </a>
+
+              {/* View Seller Details Button (replaces Email Seller) */}
+              <button
+                onClick={() => setSellerModalId(car.seller?.id)}
+                className="btn-outline flex w-full items-center justify-center gap-2"
+              >
+                <Eye className="h-4 w-4" /> View Seller Details
+              </button>
+
+              {/* Inquiry / I'm Interested */}
+              {isAuthenticated && (
+                <>
+                  {inquiryCheck?.hasInquired ? (
+                    <div className="flex w-full items-center justify-center gap-2 rounded-lg border border-status-success bg-status-success/10 px-4 py-2.5 text-sm font-medium text-status-success">
+                      <CheckCircle className="h-4 w-4" /> Interest Sent
+                    </div>
+                  ) : showInquiryForm ? (
+                    <div className="space-y-2">
+                      <textarea
+                        value={inquiryMessage}
+                        onChange={(e) => setInquiryMessage(e.target.value)}
+                        placeholder="Add a message (optional)..."
+                        rows={3}
+                        className="w-full rounded-lg border px-3 py-2 text-sm focus:border-primary-accent focus:outline-none focus:ring-1 focus:ring-primary-accent"
+                      />
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => inquiryMutation.mutate({ carId: car.id, message: inquiryMessage })}
+                          disabled={inquiryMutation.isPending}
+                          className="btn-primary flex flex-1 items-center justify-center gap-2"
+                        >
+                          <Send className="h-4 w-4" />
+                          {inquiryMutation.isPending ? 'Sending...' : 'Send'}
+                        </button>
+                        <button
+                          onClick={() => setShowInquiryForm(false)}
+                          className="rounded-lg border px-3 py-2 text-sm hover:bg-gray-50"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                      {inquiryMutation.isError && (
+                        <p className="text-xs text-status-error">{inquiryMutation.error?.response?.data?.error || 'Failed to send.'}</p>
+                      )}
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setShowInquiryForm(true)}
+                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-status-success px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-status-success/90"
+                    >
+                      <Send className="h-4 w-4" /> I'm Interested
+                    </button>
+                  )}
+                </>
               )}
             </div>
 
@@ -177,6 +246,11 @@ export default function CarDetailsPage() {
           </div>
         </div>
       </div>
+
+      {/* Seller Details Modal */}
+      {sellerModalId && (
+        <SellerDetailsModal sellerId={sellerModalId} onClose={() => setSellerModalId(null)} />
+      )}
     </div>
   );
 }

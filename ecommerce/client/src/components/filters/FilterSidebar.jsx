@@ -30,8 +30,8 @@ export default function FilterSidebar({ filters, onFilterChange, onReset }) {
   // Sync brand slug when brand filter changes
   useEffect(() => {
     if (filters.brand && filterOptions) {
-      const brand = filterOptions.brands.find(b => b.id === Number(filters.brand));
-      setSelectedBrandSlug(brand?.slug || null);
+      const brand = filterOptions.brands.find(b => b.slug === filters.brand || b.id === Number(filters.brand));
+      setSelectedBrandSlug(brand?.slug || filters.brand || null);
     } else {
       setSelectedBrandSlug(null);
     }
@@ -72,7 +72,7 @@ export default function FilterSidebar({ filters, onFilterChange, onReset }) {
 
         {/* Total Count */}
         <p className="mb-4 text-xs text-secondary-muted">
-          {filterOptions.totalCount.toLocaleString()} cars available
+          {(filterOptions.totalCount || 0).toLocaleString()} cars available
         </p>
 
         {/* Brand Filter */}
@@ -84,7 +84,7 @@ export default function FilterSidebar({ filters, onFilterChange, onReset }) {
           >
             <option value="">All Brands</option>
             {filterOptions.brands.map((b) => (
-              <option key={b.id} value={b.id}>
+              <option key={b.id} value={b.slug}>
                 {b.name} ({b._count.cars})
               </option>
             ))}
@@ -116,7 +116,7 @@ export default function FilterSidebar({ filters, onFilterChange, onReset }) {
           >
             <option value="">All Types</option>
             {filterOptions.vehicleTypes.map((vt) => (
-              <option key={vt.id} value={vt.id}>
+              <option key={vt.id} value={vt.slug}>
                 {vt.name} ({vt._count.cars})
               </option>
             ))}

@@ -3,6 +3,7 @@ import api from './axios';
 export const carsAPI = {
   list: (params) => api.get('/cars', { params }),
   getBySlug: (slug) => api.get(`/cars/${slug}`),
+  getSellerProfile: (sellerId, params) => api.get(`/cars/seller/${sellerId}`, { params }),
   create: (data) => api.post('/cars', data),
   update: (id, data) => api.put(`/cars/${id}`, data),
   delete: (id) => api.delete(`/cars/${id}`),

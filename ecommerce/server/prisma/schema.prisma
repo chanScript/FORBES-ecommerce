@@ -64,6 +64,7 @@ model User {
   listings  Car[]      @relation("SellerCars")
   favorites Favorite[]
   auditLogs AuditLog[]
+  inquiries Inquiry[]  @relation("UserInquiries")
 
   // Seller request system
   sellerRequests         SellerRequest[] @relation("UserSellerRequests")
@@ -189,6 +190,7 @@ model Car {
   // Relations
   images    CarImage[]
   favorites Favorite[]
+  inquiries Inquiry[]
 
   @@index([status])
   @@index([brandId])
@@ -283,4 +285,31 @@ model SellerRequest {
   @@index([status])
   @@index([createdAt])
   @@map("seller_requests")
+}
+
+// ============================================================
+// Product Inquiries (User Interest → Admin Notification)
+// ============================================================
+
+enum InquiryStatus {
+  New
+  Seen
+  Contacted
+}
+
+model Inquiry {
+  id        Int           @id @default(autoincrement())
+  userId    String        @db.VarChar(36)
+  user      User          @relation("UserInquiries", fields: [userId], references: [id], onDelete: Cascade)
+  carId     String        @db.VarChar(36)
+  car       Car           @relation(fields: [carId], references: [id], onDelete: Cascade)
+  message   String?       @db.Text
+  status    InquiryStatus @default(New)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@unique([userId, carId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("inquiries")
 }

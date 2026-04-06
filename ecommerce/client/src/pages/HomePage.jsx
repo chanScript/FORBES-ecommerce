@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { carsAPI, favoritesAPI } from '../api/cars';
+import { carsAPI, favoritesAPI, filtersAPI } from '../api/cars';
 import { useAuth } from '../context/AuthContext';
 import CarGrid from '../components/cars/CarGrid';
 import CarCardSkeleton from '../components/ui/CarCardSkeleton';
@@ -9,7 +9,7 @@ import FilterSidebar from '../components/filters/FilterSidebar';
 import SearchBar from '../components/filters/SearchBar';
 import SortDropdown from '../components/filters/SortDropdown';
 import Pagination from '../components/ui/Pagination';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal, X, Car, Truck, ChevronRight } from 'lucide-react';
 
 const DEFAULT_FILTERS = {
   brand: '',
@@ -71,6 +71,13 @@ export default function HomePage() {
     },
   });
 
+  // Fetch filter options (brands & vehicle types for quick nav)
+  const { data: filterOptions } = useQuery({
+    queryKey: ['filterOptions'],
+    queryFn: () => filtersAPI.getOptions().then(r => r.data),
+    staleTime: 5 * 60 * 1000,
+  });
+
   const handleToggleFavorite = useCallback((carId) => {
     if (!isAuthenticated) {
       window.location.href = '/login';
@@ -104,6 +111,82 @@ export default function HomePage() {
           {data?.pagination?.total?.toLocaleString() || 0} cars available
         </p>
       </div>
+
+      {/* Vehicle Type Navigation */}
+      {filterOptions?.vehicleTypes?.length > 0 && (
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-gray-900">Browse by Type</h2>
+            {filters.vehicleType && (
+              <button
+                onClick={() => handleFilterChange({ ...filters, vehicleType: '' })}
+                className="text-xs text-primary-accent hover:underline"
+              >
+                Clear type filter
+              </button>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {filterOptions.vehicleTypes
+              .filter(vt => vt._count?.cars > 0)
+              .map((vt) => (
+                <button
+                  key={vt.id}
+                  onClick={() => handleFilterChange({ ...filters, vehicleType: vt.slug })}
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all ${
+                    filters.vehicleType === vt.slug
+                      ? 'border-primary-accent bg-primary-accent text-white'
+                      : 'border-gray-200 bg-white text-gray-700 hover:border-primary-accent hover:text-primary-accent'
+                  }`}
+                >
+                  <Truck className="h-3.5 w-3.5" />
+                  {vt.name}
+                  <span className={`text-xs ${filters.vehicleType === vt.slug ? 'text-white/80' : 'text-secondary-muted'}`}>
+                    ({vt._count?.cars})
+                  </span>
+                </button>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* Brand Navigation */}
+      {filterOptions?.brands?.length > 0 && (
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-gray-900">Browse by Brand</h2>
+            {filters.brand && (
+              <button
+                onClick={() => handleFilterChange({ ...filters, brand: '', model: '' })}
+                className="text-xs text-primary-accent hover:underline"
+              >
+                Clear brand filter
+              </button>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {filterOptions.brands
+              .filter(b => b._count?.cars > 0)
+              .map((brand) => (
+                <button
+                  key={brand.id}
+                  onClick={() => handleFilterChange({ ...filters, brand: brand.slug, model: '' })}
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all ${
+                    filters.brand === brand.slug
+                      ? 'border-primary-accent bg-primary-accent text-white'
+                      : 'border-gray-200 bg-white text-gray-700 hover:border-primary-accent hover:text-primary-accent'
+                  }`}
+                >
+                  <Car className="h-3.5 w-3.5" />
+                  {brand.name}
+                  <span className={`text-xs ${filters.brand === brand.slug ? 'text-white/80' : 'text-secondary-muted'}`}>
+                    ({brand._count?.cars})
+                  </span>
+                </button>
+              ))}
+          </div>
+        </div>
+      )}
 
       {/* Search + Sort Bar */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

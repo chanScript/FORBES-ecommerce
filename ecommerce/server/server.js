@@ -14,6 +14,7 @@ const adminRoutes = require('./src/routes/admin.routes');
 const favoriteRoutes = require('./src/routes/favorite.routes');
 const filterRoutes = require('./src/routes/filter.routes');
 const sellerRequestRoutes = require('./src/routes/sellerRequest.routes');
+const inquiryRoutes = require('./src/routes/inquiry.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -59,6 +60,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/filters', filterRoutes);
 app.use('/api/seller-requests', sellerRequestRoutes);
+app.use('/api/inquiries', inquiryRoutes);
 
 // ----------------------------------------------------------
 // Health Check

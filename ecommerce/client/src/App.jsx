@@ -10,6 +10,7 @@ import SellerSubmitPage from './pages/SellerSubmitPage';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminListingsPage from './pages/AdminListingsPage';
 import AdminSellerRequestsPage from './pages/AdminSellerRequestsPage';
+import AdminInquiriesPage from './pages/AdminInquiriesPage';
 import FavoritesPage from './pages/FavoritesPage';
 import ProtectedRoute from './routes/ProtectedRoute';
 
@@ -45,6 +46,7 @@ export default function App() {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/listings" element={<AdminListingsPage />} />
             <Route path="/admin/seller-requests" element={<AdminSellerRequestsPage />} />
+            <Route path="/admin/inquiries" element={<AdminInquiriesPage />} />
           </Route>
         </Routes>
       </main>

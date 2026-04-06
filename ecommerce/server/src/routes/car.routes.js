@@ -13,6 +13,7 @@ const {
   deleteCar,
   uploadImages,
   deleteImage,
+  getSellerProfile,
 } = require('../controllers/car.controller');
 
 // ---- Public Routes ----
@@ -22,6 +23,9 @@ router.get('/', optionalAuth, listCars);
 
 // GET /api/cars/my-listings — Seller's own listings (must come before :slug)
 router.get('/my-listings', authenticate, rbac('Seller', 'Admin', 'Super Admin'), getMyListings);
+
+// GET /api/cars/seller/:sellerId — Public seller profile
+router.get('/seller/:sellerId', getSellerProfile);
 
 // GET /api/cars/:slug — Single car details
 router.get('/:slug', optionalAuth, getCarBySlug);

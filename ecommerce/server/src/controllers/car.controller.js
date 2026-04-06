@@ -396,9 +396,23 @@ function buildPublicWhere(query) {
     status: 'Approved',
   };
 
-  if (query.brand) where.brandId = parseInt(query.brand, 10);
+  if (query.brand) {
+    const parsed = parseInt(query.brand, 10);
+    if (!isNaN(parsed)) {
+      where.brandId = parsed;
+    } else {
+      where.brand = { slug: query.brand };
+    }
+  }
   if (query.model) where.modelId = parseInt(query.model, 10);
-  if (query.vehicleType) where.vehicleTypeId = parseInt(query.vehicleType, 10);
+  if (query.vehicleType) {
+    const parsed = parseInt(query.vehicleType, 10);
+    if (!isNaN(parsed)) {
+      where.vehicleTypeId = parsed;
+    } else {
+      where.vehicleType = { slug: query.vehicleType };
+    }
+  }
   if (query.fuelType) where.fuelType = query.fuelType;
   if (query.transmission) where.transmission = query.transmission;
   if (query.city) where.city = { contains: query.city, mode: 'insensitive' };
@@ -460,6 +474,65 @@ function buildOrderBy(sort) {
   }
 }
 
+/**
+ * GET /api/cars/seller/:sellerId — Public seller profile with their listings.
+ */
+async function getSellerProfile(req, res, next) {
+  try {
+    const seller = await prisma.user.findUnique({
+      where: { id: req.params.sellerId },
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        createdAt: true,
+        role: { select: { name: true } },
+      },
+    });
+
+    if (!seller) {
+      return res.status(404).json({ error: 'Seller not found.' });
+    }
+
+    const { page, limit, skip } = parsePagination(req.query);
+
+    const where = {
+      sellerId: seller.id,
+      status: 'Approved',
+      isDeleted: false,
+    };
+
+    const [listings, total] = await Promise.all([
+      prisma.car.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+        include: {
+          brand: true,
+          model: true,
+          vehicleType: true,
+          images: { where: { isPrimary: true }, take: 1 },
+        },
+      }),
+      prisma.car.count({ where }),
+    ]);
+
+    res.json({
+      seller: {
+        id: seller.id,
+        name: seller.name,
+        phone: seller.phone,
+        memberSince: seller.createdAt,
+        role: seller.role.name,
+      },
+      listings: paginatedResponse(listings, total, page, limit),
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   listCars,
   getCarBySlug,
@@ -469,4 +542,5 @@ module.exports = {
   deleteCar,
   uploadImages,
   deleteImage,
+  getSellerProfile,
 };

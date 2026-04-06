@@ -1,7 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../../context/AuthContext';
-import { Car, Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Plus, Heart, Shield, UserPlus } from 'lucide-react';
+import { inquiriesAPI } from '../../api/inquiries';
+import { Car, Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Plus, Heart, Shield, UserPlus, MessageSquare } from 'lucide-react';
 
 export default function Navbar() {
   const { user, isAuthenticated, isSeller, isAdmin, isUser, logout } = useAuth();
@@ -14,6 +16,15 @@ export default function Navbar() {
     setUserMenuOpen(false);
     navigate('/');
   };
+
+  const { data: inquiryCountData } = useQuery({
+    queryKey: ['inquiryCount'],
+    queryFn: () => inquiriesAPI.adminCount().then(r => r.data),
+    enabled: isAdmin,
+    refetchInterval: 30000,
+  });
+
+  const newInquiryCount = inquiryCountData?.count || 0;
 
   return (
     <header className="sticky top-0 z-50 bg-primary-header shadow-lg">
@@ -45,8 +56,13 @@ export default function Navbar() {
             </>
           )}
           {isAdmin && (
-            <Link to="/admin/dashboard" className="text-sm font-medium text-white hover:text-primary-on-dark transition-colors flex items-center gap-1">
+            <Link to="/admin/dashboard" className="relative text-sm font-medium text-white hover:text-primary-on-dark transition-colors flex items-center gap-1">
               <Shield className="h-4 w-4" /> Admin
+              {newInquiryCount > 0 && (
+                <span className="absolute -right-3 -top-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-primary-accent px-1 text-[10px] font-bold text-white">
+                  {newInquiryCount}
+                </span>
+              )}
             </Link>
           )}
         </nav>
@@ -92,6 +108,20 @@ export default function Navbar() {
                       className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-surface-card"
                     >
                       <Shield className="h-4 w-4" /> Admin Panel
+                    </Link>
+                  )}
+                  {isAdmin && (
+                    <Link
+                      to="/admin/inquiries"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-surface-card"
+                    >
+                      <MessageSquare className="h-4 w-4" /> Inquiries
+                      {newInquiryCount > 0 && (
+                        <span className="ml-auto rounded-full bg-primary-accent px-1.5 py-0.5 text-[10px] font-bold text-white">
+                          {newInquiryCount}
+                        </span>
+                      )}
                     </Link>
                   )}
                   <button
