@@ -8,10 +8,10 @@ router.use(authenticate);
 // GET /api/favorites
 router.get('/', listFavorites);
 
-// POST /api/favorites/:carId
-router.post('/:carId', addFavorite);
+// POST /api/favorites/:listingId
+router.post('/:listingId', addFavorite);
 
-// DELETE /api/favorites/:carId
-router.delete('/:carId', removeFavorite);
+// DELETE /api/favorites/:listingId
+router.delete('/:listingId', removeFavorite);
 
 module.exports = router;

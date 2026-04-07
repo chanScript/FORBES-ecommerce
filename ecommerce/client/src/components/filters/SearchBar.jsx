@@ -14,7 +14,7 @@ export default function SearchBar({ value, onSearch }) {
       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary-muted" />
       <input
         type="text"
-        placeholder="Search cars by brand, model, or keyword..."
+        placeholder="Search listings by keyword..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
         className="w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-20 text-sm focus:border-primary-accent focus:outline-none focus:ring-1 focus:ring-primary-accent"

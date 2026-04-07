@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { carsAPI, favoritesAPI, filtersAPI } from '../api/cars';
+import { listingsAPI, favoritesAPI, filtersAPI } from '../api/cars';
 import { useAuth } from '../context/AuthContext';
 import CarGrid from '../components/cars/CarGrid';
 import CarCardSkeleton from '../components/ui/CarCardSkeleton';
@@ -9,9 +9,33 @@ import FilterSidebar from '../components/filters/FilterSidebar';
 import SearchBar from '../components/filters/SearchBar';
 import SortDropdown from '../components/filters/SortDropdown';
 import Pagination from '../components/ui/Pagination';
-import { SlidersHorizontal, X, Car, Truck, ChevronRight } from 'lucide-react';
+import { SlidersHorizontal, X, Car, Truck, Home, Building2, LandPlot } from 'lucide-react';
+
+const CATEGORY_TABS = [
+  { key: '', label: 'All', icon: null },
+  { key: 'Vehicle', label: 'Vehicles', icon: Car },
+  { key: 'RealEstate', label: 'Real Estate', icon: Home },
+];
+
+const SUBTYPE_TABS = {
+  Vehicle: [
+    { key: '', label: 'All Vehicles' },
+    { key: 'Car', label: 'Cars' },
+    { key: 'Motorcycle', label: 'Motorcycles' },
+    { key: 'Truck', label: 'Trucks' },
+  ],
+  RealEstate: [
+    { key: '', label: 'All Properties' },
+    { key: 'HouseAndLot', label: 'House & Lot' },
+    { key: 'VacantLot', label: 'Vacant Lots' },
+    { key: 'CommercialProperty', label: 'Commercial' },
+  ],
+};
 
 const DEFAULT_FILTERS = {
+  category: '',
+  vehicleSubtype: '',
+  realEstateSubtype: '',
   brand: '',
   model: '',
   vehicleType: '',
@@ -42,10 +66,10 @@ export default function HomePage() {
     limit: 12,
   };
 
-  // Fetch cars
+  // Fetch listings
   const { data, isLoading } = useQuery({
-    queryKey: ['cars', queryParams],
-    queryFn: () => carsAPI.list(queryParams).then(r => r.data),
+    queryKey: ['listings', queryParams],
+    queryFn: () => listingsAPI.list(queryParams).then(r => r.data),
     placeholderData: (prev) => prev,
   });
 
@@ -56,15 +80,15 @@ export default function HomePage() {
     enabled: isAuthenticated,
   });
 
-  const favoritedIds = favoritesData?.map(f => f.carId) || [];
+  const favoritedIds = favoritesData?.map(f => f.listingId) || [];
 
   // Toggle favorite mutation
   const toggleFavMutation = useMutation({
-    mutationFn: (carId) => {
-      if (favoritedIds.includes(carId)) {
-        return favoritesAPI.remove(carId);
+    mutationFn: (listingId) => {
+      if (favoritedIds.includes(listingId)) {
+        return favoritesAPI.remove(listingId);
       }
-      return favoritesAPI.add(carId);
+      return favoritesAPI.add(listingId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
@@ -78,16 +102,30 @@ export default function HomePage() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const handleToggleFavorite = useCallback((carId) => {
+  const handleToggleFavorite = useCallback((listingId) => {
     if (!isAuthenticated) {
       window.location.href = '/login';
       return;
     }
-    toggleFavMutation.mutate(carId);
+    toggleFavMutation.mutate(listingId);
   }, [isAuthenticated, toggleFavMutation]);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
+    setPage(1);
+  };
+
+  const handleCategoryChange = (category) => {
+    setFilters({ ...DEFAULT_FILTERS, category, search: filters.search });
+    setPage(1);
+  };
+
+  const handleSubtypeChange = (subtype) => {
+    if (filters.category === 'Vehicle') {
+      setFilters({ ...filters, vehicleSubtype: subtype });
+    } else if (filters.category === 'RealEstate') {
+      setFilters({ ...filters, realEstateSubtype: subtype });
+    }
     setPage(1);
   };
 
@@ -106,87 +144,53 @@ export default function HomePage() {
     <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8">
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Cars for Sale</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Marketplace</h1>
         <p className="mt-1 text-sm text-secondary-muted">
-          {data?.pagination?.total?.toLocaleString() || 0} cars available
+          {data?.pagination?.total?.toLocaleString() || 0} listings available
         </p>
       </div>
 
-      {/* Vehicle Type Navigation */}
-      {filterOptions?.vehicleTypes?.length > 0 && (
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-gray-900">Browse by Type</h2>
-            {filters.vehicleType && (
-              <button
-                onClick={() => handleFilterChange({ ...filters, vehicleType: '' })}
-                className="text-xs text-primary-accent hover:underline"
-              >
-                Clear type filter
-              </button>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {filterOptions.vehicleTypes
-              .filter(vt => vt._count?.cars > 0)
-              .map((vt) => (
-                <button
-                  key={vt.id}
-                  onClick={() => handleFilterChange({ ...filters, vehicleType: vt.slug })}
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all ${
-                    filters.vehicleType === vt.slug
-                      ? 'border-primary-accent bg-primary-accent text-white'
-                      : 'border-gray-200 bg-white text-gray-700 hover:border-primary-accent hover:text-primary-accent'
-                  }`}
-                >
-                  <Truck className="h-3.5 w-3.5" />
-                  {vt.name}
-                  <span className={`text-xs ${filters.vehicleType === vt.slug ? 'text-white/80' : 'text-secondary-muted'}`}>
-                    ({vt._count?.cars})
-                  </span>
-                </button>
-              ))}
-          </div>
+      {/* Category Tabs */}
+      <div className="mb-6">
+        <div className="flex gap-1 border-b">
+          {CATEGORY_TABS.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => handleCategoryChange(tab.key)}
+              className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium transition-colors ${
+                filters.category === tab.key
+                  ? 'border-b-2 border-primary-accent text-primary-accent'
+                  : 'text-secondary-muted hover:text-gray-700'
+              }`}
+            >
+              {tab.icon && <tab.icon className="h-4 w-4" />}
+              {tab.label}
+            </button>
+          ))}
         </div>
-      )}
 
-      {/* Brand Navigation */}
-      {filterOptions?.brands?.length > 0 && (
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-gray-900">Browse by Brand</h2>
-            {filters.brand && (
-              <button
-                onClick={() => handleFilterChange({ ...filters, brand: '', model: '' })}
-                className="text-xs text-primary-accent hover:underline"
-              >
-                Clear brand filter
-              </button>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {filterOptions.brands
-              .filter(b => b._count?.cars > 0)
-              .map((brand) => (
+        {/* Subtype pills */}
+        {filters.category && SUBTYPE_TABS[filters.category] && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {SUBTYPE_TABS[filters.category].map((sub) => {
+              const activeSubtype = filters.category === 'Vehicle' ? filters.vehicleSubtype : filters.realEstateSubtype;
+              return (
                 <button
-                  key={brand.id}
-                  onClick={() => handleFilterChange({ ...filters, brand: brand.slug, model: '' })}
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all ${
-                    filters.brand === brand.slug
+                  key={sub.key}
+                  onClick={() => handleSubtypeChange(sub.key)}
+                  className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all ${
+                    activeSubtype === sub.key
                       ? 'border-primary-accent bg-primary-accent text-white'
                       : 'border-gray-200 bg-white text-gray-700 hover:border-primary-accent hover:text-primary-accent'
                   }`}
                 >
-                  <Car className="h-3.5 w-3.5" />
-                  {brand.name}
-                  <span className={`text-xs ${filters.brand === brand.slug ? 'text-white/80' : 'text-secondary-muted'}`}>
-                    ({brand._count?.cars})
-                  </span>
+                  {sub.label}
                 </button>
-              ))}
+              );
+            })}
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Search + Sort Bar */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

@@ -2,11 +2,15 @@ const prisma = require('../config/db');
 
 /**
  * GET /api/filters/options — Dynamic filter metadata for the sidebar.
- * Returns brands, vehicle types, cities, fuel types, etc. with counts.
  */
 async function getFilterOptions(req, res, next) {
   try {
     const baseWhere = { isDeleted: false, status: 'Approved' };
+
+    // Apply category filter if provided
+    if (req.query.category) baseWhere.category = req.query.category;
+    if (req.query.vehicleSubtype) baseWhere.vehicleSubtype = req.query.vehicleSubtype;
+    if (req.query.realEstateSubtype) baseWhere.realEstateSubtype = req.query.realEstateSubtype;
 
     const [
       brands,
@@ -16,74 +20,74 @@ async function getFilterOptions(req, res, next) {
       cities,
       fuelCounts,
       transmissionCounts,
+      categoryCounts,
       totalCount,
     ] = await Promise.all([
-      // Brands with count
       prisma.brand.findMany({
         orderBy: { name: 'asc' },
         select: {
           id: true,
           name: true,
           slug: true,
-          _count: { select: { cars: { where: baseWhere } } },
+          _count: { select: { listings: { where: baseWhere } } },
         },
       }),
 
-      // Vehicle types with count
       prisma.vehicleType.findMany({
         orderBy: { name: 'asc' },
         select: {
           id: true,
           name: true,
           slug: true,
-          _count: { select: { cars: { where: baseWhere } } },
+          _count: { select: { listings: { where: baseWhere } } },
         },
       }),
 
-      // Price range
-      prisma.car.aggregate({
+      prisma.listing.aggregate({
         where: baseWhere,
         _min: { price: true },
         _max: { price: true },
       }),
 
-      // Year range
-      prisma.car.aggregate({
+      prisma.listing.aggregate({
         where: baseWhere,
         _min: { year: true },
         _max: { year: true },
       }),
 
-      // Cities with count
-      prisma.car.groupBy({
+      prisma.listing.groupBy({
         by: ['city'],
         where: baseWhere,
         _count: { city: true },
         orderBy: { _count: { city: 'desc' } },
       }),
 
-      // Fuel type counts
-      prisma.car.groupBy({
+      prisma.listing.groupBy({
         by: ['fuelType'],
-        where: baseWhere,
+        where: { ...baseWhere, fuelType: { not: null } },
         _count: { fuelType: true },
       }),
 
-      // Transmission counts
-      prisma.car.groupBy({
+      prisma.listing.groupBy({
         by: ['transmission'],
-        where: baseWhere,
+        where: { ...baseWhere, transmission: { not: null } },
         _count: { transmission: true },
       }),
 
-      // Total approved count
-      prisma.car.count({ where: baseWhere }),
+      prisma.listing.groupBy({
+        by: ['category'],
+        where: { isDeleted: false, status: 'Approved' },
+        _count: { category: true },
+      }),
+
+      prisma.listing.count({ where: baseWhere }),
     ]);
 
     res.json({
       totalCount,
-      brands: brands.filter(b => b._count.cars > 0),
-      vehicleTypes: vehicleTypes.filter(vt => vt._count.cars > 0),
+      categories: categoryCounts.map(c => ({ name: c.category, count: c._count.category })),
+      brands: brands.filter(b => b._count.listings > 0),
+      vehicleTypes: vehicleTypes.filter(vt => vt._count.listings > 0),
       priceRange: {
         min: priceRange._min.price ? Number(priceRange._min.price) : 0,
         max: priceRange._max.price ? Number(priceRange._max.price) : 0,

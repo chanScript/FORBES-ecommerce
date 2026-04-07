@@ -1,8 +1,9 @@
 // ============================================================
-// Prisma Schema — Ecommerceplace
+// Prisma Schema — Multi-Category Ecommerce Platform
 // ============================================================
 // Stack: Prisma ORM + MySQL
 // Features: JWT Auth, RBAC, Soft Delete, Audit Logs, Cloudinary
+// Categories: Vehicles (Car, Motorcycle, Truck) + Real Estate
 // ============================================================
 
 generator client {
@@ -61,18 +62,17 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relations
-  listings  Car[]      @relation("SellerCars")
-  favorites Favorite[]
-  auditLogs AuditLog[]
-  inquiries Inquiry[]  @relation("UserInquiries")
+  listings         Listing[]     @relation("SellerListings")
+  favorites        Favorite[]
+  auditLogs        AuditLog[]
+  inquiries        Inquiry[]     @relation("UserInquiries")
 
-  // Seller request system
-  sellerRequests         SellerRequest[] @relation("UserSellerRequests")
-  reviewedSellerRequests SellerRequest[] @relation("ReviewedSellerRequests")
+  // Soft delete tracking (who deleted/approved what)
+  deletedListings  Listing[]     @relation("DeletedByListings")
+  approvedListings Listing[]     @relation("ApprovedByListings")
 
-  // Soft delete tracking (who deleted what)
-  deletedCars    Car[] @relation("DeletedByCars")
-  approvedCars   Car[] @relation("ApprovedByCars")
+  // Seller submission reviews
+  reviewedSubmissions SellerSubmission[] @relation("ReviewedSubmissions")
 
   @@index([email])
   @@index([roleId])
@@ -80,44 +80,24 @@ model User {
 }
 
 // ============================================================
-// Ecommerceplace
+// Shared Enums
 // ============================================================
 
-model Brand {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  slug      String   @unique
-  logoUrl   String?
-  createdAt DateTime @default(now())
-
-  models Model[]
-  cars   Car[]
-
-  @@map("brands")
+enum ListingCategory {
+  Vehicle
+  RealEstate
 }
 
-model Model {
-  id        Int      @id @default(autoincrement())
-  name      String
-  slug      String   @unique
-  brandId   Int
-  brand     Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-
-  cars Car[]
-
-  @@index([brandId])
-  @@map("models")
+enum VehicleSubtype {
+  Car
+  Motorcycle
+  Truck
 }
 
-model VehicleType {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-  slug String @unique
-
-  cars Car[]
-
-  @@map("vehicle_types")
+enum RealEstateSubtype {
+  HouseAndLot
+  VacantLot
+  CommercialProperty
 }
 
 enum FuelType {
@@ -133,9 +113,15 @@ enum Transmission {
   Manual
 }
 
-enum CarCondition {
+enum ListingCondition {
   New
   Used
+}
+
+enum FurnishingStatus {
+  Unfurnished
+  SemiFurnished
+  FullyFurnished
 }
 
 enum ListingStatus {
@@ -145,54 +131,122 @@ enum ListingStatus {
   Sold
 }
 
-model Car {
-  id              String        @id @default(uuid()) @db.VarChar(36)
-  title           String        @db.VarChar(500)
-  slug            String        @unique @db.VarChar(500)
-  description     String?       @db.Text
-  price           Decimal       @db.Decimal(12, 2)
-  year            Int
-  mileage         Int
-  fuelType        FuelType
-  transmission    Transmission
+// ============================================================
+// Vehicle Reference Data (Brands, Models, Body Types)
+// ============================================================
+
+model Brand {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String   @unique
+  logoUrl   String?
+  createdAt DateTime @default(now())
+
+  models   Model[]
+  listings Listing[]
+
+  @@map("brands")
+}
+
+model Model {
+  id        Int      @id @default(autoincrement())
+  name      String
+  slug      String   @unique
+  brandId   Int
+  brand     Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  listings Listing[]
+
+  @@index([brandId])
+  @@map("models")
+}
+
+model VehicleType {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  slug String @unique
+
+  listings Listing[]
+
+  @@map("vehicle_types")
+}
+
+// ============================================================
+// Listings (Multi-Category: Vehicle + Real Estate)
+// ============================================================
+
+model Listing {
+  id              String           @id @default(uuid()) @db.VarChar(36)
+  title           String           @db.VarChar(500)
+  slug            String           @unique @db.VarChar(500)
+  description     String?          @db.Text
+  price           Decimal          @db.Decimal(12, 2)
+  city            String           @db.VarChar(255)
+  condition       ListingCondition @default(Used)
+  status          ListingStatus    @default(Pending)
+
+  // ── Category ──
+  category         ListingCategory
+  vehicleSubtype   VehicleSubtype?
+  realEstateSubtype RealEstateSubtype?
+
+  // ── Vehicle-specific fields (nullable — only for Vehicle category) ──
+  year            Int?
+  mileage         Int?
+  fuelType        FuelType?
+  transmission    Transmission?
   engineCapacity  Int?
   color           String?
   seats           Int?
-  city            String        @db.VarChar(255)
-  condition       CarCondition  @default(Used)
-  status          ListingStatus @default(Pending)
+  brandId         Int?
+  brand           Brand?       @relation(fields: [brandId], references: [id])
+  modelId         Int?
+  model           Model?       @relation(fields: [modelId], references: [id])
+  vehicleTypeId   Int?
+  vehicleType     VehicleType? @relation(fields: [vehicleTypeId], references: [id])
 
-  // Foreign keys
-  brandId       Int
-  brand         Brand       @relation(fields: [brandId], references: [id])
-  modelId       Int
-  model         Model       @relation(fields: [modelId], references: [id])
-  vehicleTypeId Int
-  vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id])
+  // ── Real Estate-specific fields (nullable — only for RealEstate category) ──
+  lotArea          Decimal?          @db.Decimal(10, 2)
+  floorArea        Decimal?          @db.Decimal(10, 2)
+  bedrooms         Int?
+  bathrooms        Int?
+  parkingSpaces    Int?
+  furnishingStatus FurnishingStatus?
+  amenities        String?           @db.Text
+  propertyAge      Int?
+  titleType        String?           @db.VarChar(100)
+
+  // ── Seller ──
   sellerId      String      @db.VarChar(36)
-  seller        User        @relation("SellerCars", fields: [sellerId], references: [id])
+  seller        User        @relation("SellerListings", fields: [sellerId], references: [id])
 
-  // Approval tracking
-  approvedAt    DateTime?
-  approvedBy    String?     @db.VarChar(36)
-  approvedByUser User?     @relation("ApprovedByCars", fields: [approvedBy], references: [id])
-  rejectionReason String?  @db.Text
+  // ── Approval tracking ──
+  approvedAt      DateTime?
+  approvedBy      String?    @db.VarChar(36)
+  approvedByUser  User?      @relation("ApprovedByListings", fields: [approvedBy], references: [id])
+  rejectionReason String?    @db.Text
 
-  // Soft delete (Trashbin)
-  isDeleted  Boolean   @default(false)
-  deletedAt  DateTime?
-  deletedBy  String?   @db.VarChar(36)
-  deletedByUser User?  @relation("DeletedByCars", fields: [deletedBy], references: [id])
+  // ── Soft delete (Trashbin) ──
+  isDeleted     Boolean   @default(false)
+  deletedAt     DateTime?
+  deletedBy     String?   @db.VarChar(36)
+  deletedByUser User?     @relation("DeletedByListings", fields: [deletedBy], references: [id])
+
+  // ── Source: link to the seller submission that created this listing ──
+  sourceSubmissionId Int?  @unique
+  sourceSubmission   SellerSubmission? @relation("ConvertedListing", fields: [sourceSubmissionId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  images    CarImage[]
+  images    ListingImage[]
   favorites Favorite[]
   inquiries Inquiry[]
 
   @@index([status])
+  @@index([category])
   @@index([brandId])
   @@index([modelId])
   @@index([vehicleTypeId])
@@ -202,21 +256,21 @@ model Car {
   @@index([price])
   @@index([year])
   @@index([city])
-  @@map("cars")
+  @@map("listings")
 }
 
-model CarImage {
+model ListingImage {
   id        Int      @id @default(autoincrement())
-  carId     String   @db.VarChar(36)
-  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  listingId String   @db.VarChar(36)
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
   url       String   @db.VarChar(500)
   publicId  String   @db.VarChar(255)
   isPrimary Boolean  @default(false)
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
 
-  @@index([carId])
-  @@map("car_images")
+  @@index([listingId])
+  @@map("listing_images")
 }
 
 // ============================================================
@@ -227,11 +281,11 @@ model Favorite {
   id        Int      @id @default(autoincrement())
   userId    String   @db.VarChar(36)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  carId     String   @db.VarChar(36)
-  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  listingId String   @db.VarChar(36)
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
-  @@unique([userId, carId])
+  @@unique([userId, listingId])
   @@index([userId])
   @@map("favorites")
 }
@@ -259,36 +313,58 @@ model AuditLog {
 }
 
 // ============================================================
-// Seller Request System
+// Seller Submissions (Anonymous — No Account Required)
 // ============================================================
 
-enum SellerRequestStatus {
+enum SubmissionStatus {
   Pending
   Approved
   Rejected
 }
 
-model SellerRequest {
-  id         Int                 @id @default(autoincrement())
-  userId     String              @db.VarChar(36)
-  user       User                @relation("UserSellerRequests", fields: [userId], references: [id], onDelete: Cascade)
-  status     SellerRequestStatus @default(Pending)
-  reason     String?             @db.Text
-  adminNote  String?             @db.Text
-  reviewedBy String?             @db.VarChar(36)
-  reviewer   User?               @relation("ReviewedSellerRequests", fields: [reviewedBy], references: [id])
-  reviewedAt DateTime?
-  createdAt  DateTime            @default(now())
-  updatedAt  DateTime            @updatedAt
+model SellerSubmission {
+  id                Int              @id @default(autoincrement())
+  fullName          String           @db.VarChar(255)
+  email             String           @db.VarChar(255)
+  phone             String           @db.VarChar(50)
+  category          ListingCategory
+  vehicleSubtype    VehicleSubtype?
+  realEstateSubtype RealEstateSubtype?
+  propertyDetails   String           @db.Text
+  price             Decimal?         @db.Decimal(12, 2)
+  status            SubmissionStatus @default(Pending)
+  adminNote         String?          @db.Text
+  reviewedBy        String?          @db.VarChar(36)
+  reviewer          User?            @relation("ReviewedSubmissions", fields: [reviewedBy], references: [id])
+  reviewedAt        DateTime?
 
-  @@index([userId])
+  // Link to the listing created from this submission
+  convertedListing  Listing?         @relation("ConvertedListing")
+
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  images            SellerSubmissionImage[]
+
   @@index([status])
   @@index([createdAt])
-  @@map("seller_requests")
+  @@map("seller_submissions")
+}
+
+model SellerSubmissionImage {
+  id           Int              @id @default(autoincrement())
+  submissionId Int
+  submission   SellerSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  url          String           @db.VarChar(500)
+  publicId     String           @db.VarChar(255)
+  createdAt    DateTime         @default(now())
+
+  @@index([submissionId])
+  @@map("seller_submission_images")
 }
 
 // ============================================================
-// Product Inquiries (User Interest → Admin Notification)
+// Product Inquiries (Anonymous or Authenticated)
 // ============================================================
 
 enum InquiryStatus {
@@ -299,16 +375,24 @@ enum InquiryStatus {
 
 model Inquiry {
   id        Int           @id @default(autoincrement())
-  userId    String        @db.VarChar(36)
-  user      User          @relation("UserInquiries", fields: [userId], references: [id], onDelete: Cascade)
-  carId     String        @db.VarChar(36)
-  car       Car           @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  // Optional user (authenticated inquiries)
+  userId    String?       @db.VarChar(36)
+  user      User?         @relation("UserInquiries", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Anonymous contact info (always stored)
+  name      String        @db.VarChar(255)
+  email     String        @db.VarChar(255)
+  phone     String?       @db.VarChar(50)
+
+  listingId String        @db.VarChar(36)
+  listing   Listing       @relation(fields: [listingId], references: [id], onDelete: Cascade)
   message   String?       @db.Text
   status    InquiryStatus @default(New)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
-  @@unique([userId, carId])
+  @@index([listingId])
   @@index([status])
   @@index([createdAt])
   @@map("inquiries")

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../../context/AuthContext';
 import { inquiriesAPI } from '../../api/inquiries';
-import { Car, Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Plus, Heart, Shield, UserPlus, MessageSquare } from 'lucide-react';
+import { Car, Menu, X, User, ChevronDown, LogOut, LayoutDashboard, Plus, Heart, Shield, Send, MessageSquare } from 'lucide-react';
 
 export default function Navbar() {
   const { user, isAuthenticated, isSeller, isAdmin, isUser, logout } = useAuth();
@@ -38,20 +38,18 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-6 lg:flex">
           <Link to="/" className="text-sm font-medium text-white hover:text-primary-on-dark transition-colors">
-            Browse Cars
+            Browse Listings
           </Link>
-          {isAuthenticated && !isSeller && (
-            <Link to="/seller/dashboard" className="text-sm font-medium text-primary-on-dark hover:text-white transition-colors flex items-center gap-1">
-              <UserPlus className="h-4 w-4" /> Become a Seller
-            </Link>
-          )}
+          <Link to="/sell" className="text-sm font-medium text-primary-on-dark hover:text-white transition-colors flex items-center gap-1">
+            <Send className="h-4 w-4" /> Sell Your Property
+          </Link>
           {isSeller && (
             <>
               <Link to="/seller/dashboard" className="text-sm font-medium text-white hover:text-primary-on-dark transition-colors">
                 My Listings
               </Link>
               <Link to="/seller/submit" className="btn-primary flex items-center gap-1.5 !py-2 !px-4 text-sm">
-                <Plus className="h-4 w-4" /> Sell a Car
+                <Plus className="h-4 w-4" /> New Listing
               </Link>
             </>
           )}
@@ -138,9 +136,9 @@ export default function Navbar() {
               <Link to="/login" className="text-sm font-medium text-white hover:text-primary-on-dark transition-colors">
                 Login
               </Link>
-              <Link to="/register" className="btn-primary !py-2 !px-4 text-sm">
+              {/* <Link to="/register" className="btn-primary !py-2 !px-4 text-sm">
                 Register
-              </Link>
+              </Link> */}
             </div>
           )}
         </div>
@@ -159,20 +157,18 @@ export default function Navbar() {
         <div className="border-t border-white/10 bg-primary-header px-4 pb-4 lg:hidden">
           <nav className="flex flex-col gap-2 pt-2">
             <Link to="/" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-white hover:bg-primary-blue/50">
-              Browse Cars
+              Browse Listings
             </Link>
-            {isAuthenticated && !isSeller && (
-              <Link to="/seller/dashboard" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-primary-on-dark hover:bg-primary-blue/50">
-                Become a Seller
-              </Link>
-            )}
+            <Link to="/sell" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-primary-on-dark hover:bg-primary-blue/50">
+              Sell Your Property
+            </Link>
             {isSeller && (
               <>
                 <Link to="/seller/dashboard" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-white hover:bg-primary-blue/50">
                   My Listings
                 </Link>
                 <Link to="/seller/submit" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-sm font-medium text-primary-on-dark hover:bg-primary-blue/50">
-                  + Sell a Car
+                  + New Listing
                 </Link>
               </>
             )}

@@ -79,7 +79,7 @@ export default function SellerDetailsModal({ sellerId, onClose }) {
                     {data.listings.data.slice(0, 6).map((car) => (
                       <Link
                         key={car.id}
-                        to={`/cars/${car.slug}`}
+                        to={`/listings/${car.slug}`}
                         onClick={onClose}
                         className="flex items-center gap-3 rounded-lg border border-gray-100 p-3 hover:bg-surface-card transition-colors group"
                       >

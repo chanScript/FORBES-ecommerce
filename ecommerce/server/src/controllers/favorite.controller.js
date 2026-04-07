@@ -9,7 +9,7 @@ async function listFavorites(req, res, next) {
       where: { userId: req.user.id },
       orderBy: { createdAt: 'desc' },
       include: {
-        car: {
+        listing: {
           include: {
             brand: true,
             model: true,
@@ -20,9 +20,8 @@ async function listFavorites(req, res, next) {
       },
     });
 
-    // Filter out deleted/unapproved cars from favorites view
     const activeFavorites = favorites.filter(
-      f => !f.car.isDeleted && f.car.status === 'Approved'
+      f => !f.listing.isDeleted && f.listing.status === 'Approved'
     );
 
     res.json(activeFavorites);
@@ -32,20 +31,20 @@ async function listFavorites(req, res, next) {
 }
 
 /**
- * POST /api/favorites/:carId — Add to favorites.
+ * POST /api/favorites/:listingId — Add to favorites.
  */
 async function addFavorite(req, res, next) {
   try {
-    const car = await prisma.car.findUnique({ where: { id: req.params.carId } });
+    const listing = await prisma.listing.findUnique({ where: { id: req.params.listingId } });
 
-    if (!car || car.isDeleted || car.status !== 'Approved') {
-      return res.status(404).json({ error: 'Car not found.' });
+    if (!listing || listing.isDeleted || listing.status !== 'Approved') {
+      return res.status(404).json({ error: 'Listing not found.' });
     }
 
     const favorite = await prisma.favorite.create({
       data: {
         userId: req.user.id,
-        carId: req.params.carId,
+        listingId: req.params.listingId,
       },
     });
 
@@ -59,15 +58,15 @@ async function addFavorite(req, res, next) {
 }
 
 /**
- * DELETE /api/favorites/:carId — Remove from favorites.
+ * DELETE /api/favorites/:listingId — Remove from favorites.
  */
 async function removeFavorite(req, res, next) {
   try {
     await prisma.favorite.delete({
       where: {
-        userId_carId: {
+        userId_listingId: {
           userId: req.user.id,
-          carId: req.params.carId,
+          listingId: req.params.listingId,
         },
       },
     });

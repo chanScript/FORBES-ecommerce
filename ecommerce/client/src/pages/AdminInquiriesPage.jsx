@@ -85,22 +85,22 @@ export default function AdminInquiriesPage() {
                 <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                   {/* Left: User + Car Info */}
                   <div className="flex-1 space-y-3">
-                    {/* Interested User */}
+                    {/* Interested Customer */}
                     <div>
                       <span className="text-xs font-medium text-secondary-muted">Interested Customer</span>
                       <div className="mt-1 flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-header text-primary-on-dark font-bold">
-                          {inquiry.user?.name?.charAt(0)?.toUpperCase()}
+                          {inquiry.name?.charAt(0)?.toUpperCase()}
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-900">{inquiry.user?.name}</p>
+                          <p className="font-semibold text-gray-900">{inquiry.name}</p>
                           <div className="flex flex-wrap items-center gap-2 text-xs text-secondary-muted">
                             <span className="inline-flex items-center gap-1">
-                              <Mail className="h-3 w-3" /> {inquiry.user?.email}
+                              <Mail className="h-3 w-3" /> {inquiry.email}
                             </span>
-                            {inquiry.user?.phone && (
-                              <a href={`tel:${inquiry.user.phone}`} className="inline-flex items-center gap-1 text-primary-accent hover:underline">
-                                <Phone className="h-3 w-3" /> {inquiry.user.phone}
+                            {inquiry.phone && (
+                              <a href={`tel:${inquiry.phone}`} className="inline-flex items-center gap-1 text-primary-accent hover:underline">
+                                <Phone className="h-3 w-3" /> {inquiry.phone}
                               </a>
                             )}
                           </div>
@@ -108,32 +108,32 @@ export default function AdminInquiriesPage() {
                       </div>
                     </div>
 
-                    {/* Vehicle */}
+                    {/* Listing */}
                     <div>
-                      <span className="text-xs font-medium text-secondary-muted">Vehicle of Interest</span>
+                      <span className="text-xs font-medium text-secondary-muted">Listing of Interest</span>
                       <Link
-                        to={`/cars/${inquiry.car?.slug}`}
+                        to={`/listings/${inquiry.listing?.slug}`}
                         className="mt-1 flex items-center gap-3 rounded-lg border p-2 hover:bg-surface-card transition-colors group"
                       >
                         <div className="h-12 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                          {inquiry.car?.images?.[0]?.url ? (
-                            <img src={inquiry.car.images[0].url} alt="" className="h-full w-full object-cover" />
+                          {inquiry.listing?.images?.[0]?.url ? (
+                            <img src={inquiry.listing.images[0].url} alt="" className="h-full w-full object-cover" />
                           ) : (
                             <div className="flex h-full items-center justify-center"><Car className="h-4 w-4 text-gray-400" /></div>
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-primary-accent">{inquiry.car?.title}</p>
-                          <p className="text-xs text-primary-accent font-bold">{formatPrice(inquiry.car?.price)}</p>
+                          <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-primary-accent">{inquiry.listing?.title}</p>
+                          <p className="text-xs text-primary-accent font-bold">{formatPrice(inquiry.listing?.price)}</p>
                         </div>
                         <ExternalLink className="h-4 w-4 text-gray-300 flex-shrink-0" />
                       </Link>
                     </div>
 
                     {/* Seller */}
-                    {inquiry.car?.seller && (
+                    {inquiry.listing?.seller && (
                       <div className="text-xs text-secondary-muted">
-                        <span className="font-medium">Seller:</span> {inquiry.car.seller.name} ({inquiry.car.seller.email})
+                        <span className="font-medium">Seller:</span> {inquiry.listing.seller.name} ({inquiry.listing.seller.email})
                       </div>
                     )}
 

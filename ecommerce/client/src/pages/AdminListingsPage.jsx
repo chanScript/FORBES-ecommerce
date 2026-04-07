@@ -26,7 +26,7 @@ export default function AdminListingsPage() {
 
   // Queries
   const allQuery = useQuery({
-    queryKey: ['admin', 'allCars', page],
+    queryKey: ['admin', 'allListings', page],
     queryFn: () => adminAPI.listAll({ page, limit: 15 }).then(r => r.data),
     enabled: tab === 'all',
     placeholderData: (prev) => prev,
@@ -118,7 +118,7 @@ export default function AdminListingsPage() {
           ) : (
             <>
               {car.status === 'Approved' && car.slug && (
-                <a href={`/cars/${car.slug}`} target="_blank" rel="noreferrer" className="rounded p-1.5 text-gray-500 hover:bg-surface-card">
+                <a href={`/listings/${car.slug}`} target="_blank" rel="noreferrer" className="rounded p-1.5 text-gray-500 hover:bg-surface-card">
                   <Eye className="h-4 w-4" />
                 </a>
               )}
@@ -221,7 +221,7 @@ export default function AdminListingsPage() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-surface-card">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Car</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Listing</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Price</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>

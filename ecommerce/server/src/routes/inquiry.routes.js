@@ -1,19 +1,28 @@
 const router = require('express').Router();
-const { authenticate } = require('../middleware/auth.middleware');
+const { body } = require('express-validator');
+const { validate } = require('../middleware/validate.middleware');
+const { authenticate, optionalAuth } = require('../middleware/auth.middleware');
 const { rbac } = require('../middleware/rbac.middleware');
 const {
   createInquiry,
-  getMyInquiries,
-  checkInquiry,
   listInquiries,
   updateInquiryStatus,
   getNewInquiryCount,
 } = require('../controllers/inquiry.controller');
 
-// ---- Authenticated User Routes ----
-router.post('/:carId', authenticate, createInquiry);
-router.get('/my', authenticate, getMyInquiries);
-router.get('/check/:carId', authenticate, checkInquiry);
+// ---- Public: submit an inquiry (no login required) ----
+router.post(
+  '/:listingId',
+  optionalAuth,
+  [
+    body('name').trim().notEmpty().withMessage('Name is required.'),
+    body('email').isEmail().normalizeEmail().withMessage('Valid email is required.'),
+    body('phone').optional().trim(),
+    body('message').optional().trim(),
+  ],
+  validate,
+  createInquiry
+);
 
 // ---- Admin Routes ----
 router.get('/admin', authenticate, rbac('Admin', 'Super Admin'), listInquiries);

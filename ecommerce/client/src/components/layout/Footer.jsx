@@ -1,6 +1,10 @@
-import { Car } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 
 export default function Footer() {
+  const mainSiteBase = window.location.hostname === 'localhost'
+    ? 'http://localhost:8080'
+    : `http://${window.location.hostname}:8080`;
+
   return (
     <footer className="bg-primary-header text-white">
       <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
@@ -12,7 +16,7 @@ export default function Footer() {
               <span className="text-lg font-bold text-primary-on-dark">Ecommerce</span>
             </div>
             <p className="text-sm text-gray-400">
-              Your trusted Ecommerceplace. Buy and sell quality vehicles with confidence.
+              Your trusted marketplace. Buy and sell quality vehicles and properties with confidence.
             </p>
           </div>
 
@@ -20,8 +24,8 @@ export default function Footer() {
           <div>
             <h4 className="mb-3 text-sm font-semibold text-primary-on-dark">Quick Links</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="/" className="hover:text-white transition-colors">Browse Cars</a></li>
-              <li><a href="/seller/submit" className="hover:text-white transition-colors">Sell Your Car</a></li>
+              <li><a href="/" className="hover:text-white transition-colors">Browse Listings</a></li>
+              <li><a href="/sell" className="hover:text-white transition-colors">Sell Your Listing</a></li>
               <li><a href="/register" className="hover:text-white transition-colors">Create Account</a></li>
             </ul>
           </div>
@@ -30,9 +34,9 @@ export default function Footer() {
           <div>
             <h4 className="mb-3 text-sm font-semibold text-primary-on-dark">Main Site</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="/index.html" className="hover:text-white transition-colors">Back to Home</a></li>
-              <li><a href="/about.html" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="/contact.html" className="hover:text-white transition-colors">Contact</a></li>
+              <li><a href={mainSiteBase} className="hover:text-white transition-colors">Back to Home</a></li>
+              <li><a href={`${mainSiteBase}/about.html`} className="hover:text-white transition-colors">About Us</a></li>
+              <li><a href={`${mainSiteBase}/contact.html`} className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
         </div>

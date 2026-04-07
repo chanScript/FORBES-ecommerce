@@ -94,6 +94,37 @@ async function sendSellerRequestRejectedEmail(userEmail, userName, reason) {
   );
 }
 
+/**
+ * Confirm submission received to the anonymous seller.
+ */
+async function sendSubmissionReceivedEmail(email, fullName) {
+  await sendEmail(
+    email,
+    'We Received Your Property Submission',
+    `<h2>Thank You, ${fullName}!</h2>
+     <p>We have received your submission and our team will review it shortly.</p>
+     <p>You will be notified once your submission has been reviewed.</p>`
+  );
+}
+
+/**
+ * Notify submission status change.
+ */
+async function sendSubmissionStatusEmail(email, fullName, status, reason) {
+  const approved = status === 'approved';
+  await sendEmail(
+    email,
+    approved ? 'Your Submission Has Been Approved!' : 'Update on Your Submission',
+    approved
+      ? `<h2>Good News, ${fullName}!</h2>
+         <p>Your property submission has been approved and is now listed on our marketplace.</p>`
+      : `<h2>Submission Update</h2>
+         <p>Hi ${fullName}, your submission was not approved at this time.</p>
+         ${reason ? `<p><strong>Reason:</strong> ${reason}</p>` : ''}
+         <p>Feel free to submit again with updated details.</p>`
+  );
+}
+
 module.exports = {
   sendEmail,
   sendListingApprovedEmail,
@@ -101,4 +132,6 @@ module.exports = {
   sendListingForceDeletedEmail,
   sendSellerRequestApprovedEmail,
   sendSellerRequestRejectedEmail,
+  sendSubmissionReceivedEmail,
+  sendSubmissionStatusEmail,
 };

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Forbes Financial Consultancy Corporation — Digital Handbook. Explore our story, services, values, and leadership." />
+  <title>Digital Handbook — Forbes Financial Consultancy Corporation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50:'#f0f4ff',100:'#e0e9ff',200:'#c7d6fe',300:'#a3b8fc',400:'#7a95f8',500:'#5b73f0',600:'#3b4fe4',700:'#2d3dca',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
+            accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
+            success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
+          },
+        },
+      },
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-heading { font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif; }
+
+    /* Transparent nav → solid on scroll */
+    #navbar { background: transparent; border-color: transparent; }
+    #navbar.nav-scrolled { background-color: rgba(255,255,255,0.97) !important; border-color: rgba(229,231,235,1); box-shadow: 0 1px 12px rgba(0,0,0,0.08); }
+    #navbar.nav-scrolled .nav-link { color: #4b5563; }
+    #navbar.nav-scrolled .nav-link:hover { color: #0f172a; }
+    #navbar.nav-scrolled .nav-brand { color: #0f172a; }
+    #navbar.nav-scrolled .nav-accent { color: #c9a84c; }
+    #navbar.nav-scrolled .nav-cta { background: #0f172a; color: #fff; }
+    #navbar.nav-scrolled .nav-mobile-btn { color: #374151; }
+    .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .mobile-menu.open { max-height: 800px; }
+    .dropdown-menu { opacity:0; visibility:hidden; transform:translateY(10px); transition:all 0.3s ease; pointer-events:none; }
+    .dropdown:hover .dropdown-menu, .dropdown.active .dropdown-menu { opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
+    .dropdown button { position: relative; z-index: 52; }
+    .dropdown-menu { z-index: 51; }
+
+    /* ── Handbook Hero ── */
+    .handbook-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0a1128 100%);
+      min-height: 40vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Flipbook wrapper ── */
+    #flipbook-section {
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    }
+    #flipbook-wrapper {
+      max-width: 960px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    /* ── Page base ── */
+    .page {
+      background: linear-gradient(135deg, #fefefe 0%, #f8f6f4 100%);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 36px;
+    }
+
+    /* ── Cover pages ── */
+    .page-cover {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0a1128 100%);
+      position: relative;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
+    .page-cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(201,168,76,0.08), transparent 60%);
+    }
+    .cover-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.05rem; font-weight: 800; color: #c9a84c; line-height: 1.3; padding: 0 16px; position: relative; z-index: 1; letter-spacing: 0.5px; }
+    .cover-rule { width: 56px; height: 2px; background: rgba(201,168,76,0.5); margin: 14px auto; position: relative; z-index: 1; }
+    .cover-sub { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.2rem; font-weight: 300; color: #fff; position: relative; z-index: 1; }
+    .cover-year { font-size: 0.7rem; color: #c9a84c; font-weight: 600; margin-top: 8px; position: relative; z-index: 1; }
+    .cover-tagline { font-size: 0.7rem; color: #9ca3af; margin-top: 10px; font-style: italic; position: relative; z-index: 1; }
+
+    /* ── Back Cover ── */
+    .back-title { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 8px; line-height: 1.4; position: relative; z-index: 1; }
+    .back-sub { font-size: 0.875rem; color: #c9a84c; font-weight: 600; position: relative; z-index: 1; }
+    .back-contact { font-size: 0.75rem; color: #9ca3af; margin-top: 8px; position: relative; z-index: 1; }
+
+    /* ── Content Header ── */
+    .ch { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .icon-box {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: linear-gradient(135deg, #c9a84c, #b08d2f);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0; color: #fff;
+    }
+    .section-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 700; color: #92400e; }
+    .divider { width: 100%; height: 2px; background: linear-gradient(to right, rgba(201,168,76,0.6), transparent); margin-bottom: 10px; }
+    .sub-heading { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.8rem; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    p.bt { font-size: 0.7rem; line-height: 1.75; color: #374151; margin-bottom: 6px; text-align: justify; }
+
+    /* ── Vision / Mission cards ── */
+    .vm-page { background: #f8fafc; padding: 40px; justify-content: center; }
+    .vm-card {
+      background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 12px; padding: 22px; margin-bottom: 18px;
+    }
+    .vm-card h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; font-weight: 700; color: #92400e; margin-bottom: 8px; }
+    .vm-card p { font-size: 0.7rem; line-height: 1.8; color: #475569; }
+
+    /* ── Purpose highlight ── */
+    .highlight-page {
+      background: #f8fafc; align-items: center; justify-content: center; text-align: center; padding: 48px;
+    }
+    .hl-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #c9a84c, #b08d2f);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 18px; color: #fff;
+    }
+    .highlight-page h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 700; color: #92400e; margin-bottom: 14px; }
+    .highlight-page p { font-size: 0.8rem; line-height: 1.8; color: #475569; max-width: 340px; }
+
+    /* ── Values ── */
+    .values-page { background: #f8fafc; padding: 40px; justify-content: center; }
+    .values-page h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.2rem; font-weight: 800; color: #92400e; text-align: center; margin-bottom: 6px; }
+    .values-rule { width: 60px; height: 3px; background: #c9a84c; margin: 0 auto 22px; border-radius: 2px; }
+    .value-row {
+      display: flex; align-items: center; gap: 16px;
+      background: #fff; border-radius: 10px; padding: 14px 18px;
+      border-left: 5px solid #c9a84c; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 14px;
+    }
+    .vl {
+      width: 44px; height: 44px; border-radius: 8px;
+      background: linear-gradient(135deg, #c9a84c, #b08d2f);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900; color: #fff; flex-shrink: 0;
+    }
+    .vw { font-size: 0.875rem; font-weight: 700; color: #0f172a; }
+    .vd { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+
+    /* ── Services Overview ── */
+    .svc-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #fff; border-radius: 8px; padding: 11px 14px;
+      border-left: 4px solid #c9a84c; margin-bottom: 8px;
+    }
+    .svc-row h4 { font-size: 0.75rem; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+    .svc-row p { font-size: 0.62rem; line-height: 1.55; color: #475569; }
+
+    /* ── Detail pages ── */
+    .detail-page { padding: 32px; }
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #f8fafc; border-radius: 8px; padding: 9px 12px;
+      border-left: 3px solid #c9a84c; margin-bottom: 7px;
+    }
+    .fdot { width: 6px; height: 6px; background: #c9a84c; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .ft { font-size: 0.65rem; line-height: 1.65; color: #374151; }
+    .ft strong { color: #0f172a; }
+
+    /* ── Team page ── */
+    .team-page { padding: 32px; }
+    .team-grid { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; justify-content: center; }
+    .team-card { width: 110px; text-align: center; }
+    .team-photo {
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 3px solid #c9a84c; object-fit: cover; display: block; margin: 0 auto 6px;
+    }
+    .team-initial {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, #c9a84c, #b08d2f);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 900; color: #fff; margin: 0 auto 6px;
+    }
+    .tname { font-size: 0.6rem; font-weight: 700; color: #0f172a; }
+    .trole { font-size: 0.55rem; color: #64748b; margin-top: 2px; }
+
+    /* ── CEO Profile ── */
+    .profile-page {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      align-items: center; justify-content: center; text-align: center; padding: 48px;
+    }
+    .profile-photo-wrap {
+      width: 140px; height: 140px; border-radius: 50%;
+      border: 5px solid #c9a84c; overflow: hidden; margin: 0 auto 18px;
+    }
+    .profile-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-name { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.1rem; font-weight: 800; color: #fff; }
+    .profile-role { font-size: 0.75rem; color: #c9a84c; font-weight: 600; margin-top: 5px; letter-spacing: 1px; }
+    .profile-rule { width: 48px; height: 3px; background: #c9a84c; border-radius: 2px; margin: 14px auto 0; }
+
+    /* ── CEO Story ── */
+    .story-page { padding: 32px; background: linear-gradient(135deg, #fefefe 0%, #f8f6f4 100%); }
+    p.story-text { font-size: 0.62rem; line-height: 1.8; color: #374151; margin-bottom: 4px; text-align: justify; }
+    .story-footer { margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(201,168,76,0.3); }
+    .sfn { font-size: 0.75rem; font-weight: 700; color: #0f172a; }
+    .sfr { font-size: 0.65rem; color: #64748b; }
+    .sfc { font-size: 0.6rem; color: #94a3b8; }
+
+    /* ── Team photo page ── */
+    .team-photo-page {
+      padding: 0;
+      position: relative;
+    }
+    .team-photo-page img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .team-photo-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px 24px;
+      background: linear-gradient(to top, rgba(15,23,42,0.85), transparent);
+      text-align: center;
+    }
+
+    /* ── Control bar ── */
+    .controls { display: flex; align-items: center; gap: 16px; }
+    .controls button {
+      padding: 10px 24px; border-radius: 10px;
+      border: 1px solid rgba(201,168,76,0.3);
+      background: rgba(201,168,76,0.1); color: #c9a84c;
+      cursor: pointer; font-size: 0.875rem; font-weight: 600;
+      transition: all 0.2s; letter-spacing: 0.5px;
+    }
+    .controls button:hover:not(:disabled) { background: #c9a84c; color: #0f172a; border-color: #c9a84c; }
+    .controls button:disabled { opacity: 0.3; cursor: not-allowed; }
+    .page-counter { color: #c9a84c; font-weight: 600; font-size: 0.875rem; min-width: 70px; text-align: center; }
+  </style>
+</head>
+<body class="bg-primary-900 text-gray-700 antialiased">
+
+  <!-- ====== NAVIGATION ====== -->
+  <div id="navbar-container"></div>
+
+  <!-- ====== HERO SECTION ====== -->
+  <section class="handbook-hero pt-32 pb-16">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+        <i data-lucide="book-open" class="w-4 h-4 text-accent"></i>
+        <span class="text-accent text-sm font-medium">Digital Handbook</span>
+      </div>
+      <h1 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
+        Forbes Financial <span class="text-accent">Digital Handbook</span>
+      </h1>
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8">Explore our story, services, values, and leadership. Click or swipe to flip through the pages.</p>
+      <div class="flex items-center justify-center gap-6 text-sm text-gray-500">
+        <span class="flex items-center gap-2"><i data-lucide="mouse-pointer-click" class="w-4 h-4 text-accent"></i> Click to flip</span>
+        <span class="flex items-center gap-2"><i data-lucide="move-horizontal" class="w-4 h-4 text-accent"></i> Swipe on mobile</span>
+        <span class="flex items-center gap-2"><i data-lucide="layers" class="w-4 h-4 text-accent"></i> 16 Pages</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FLIPBOOK ====== -->
+  <section id="flipbook-section" class="py-16">
+    <div class="max-w-7xl mx-auto px-4 flex justify-center">
+      <div id="flipbook-wrapper">
+        <div id="book">
+
+          <!-- PAGE 1: COVER -->
+          <div class="page page-cover" data-density="hard">
+            <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;">
+              <img src="images/logo.png" alt="FFCC Logo" style="width:64px;height:64px;object-fit:contain;margin-bottom:4px;border-radius:8px;" onerror="this.style.display='none'">
+              <span style="border:1.5px solid #c9a84c;color:#c9a84c;font-size:8px;letter-spacing:3px;text-transform:uppercase;padding:4px 18px;border-radius:99px;">Est. 2003</span>
+              <p class="cover-title">FORBES FINANCIAL CONSULTANCY CORPORATION</p>
+              <div class="cover-rule"></div>
+              <p class="cover-sub">Digital Handbook</p>
+              <p class="cover-tagline">Your Trusted Partner in Financial Solutions</p>
+            </div>
+          </div>
+
+          <!-- PAGE 2: ABOUT US — OUR STORY -->
+          <div class="page">
+            <div class="ch"><div class="icon-box"><i data-lucide="book-open" class="w-4 h-4"></i></div><span class="section-title">About Us</span></div>
+            <div class="divider"></div>
+            <p class="sub-heading">Our Story</p>
+            <p class="bt">Established in 2003, Forbes Financial Consultancy Corporation (FFCC) was built on a single, unwavering foundation: INTEGRITY. This core value continues to guide our governance, operations, and client relationships more than two decades later. Our commitment to precision, confidentiality, and ethical standards has earned the confidence of institutions across multiple industries.</p>
+            <p class="bt">From the outset, FFCC positioned itself as a trusted partner of businesses, financial institutions, and key stakeholders by delivering accurate, reliable, and professionally prepared financial and credit information reports.</p>
+            <p class="bt">Over the past 22 years, FFCC has evolved into one of the country's fastest-growing Credit Information Agencies, expanding its services to include comprehensive business intelligence solutions, credit investigation, risk assessment support, and financial consulting.</p>
+            <p class="bt">Today, FFCC is undergoing strategic modernization — integrating advanced data analytics, automation tools, and AI-assisted systems to improve reporting accuracy, turnaround time, and risk analysis capabilities.</p>
+            <p class="bt">FFCC is expanding into integrated credit intelligence and recovery management solutions, bridging information services with innovative collection strategies.</p>
+            <p class="bt">As we move forward, our commitment remains clear: to combine Integrity, Innovation, and Intelligence in delivering value-driven financial information services.</p>
+          </div>
+
+          <!-- PAGE 3: OUR COMMITMENT -->
+          <div class="page">
+            <div class="ch"><div class="icon-box"><i data-lucide="lightbulb" class="w-4 h-4"></i></div><span class="section-title">Our Commitment</span></div>
+            <div class="divider"></div>
+            <p class="sub-heading">Strategic Modernization</p>
+            <p class="bt">Today, FFCC is undergoing strategic modernization. We are actively enhancing our digital infrastructure, integrating advanced data analytics, automation tools and AI-assisted systems to improve reporting accuracy, turnaround time and risk analysis capabilities.</p>
+            <p class="bt">Our focus is on strengthening data security, compliance frameworks, and system efficiency to meet the growing demands of financial institutions and corporate clients in a rapidly evolving regulatory and economic environment.</p>
+            <p class="bt">With a strong legacy, strengthened leadership, and a technology-focused future, FFCC continues to grow — adaptive, resilient, and ready for the next era of financial intelligence.</p>
+            <div style="margin-top:auto;padding-top:16px;">
+              <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px;text-align:center;">
+                <p style="font-size:0.7rem;color:#92400e;font-weight:600;margin-bottom:4px;">Innovation • Analytics • Automation</p>
+                <p style="font-size:0.6rem;color:#64748b;">Building the future of financial intelligence</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAGE 4: VISION & MISSION -->
+          <div class="page vm-page">
+            <div class="ch"><div class="icon-box"><i data-lucide="eye" class="w-4 h-4"></i></div><span class="section-title">Vision &amp; Mission</span></div>
+            <div class="divider"></div>
+            <div class="vm-card">
+              <h3>Our Vision</h3>
+              <p>To be the premier source of accurate Comprehensive Credit &amp; Business Solutions enabling businesses to thrive with trust, confidence and integrity.</p>
+            </div>
+            <div class="vm-card">
+              <h3>Our Mission</h3>
+              <p>We facilitate Business Intelligence and Recovery Solutions with precision, professionalism and transparency, enabling our clients to make informed financial decisions and achieve sustainable growth.</p>
+            </div>
+          </div>
+
+          <!-- PAGE 5: PURPOSE -->
+          <div class="page highlight-page">
+            <div class="hl-icon"><i data-lucide="shield" class="w-6 h-6"></i></div>
+            <h3>Our Purpose</h3>
+            <p>To provide reliable intelligence and strategic solutions that safeguard investments, mitigate risks and reinforce financial stability of our clients and their business partners.</p>
+          </div>
+
+          <!-- PAGE 6: VALUES (T-I-T-A-N) -->
+          <div class="page values-page">
+            <h2>Values</h2>
+            <div class="values-rule"></div>
+            <div class="value-row"><div class="vl">T</div><div><div class="vw">Teamwork</div><div class="vd">Collaboration that drives success</div></div></div>
+            <div class="value-row"><div class="vl">I</div><div><div class="vw">Integrity</div><div class="vd">Honesty in everything we do</div></div></div>
+            <div class="value-row"><div class="vl">T</div><div><div class="vw">Trust</div><div class="vd">Building lasting relationships</div></div></div>
+            <div class="value-row"><div class="vl">A</div><div><div class="vw">Adaptability</div><div class="vd">Embracing change and innovation</div></div></div>
+            <div class="value-row"><div class="vl">N</div><div><div class="vw">New Leaders</div><div class="vd">Nurturing future excellence</div></div></div>
+          </div>
+
+          <!-- PAGE 7: SERVICES OVERVIEW -->
+          <div class="page" style="padding:32px;">
+            <div class="ch"><div class="icon-box"><i data-lucide="briefcase" class="w-4 h-4"></i></div><span class="section-title">Our Services</span></div>
+            <div class="divider"></div>
+            <div class="svc-row"><div class="icon-box" style="flex-shrink:0;width:30px;height:30px;font-size:12px;"><i data-lucide="search" class="w-3.5 h-3.5"></i></div><div><h4>Credit Investigation</h4><p>Comprehensive credit investigation services designed to support informed, risk-aware lending and business decisions with structured verification processes.</p></div></div>
+            <div class="svc-row"><div class="icon-box" style="flex-shrink:0;width:30px;height:30px;font-size:12px;"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i></div><div><h4>Background Investigation</h4><p>Reliable, fact-based insights on individuals and corporate entities through structured due diligence processes to mitigate risk and prevent fraud.</p></div></div>
+            <div class="svc-row"><div class="icon-box" style="flex-shrink:0;width:30px;height:30px;font-size:12px;"><i data-lucide="home" class="w-3.5 h-3.5"></i></div><div><h4>Appraisal Services</h4><p>Professional and independent appraisal services for accurate asset valuation with objectivity, technical competence, and adherence to recognized standards.</p></div></div>
+            <div class="svc-row"><div class="icon-box" style="flex-shrink:0;width:30px;height:30px;font-size:12px;"><i data-lucide="trending-up" class="w-3.5 h-3.5"></i></div><div><h4>Loan Marketing</h4><p>Comprehensive loan marketing and client acquisition services connecting borrowers with suitable financing solutions across various financial products.</p></div></div>
+            <div class="svc-row"><div class="icon-box" style="flex-shrink:0;width:30px;height:30px;font-size:12px;"><i data-lucide="file-text" class="w-3.5 h-3.5"></i></div><div><h4>Liaison Services</h4><p>Professional liaison services for smooth processing of regulatory and documentation requirements for mortgage and motor vehicle transactions.</p></div></div>
+          </div>
+
+          <!-- PAGE 8: CREDIT INVESTIGATION DETAIL -->
+          <div class="page detail-page">
+            <div class="ch"><div class="icon-box"><i data-lucide="search" class="w-4 h-4"></i></div><span class="section-title">Credit Investigation</span></div>
+            <div class="divider"></div>
+            <p class="bt">FFCC provides comprehensive and systematic credit investigation services designed to support informed, risk-aware lending and business decisions. Our structured verification processes help financial institutions, lenders, and corporate clients assess credibility, capacity, and character with accuracy and confidence.</p>
+            <p class="bt">Through thorough field and data validation, we ensure that critical borrower and business information is properly authenticated, reducing exposure to fraud, misrepresentation, and credit risk.</p>
+            <p class="sub-heading" style="margin-top:10px">Key Features:</p>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Business Verification</strong> — Validation of business existence, operations, legitimacy, ownership structure, and operational capacity to ensure accuracy of declared information.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Employment Verification</strong> — Confirmation of employment status, tenure, position, and compensation details to assess income stability and repayment capability.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Residence Verification</strong> — Physical or documented confirmation of residential address and occupancy status to validate identity and borrower traceability.</div></div>
+          </div>
+
+          <!-- PAGE 9: BACKGROUND INVESTIGATION DETAIL -->
+          <div class="page detail-page">
+            <div class="ch"><div class="icon-box"><i data-lucide="shield-check" class="w-4 h-4"></i></div><span class="section-title">Background Investigation</span></div>
+            <div class="divider"></div>
+            <p class="bt">FFCC delivers comprehensive background investigation services designed to provide reliable, fact-based insights on individuals and corporate entities. Our structured due diligence processes help financial institutions, corporations, and decision-makers mitigate risk, prevent fraud, and maintain regulatory compliance.</p>
+            <p class="bt">By combining verified data sources, field validation, and systematic analysis, we provide clear and actionable intelligence that supports sound credit, investment, partnership, and employment decisions.</p>
+            <p class="sub-heading" style="margin-top:10px">Key Features:</p>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Consumer Report</strong> — A detailed credit and background profile of an individual, including financial standing, credit behavior, and relevant public records.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Individual Background Report</strong> — Comprehensive verification of personal history, affiliations, and reputation checks.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Corporate Background Report</strong> — In-depth due diligence on corporate entities, including registration status, ownership structure, and operational legitimacy.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Express Corporate Validation</strong> — Streamlined verification providing rapid confirmation of a company's existence and registration details.</div></div>
+          </div>
+
+          <!-- PAGE 10: APPRAISAL SERVICES DETAIL -->
+          <div class="page detail-page">
+            <div class="ch"><div class="icon-box"><i data-lucide="home" class="w-4 h-4"></i></div><span class="section-title">Appraisal Services</span></div>
+            <div class="divider"></div>
+            <p class="bt">Professional and independent appraisal services to support accurate asset valuation for lending, investment, acquisition, and risk management purposes. Our appraisal process is conducted with objectivity, technical competence, and adherence to recognized valuation standards to ensure credible and defensible results.</p>
+            <p class="bt">By delivering well-documented and market-supported valuations, we assist financial institutions, corporations, and individual clients in making informed collateral and financial decisions.</p>
+            <p class="sub-heading" style="margin-top:10px">Key Features:</p>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Real Estate Appraisal</strong> — Comprehensive valuation of residential, commercial, industrial, agricultural, and special-use properties. Assessment considers market comparables, property condition, location, legal documentation, highest and best use analysis, and prevailing market trends.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Vehicle Appraisal</strong> — Professional evaluation of motor vehicles for loan collateral, resale, insurance, asset verification, or financial reporting purposes. Assessment includes physical condition, mileage, depreciation factors, market demand, and documentation validation.</div></div>
+          </div>
+
+          <!-- PAGE 11: LIAISON SERVICES DETAIL -->
+          <div class="page detail-page">
+            <div class="ch"><div class="icon-box"><i data-lucide="file-text" class="w-4 h-4"></i></div><span class="section-title">Liaison Services</span></div>
+            <div class="divider"></div>
+            <p class="bt">FFCC provides professional and reliable liaison services to facilitate smooth, accurate, and timely processing of regulatory and documentation requirements related to mortgage and motor vehicle transactions. Our team coordinates directly with government agencies and relevant offices to ensure compliance, proper documentation, and efficient transaction handling.</p>
+            <p class="bt">We assist clients in navigating procedural requirements, minimizing delays, and ensuring that all submissions meet regulatory standards.</p>
+            <p class="sub-heading" style="margin-top:10px">Key Features:</p>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>REM Mortgage Annotation</strong> — Processing and facilitation of Real Estate Mortgage (REM) annotation with the appropriate Registry of Deeds, ensuring proper recording of mortgage liens and compliance with documentary requirements.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>LTO Encumbrance &amp; Registration Renewal</strong> — Assistance in processing motor vehicle encumbrance registration, cancellation (when applicable), and annual registration renewal with the Land Transportation Office (LTO), ensuring accurate documentation and timely compliance.</div></div>
+          </div>
+
+          <!-- PAGE 12: LOAN MARKETING DETAIL -->
+          <div class="page detail-page">
+            <div class="ch"><div class="icon-box"><i data-lucide="trending-up" class="w-4 h-4"></i></div><span class="section-title">Loan Marketing</span></div>
+            <div class="divider"></div>
+            <p class="bt">FFCC provides comprehensive loan marketing and client acquisition services designed to connect borrowers with suitable financing solutions across a wide range of financial products. Through strategic partnerships with banks and financing institutions, we facilitate responsible lending by matching clients with competitive, structured loan programs.</p>
+            <p class="sub-heading" style="margin-top:8px">Loan Products:</p>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Auto Loans</strong> — Car &amp; Truck Loans (Brand New, Pre-Owned, Refinancing). Structured financing for personal and commercial vehicle acquisition.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Motorcycle Loan</strong> — Brand New, Pre-Owned, Refinancing. Accessible financing options for individual and business mobility needs.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Appliance &amp; Gadget Loan</strong> — Consumer financing for essential household appliances, electronics, and technology purchases.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Real Estate Mortgage (REM) Loan</strong> — Financing secured by real property for acquisition, refinancing, or equity take-out purposes.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>OFW &amp; Seaman's Loan</strong> — Specialized financing tailored to Overseas Filipino Workers and seafarers, aligned with documented income streams.</div></div>
+            <div class="feature-item"><div class="fdot"></div><div class="ft"><strong>Business Loan</strong> — Working capital and expansion financing to support operational growth, asset acquisition, and business sustainability.</div></div>
+          </div>
+
+          <!-- PAGE 13: MANAGEMENT TEAM -->
+          <div class="page team-page">
+            <div class="ch"><div class="icon-box"><i data-lucide="users" class="w-4 h-4"></i></div><span class="section-title">Management</span></div>
+            <div class="divider"></div>
+            <div class="team-grid">
+              <div class="team-card">
+                <img class="team-photo" src="images/assets/handbook/Picture20.png" alt="Noel J. Domingo" onerror="this.outerHTML='<div class=\'team-initial\'>N</div>'">
+                <div class="tname">Noel J. Domingo</div><div class="trole">Chief Executive Officer</div>
+              </div>
+              <div class="team-card">
+                <img class="team-photo" src="images/assets/handbook/Picture5-removebg-preview.png" alt="Joebert Grey Reyes" onerror="this.outerHTML='<div class=\'team-initial\'>J</div>'">
+                <div class="tname">Joebert Grey Reyes</div><div class="trole">President</div>
+              </div>
+              <div class="team-card">
+                <img class="team-photo" src="images/assets/handbook/0a74a348d8764f4c9c518f091a0c520b4fa33f6c-removebg-preview.png" alt="Ruch Salas" onerror="this.outerHTML='<div class=\'team-initial\'>R</div>'">
+                <div class="tname">Ruch Salas</div><div class="trole">Vice President</div>
+              </div>
+              <div class="team-card">
+                <img class="team-photo" src="images/assets/handbook/Picture3-removebg-preview.png" alt="Jan Kris Ann Fernandez" onerror="this.outerHTML='<div class=\'team-initial\'>J</div>'">
+                <div class="tname">Jan Kris Ann Fernandez</div><div class="trole">Chief Financial Officer</div>
+              </div>
+              <div class="team-card">
+                <img class="team-photo" src="images/assets/handbook/Picture4-removebg-preview.png" alt="Aubrey Lim" onerror="this.outerHTML='<div class=\'team-initial\'>A</div>'">
+                <div class="tname">Aubrey Lim</div><div class="trole">Operations Manager</div>
+              </div>
+              <div class="team-card">
+                <div class="team-initial">N</div>
+                <div class="tname">Nikki</div><div class="trole">Management</div>
+              </div>
+              <div class="team-card">
+                <div class="team-initial">J</div>
+                <div class="tname">Jane</div><div class="trole">Management</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAGE 14: CEO PROFILE -->
+          <div class="page profile-page">
+            <div class="profile-photo-wrap">
+              <img src="images/assets/handbook/Picture20.png" alt="Noel J. Domingo" onerror="this.style.display='none'">
+            </div>
+            <div class="profile-name">Noel J. Domingo</div>
+            <div class="profile-role">CHIEF EXECUTIVE OFFICER</div>
+            <div class="profile-rule"></div>
+            <p style="font-size:0.65rem;color:#9ca3af;margin-top:14px;font-style:italic;max-width:280px;line-height:1.6;text-align:center;">Forbes Financial Consultancy Corporation</p>
+          </div>
+
+          <!-- PAGE 15: CEO STORY -->
+          <div class="page story-page">
+            <div class="ch"><div class="icon-box"><i data-lucide="quote" class="w-4 h-4"></i></div><span class="section-title">CEO Statement</span></div>
+            <div class="divider"></div>
+            <p class="story-text">"When I joined Forbes Financial Consultancy Corporation (FFCC) in the last quarter of 2023 as Assistant General Manager, I saw more than a company, I saw potential. In the first quarter of 2025, I was honored to serve as General Manager and by June 2025, I accepted the responsibility of leading FFCC as Chief Executive Officer.</p>
+            <p class="story-text">This journey has not just been a progression of titles, but a deep commitment to transformation, discipline and purposeful growth.</p>
+            <p class="story-text">FFCC was built on Integrity, and that foundation remains non-negotiable. However, integrity alone is not enough in today's rapidly evolving financial landscape. We must also lead with courage, innovation, and vision.</p>
+            <p class="story-text">Our vision for FFCC is clear: To build a future-ready financial intelligence organization that empowers institutions, uplifts professionals and creates sustainable value for generations.</p>
+            <p class="story-text">We are investing in modernization: integrating digital systems, analytics and tech-driven solutions to strengthen the accuracy, speed and security of our services.</p>
+            <p class="story-text">We are committed to cultivating a culture where employee growth is intentional, career progression is structured, and leadership is developed from within.</p>
+            <p class="story-text">Financial growth for us, is not merely about revenue expansion. It is about building a stable, disciplined and scalable institution — one that creates opportunities, sustains livelihoods and earns the long-term trust of clients, partners and stakeholders.</p>
+            <p class="story-text">We are building more than services. We are building systems. We are building leaders. We are building legacy.</p>
+            <p class="story-text">The future is not something we wait for. It is something we build."</p>
+            <div class="story-footer">
+              <div class="sfn">Noel J. Domingo</div>
+              <div class="sfr">Chief Executive Officer</div>
+              <div class="sfc">Forbes Financial Consultancy Corporation</div>
+            </div>
+          </div>
+
+          <!-- PAGE 16: BACK COVER -->
+          <div class="page page-cover" data-density="hard">
+            <div style="position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <img src="images/logo.png" alt="FFCC Logo" style="width:48px;height:48px;object-fit:contain;margin-bottom:8px;border-radius:8px;" onerror="this.style.display='none'">
+              <p class="back-title">Thank you for exploring our<br>Digital Handbook</p>
+              <div class="cover-rule"></div>
+              <p class="back-sub">Building Trust Since 2003</p>
+              <p class="back-contact">Contact us to learn more</p>
+              <p class="back-contact" style="margin-top:12px;">rsalas@forbesfinancial.com.ph</p>
+            </div>
+          </div>
+
+        </div><!-- /#book -->
+
+        <!-- Controls -->
+        <div class="controls">
+          <button id="prev-btn" disabled>&#8592; Previous</button>
+          <span class="page-counter" id="page-counter">1 / 16</span>
+          <button id="next-btn">Next &#8594;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <div id="footer-container"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/script.js"></script>
+
+  <!-- page-flip CDN -->
+  <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const bookEl = document.getElementById('book');
+      if (!bookEl || typeof St === 'undefined') return;
+
+      const pageFlip = new St.PageFlip(bookEl, {
+        width: 420,
+        height: 560,
+        size: 'stretch',
+        minWidth: 280,
+        maxWidth: 520,
+        minHeight: 400,
+        maxHeight: 620,
+        showCover: true,
+        mobileScrollSupport: true,
+        maxShadowOpacity: 0.5,
+        drawShadow: true,
+        flippingTime: 1000,
+        usePortrait: true,
+        startZIndex: 0,
+        autoSize: true,
+        swipeDistance: 30,
+        clickEventForward: true,
+        useMouseEvents: true,
+        disableFlipByClick: false
+      });
+
+      pageFlip.loadFromHTML(document.querySelectorAll('#book .page'));
+
+      function updateCounter() {
+        var total = pageFlip.getPageCount();
+        var current = pageFlip.getCurrentPageIndex() + 1;
+        document.getElementById('page-counter').textContent = current + ' / ' + total;
+        document.getElementById('prev-btn').disabled = current === 1;
+        document.getElementById('next-btn').disabled = current >= total;
+      }
+
+      pageFlip.on('flip', updateCounter);
+      pageFlip.on('init', updateCounter);
+
+      document.getElementById('prev-btn').addEventListener('click', function () { pageFlip.flipPrev(); });
+      document.getElementById('next-btn').addEventListener('click', function () { pageFlip.flipNext(); });
+
+      // Re-init lucide icons inside flipbook pages
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    });
+  </script>
+</body>
+</html>

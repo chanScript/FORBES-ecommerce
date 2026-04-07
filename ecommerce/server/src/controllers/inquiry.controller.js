@@ -4,17 +4,15 @@ const { createAuditLog } = require('../middleware/audit.middleware');
 const { sendEmail } = require('../utils/email');
 
 /**
- * POST /api/inquiries/:carId — User expresses interest in a car.
+ * POST /api/inquiries/:listingId — Public: submit an inquiry (no login required).
  */
 async function createInquiry(req, res, next) {
   try {
-    const carId = req.params.carId;
-    const userId = req.user.id;
-    const { message } = req.body;
+    const listingId = req.params.listingId;
+    const { name, email, phone, message } = req.body;
 
-    // Verify the car exists and is approved
-    const car = await prisma.car.findUnique({
-      where: { id: carId },
+    const listing = await prisma.listing.findUnique({
+      where: { id: listingId },
       include: {
         brand: true,
         model: true,
@@ -23,33 +21,19 @@ async function createInquiry(req, res, next) {
       },
     });
 
-    if (!car || car.isDeleted || car.status !== 'Approved') {
-      return res.status(404).json({ error: 'Car not found.' });
+    if (!listing || listing.isDeleted || listing.status !== 'Approved') {
+      return res.status(404).json({ error: 'Listing not found.' });
     }
 
-    // Prevent seller from inquiring on their own listing
-    if (car.sellerId === userId) {
-      return res.status(400).json({ error: 'You cannot inquire on your own listing.' });
-    }
-
-    // Upsert — one inquiry per user per car
-    const inquiry = await prisma.inquiry.upsert({
-      where: { userId_carId: { userId, carId } },
-      update: { message: message || null, status: 'New', updatedAt: new Date() },
-      create: { userId, carId, message: message || null },
-      include: {
-        user: { select: { id: true, name: true, email: true, phone: true } },
-        car: { select: { id: true, title: true, slug: true } },
+    const inquiry = await prisma.inquiry.create({
+      data: {
+        name,
+        email,
+        phone: phone || null,
+        listingId,
+        message: message || null,
+        userId: req.user?.id || null,
       },
-    });
-
-    await createAuditLog({
-      userId,
-      action: 'INQUIRY_SUBMITTED',
-      module: 'inquiries',
-      recordId: String(inquiry.id),
-      ipAddress: req.ip,
-      metadata: { carId, carTitle: car.title },
     });
 
     // Email admin(s) about new inquiry
@@ -60,60 +44,21 @@ async function createInquiry(req, res, next) {
 
     const adminEmails = admins.map(a => a.email);
     if (adminEmails.length > 0) {
-      const imgUrl = car.images[0]?.url || '';
+      const imgUrl = listing.images[0]?.url || '';
       await sendEmail(
         adminEmails.join(','),
-        `New Inquiry: ${car.title}`,
+        `New Inquiry: ${listing.title}`,
         `<h2>New Product Inquiry</h2>
-         <p><strong>Vehicle:</strong> ${car.title}</p>
-         ${imgUrl ? `<img src="${imgUrl}" alt="${car.title}" style="max-width:300px;border-radius:8px;" />` : ''}
-         <p><strong>Interested User:</strong> ${req.user.name} (${req.user.email})</p>
-         ${req.user.phone ? `<p><strong>Phone:</strong> ${req.user.phone}</p>` : ''}
+         <p><strong>Listing:</strong> ${listing.title}</p>
+         ${imgUrl ? `<img src="${imgUrl}" alt="${listing.title}" style="max-width:300px;border-radius:8px;" />` : ''}
+         <p><strong>From:</strong> ${name} (${email})</p>
+         ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
          ${message ? `<p><strong>Message:</strong> ${message}</p>` : ''}
-         <p><strong>Seller:</strong> ${car.seller.name} (${car.seller.email})</p>
          <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>`,
       );
     }
 
-    res.status(201).json(inquiry);
-  } catch (err) {
-    next(err);
-  }
-}
-
-/**
- * GET /api/inquiries/my — User's own inquiries.
- */
-async function getMyInquiries(req, res, next) {
-  try {
-    const inquiries = await prisma.inquiry.findMany({
-      where: { userId: req.user.id },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        car: {
-          select: {
-            id: true, title: true, slug: true, price: true,
-            images: { where: { isPrimary: true }, take: 1 },
-          },
-        },
-      },
-    });
-
-    res.json(inquiries);
-  } catch (err) {
-    next(err);
-  }
-}
-
-/**
- * GET /api/inquiries/check/:carId — Check if user already inquired about a car.
- */
-async function checkInquiry(req, res, next) {
-  try {
-    const inquiry = await prisma.inquiry.findUnique({
-      where: { userId_carId: { userId: req.user.id, carId: req.params.carId } },
-    });
-    res.json({ hasInquired: !!inquiry });
+    res.status(201).json({ message: 'Inquiry submitted successfully.', id: inquiry.id });
   } catch (err) {
     next(err);
   }
@@ -137,10 +82,9 @@ async function listInquiries(req, res, next) {
         take: limit,
         include: {
           user: { select: { id: true, name: true, email: true, phone: true } },
-          car: {
+          listing: {
             select: {
-              id: true, title: true, slug: true, price: true,
-              seller: { select: { id: true, name: true, email: true } },
+              id: true, title: true, slug: true, price: true, category: true,
               images: { where: { isPrimary: true }, take: 1 },
             },
           },
@@ -173,10 +117,6 @@ async function updateInquiryStatus(req, res, next) {
     const updated = await prisma.inquiry.update({
       where: { id: inquiry.id },
       data: { status },
-      include: {
-        user: { select: { id: true, name: true, email: true, phone: true } },
-        car: { select: { id: true, title: true, slug: true } },
-      },
     });
 
     res.json(updated);
@@ -186,7 +126,7 @@ async function updateInquiryStatus(req, res, next) {
 }
 
 /**
- * GET /api/inquiries/admin/count — Admin: count of new inquiries (for badge).
+ * GET /api/inquiries/admin/count — Admin: count of new inquiries.
  */
 async function getNewInquiryCount(req, res, next) {
   try {
@@ -199,8 +139,6 @@ async function getNewInquiryCount(req, res, next) {
 
 module.exports = {
   createInquiry,
-  getMyInquiries,
-  checkInquiry,
   listInquiries,
   updateInquiryStatus,
   getNewInquiryCount,

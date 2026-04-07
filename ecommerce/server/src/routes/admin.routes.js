@@ -2,41 +2,43 @@ const router = require('express').Router();
 const { authenticate } = require('../middleware/auth.middleware');
 const { rbac } = require('../middleware/rbac.middleware');
 const {
-  listAllCars,
-  listPendingCars,
-  approveCar,
-  rejectCar,
+  listAllListings,
+  listPendingListings,
+  approveListing,
+  rejectListing,
   adminSoftDelete,
-  restoreCar,
-  forceDeleteCar,
+  restoreListing,
+  forceDeleteListing,
   listTrash,
 } = require('../controllers/admin.controller');
+const {
+  listSubmissions,
+  getSubmission,
+  approveSubmission,
+  rejectSubmission,
+  convertToListing,
+  getPendingCount,
+} = require('../controllers/submission.controller');
 
 // All admin routes require Admin or Super Admin
 router.use(authenticate, rbac('Admin', 'Super Admin'));
 
-// GET /api/admin/cars
-router.get('/cars', listAllCars);
+// Listing management
+router.get('/listings', listAllListings);
+router.get('/listings/pending', listPendingListings);
+router.get('/listings/trash', listTrash);
+router.patch('/listings/:id/approve', approveListing);
+router.patch('/listings/:id/reject', rejectListing);
+router.patch('/listings/:id/restore', restoreListing);
+router.delete('/listings/:id', adminSoftDelete);
+router.delete('/listings/:id/force', rbac('Super Admin'), forceDeleteListing);
 
-// GET /api/admin/cars/pending
-router.get('/cars/pending', listPendingCars);
-
-// GET /api/admin/cars/trash
-router.get('/cars/trash', listTrash);
-
-// PATCH /api/admin/cars/:id/approve
-router.patch('/cars/:id/approve', approveCar);
-
-// PATCH /api/admin/cars/:id/reject
-router.patch('/cars/:id/reject', rejectCar);
-
-// PATCH /api/admin/cars/:id/restore
-router.patch('/cars/:id/restore', restoreCar);
-
-// DELETE /api/admin/cars/:id (soft delete)
-router.delete('/cars/:id', adminSoftDelete);
-
-// DELETE /api/admin/cars/:id/force (Super Admin only)
-router.delete('/cars/:id/force', rbac('Super Admin'), forceDeleteCar);
+// Seller submission management
+router.get('/submissions', listSubmissions);
+router.get('/submissions/count', getPendingCount);
+router.get('/submissions/:id', getSubmission);
+router.patch('/submissions/:id/approve', approveSubmission);
+router.patch('/submissions/:id/reject', rejectSubmission);
+router.post('/submissions/:id/convert', convertToListing);
 
 module.exports = router;

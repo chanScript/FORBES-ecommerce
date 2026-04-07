@@ -6,14 +6,14 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const authRoutes = require('./src/routes/auth.routes');
-const carRoutes = require('./src/routes/car.routes');
+const listingRoutes = require('./src/routes/listing.routes');
 const brandRoutes = require('./src/routes/brand.routes');
 const modelRoutes = require('./src/routes/model.routes');
 const vehicleTypeRoutes = require('./src/routes/vehicleType.routes');
 const adminRoutes = require('./src/routes/admin.routes');
 const favoriteRoutes = require('./src/routes/favorite.routes');
 const filterRoutes = require('./src/routes/filter.routes');
-const sellerRequestRoutes = require('./src/routes/sellerRequest.routes');
+const submissionRoutes = require('./src/routes/submission.routes');
 const inquiryRoutes = require('./src/routes/inquiry.routes');
 
 const app = express();
@@ -29,6 +29,7 @@ app.use(cors({
     process.env.CLIENT_URL || 'http://localhost:5173',
     'http://192.168.34.86:5173',
     'http://192.168.34.86:8080',
+       'http://localhost:5173/'
   ],
   credentials: true,
 }));
@@ -52,14 +53,14 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 // ----------------------------------------------------------
 app.use('/api/auth', authRoutes);
-app.use('/api/cars', carRoutes);
+app.use('/api/listings', listingRoutes);
 app.use('/api/brands', brandRoutes);
 app.use('/api/models', modelRoutes);
 app.use('/api/vehicle-types', vehicleTypeRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/filters', filterRoutes);
-app.use('/api/seller-requests', sellerRequestRoutes);
+app.use('/api/submissions', submissionRoutes);
 app.use('/api/inquiries', inquiryRoutes);
 
 // ----------------------------------------------------------

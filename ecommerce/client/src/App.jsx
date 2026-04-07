@@ -2,14 +2,15 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
-import CarDetailsPage from './pages/CarDetailsPage';
+import ListingDetailsPage from './pages/ListingDetailsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import SellerDashboard from './pages/SellerDashboard';
 import SellerSubmitPage from './pages/SellerSubmitPage';
+import SellerSubmissionPage from './pages/SellerSubmissionPage';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminListingsPage from './pages/AdminListingsPage';
-import AdminSellerRequestsPage from './pages/AdminSellerRequestsPage';
+import AdminSubmissionsPage from './pages/AdminSubmissionsPage';
 import AdminInquiriesPage from './pages/AdminInquiriesPage';
 import FavoritesPage from './pages/FavoritesPage';
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -22,7 +23,8 @@ export default function App() {
         <Routes>
           {/* Public */}
           <Route path="/" element={<HomePage />} />
-          <Route path="/cars/:slug" element={<CarDetailsPage />} />
+          <Route path="/listings/:slug" element={<ListingDetailsPage />} />
+          <Route path="/sell" element={<SellerSubmissionPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
@@ -45,7 +47,7 @@ export default function App() {
           <Route element={<ProtectedRoute roles={['Admin', 'Super Admin']} />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/listings" element={<AdminListingsPage />} />
-            <Route path="/admin/seller-requests" element={<AdminSellerRequestsPage />} />
+            <Route path="/admin/submissions" element={<AdminSubmissionsPage />} />
             <Route path="/admin/inquiries" element={<AdminInquiriesPage />} />
           </Route>
         </Routes>

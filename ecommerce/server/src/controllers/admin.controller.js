@@ -8,17 +8,18 @@ const {
 } = require('../utils/email');
 
 /**
- * GET /api/admin/cars — All listings (any status).
+ * GET /api/admin/listings — All listings (any status).
  */
-async function listAllCars(req, res, next) {
+async function listAllListings(req, res, next) {
   try {
     const { page, limit, skip } = parsePagination(req.query);
 
     const where = { isDeleted: false };
     if (req.query.status) where.status = req.query.status;
+    if (req.query.category) where.category = req.query.category;
 
-    const [cars, total] = await Promise.all([
-      prisma.car.findMany({
+    const [listings, total] = await Promise.all([
+      prisma.listing.findMany({
         where,
         orderBy: { createdAt: 'desc' },
         skip,
@@ -31,26 +32,27 @@ async function listAllCars(req, res, next) {
           images: { where: { isPrimary: true }, take: 1 },
         },
       }),
-      prisma.car.count({ where }),
+      prisma.listing.count({ where }),
     ]);
 
-    res.json(paginatedResponse(cars, total, page, limit));
+    res.json(paginatedResponse(listings, total, page, limit));
   } catch (err) {
     next(err);
   }
 }
 
 /**
- * GET /api/admin/cars/pending — Pending approval queue.
+ * GET /api/admin/listings/pending — Pending approval queue.
  */
-async function listPendingCars(req, res, next) {
+async function listPendingListings(req, res, next) {
   try {
     const { page, limit, skip } = parsePagination(req.query);
 
     const where = { status: 'Pending', isDeleted: false };
+    if (req.query.category) where.category = req.query.category;
 
-    const [cars, total] = await Promise.all([
-      prisma.car.findMany({
+    const [listings, total] = await Promise.all([
+      prisma.listing.findMany({
         where,
         orderBy: { createdAt: 'asc' },
         skip,
@@ -63,34 +65,34 @@ async function listPendingCars(req, res, next) {
           images: { orderBy: { sortOrder: 'asc' } },
         },
       }),
-      prisma.car.count({ where }),
+      prisma.listing.count({ where }),
     ]);
 
-    res.json(paginatedResponse(cars, total, page, limit));
+    res.json(paginatedResponse(listings, total, page, limit));
   } catch (err) {
     next(err);
   }
 }
 
 /**
- * PATCH /api/admin/cars/:id/approve — Approve a listing.
+ * PATCH /api/admin/listings/:id/approve — Approve a listing.
  */
-async function approveCar(req, res, next) {
+async function approveListing(req, res, next) {
   try {
-    const car = await prisma.car.findUnique({
+    const listing = await prisma.listing.findUnique({
       where: { id: req.params.id },
       include: { seller: { select: { email: true } } },
     });
 
-    if (!car || car.isDeleted) {
-      return res.status(404).json({ error: 'Car not found.' });
+    if (!listing || listing.isDeleted) {
+      return res.status(404).json({ error: 'Listing not found.' });
     }
 
-    if (car.status !== 'Pending') {
+    if (listing.status !== 'Pending') {
       return res.status(400).json({ error: 'Only pending listings can be approved.' });
     }
 
-    const updated = await prisma.car.update({
+    const updated = await prisma.listing.update({
       where: { id: req.params.id },
       data: {
         status: 'Approved',
@@ -103,14 +105,13 @@ async function approveCar(req, res, next) {
 
     await createAuditLog({
       userId: req.user.id,
-      action: 'CAR_APPROVED',
-      module: 'cars',
-      recordId: car.id,
+      action: 'LISTING_APPROVED',
+      module: 'listings',
+      recordId: listing.id,
       ipAddress: req.ip,
     });
 
-    // Email notification to seller
-    sendListingApprovedEmail(car.seller.email, car.title);
+    sendListingApprovedEmail(listing.seller.email, listing.title);
 
     res.json(updated);
   } catch (err) {
@@ -119,26 +120,26 @@ async function approveCar(req, res, next) {
 }
 
 /**
- * PATCH /api/admin/cars/:id/reject — Reject a listing.
+ * PATCH /api/admin/listings/:id/reject — Reject a listing.
  */
-async function rejectCar(req, res, next) {
+async function rejectListing(req, res, next) {
   try {
     const { reason } = req.body;
 
-    const car = await prisma.car.findUnique({
+    const listing = await prisma.listing.findUnique({
       where: { id: req.params.id },
       include: { seller: { select: { email: true } } },
     });
 
-    if (!car || car.isDeleted) {
-      return res.status(404).json({ error: 'Car not found.' });
+    if (!listing || listing.isDeleted) {
+      return res.status(404).json({ error: 'Listing not found.' });
     }
 
-    if (car.status !== 'Pending') {
+    if (listing.status !== 'Pending') {
       return res.status(400).json({ error: 'Only pending listings can be rejected.' });
     }
 
-    const updated = await prisma.car.update({
+    const updated = await prisma.listing.update({
       where: { id: req.params.id },
       data: {
         status: 'Rejected',
@@ -149,13 +150,13 @@ async function rejectCar(req, res, next) {
 
     await createAuditLog({
       userId: req.user.id,
-      action: 'CAR_REJECTED',
-      module: 'cars',
-      recordId: car.id,
+      action: 'LISTING_REJECTED',
+      module: 'listings',
+      recordId: listing.id,
       ipAddress: req.ip,
     });
 
-    sendListingRejectedEmail(car.seller.email, car.title, reason);
+    sendListingRejectedEmail(listing.seller.email, listing.title, reason);
 
     res.json(updated);
   } catch (err) {
@@ -164,17 +165,17 @@ async function rejectCar(req, res, next) {
 }
 
 /**
- * DELETE /api/admin/cars/:id — Admin soft delete.
+ * DELETE /api/admin/listings/:id — Admin soft delete.
  */
 async function adminSoftDelete(req, res, next) {
   try {
-    const car = await prisma.car.findUnique({ where: { id: req.params.id } });
+    const listing = await prisma.listing.findUnique({ where: { id: req.params.id } });
 
-    if (!car || car.isDeleted) {
-      return res.status(404).json({ error: 'Car not found.' });
+    if (!listing || listing.isDeleted) {
+      return res.status(404).json({ error: 'Listing not found.' });
     }
 
-    await prisma.car.update({
+    await prisma.listing.update({
       where: { id: req.params.id },
       data: {
         isDeleted: true,
@@ -185,9 +186,9 @@ async function adminSoftDelete(req, res, next) {
 
     await createAuditLog({
       userId: req.user.id,
-      action: 'CAR_SOFT_DELETE',
-      module: 'cars',
-      recordId: car.id,
+      action: 'LISTING_SOFT_DELETE',
+      module: 'listings',
+      recordId: listing.id,
       ipAddress: req.ip,
     });
 
@@ -198,21 +199,21 @@ async function adminSoftDelete(req, res, next) {
 }
 
 /**
- * PATCH /api/admin/cars/:id/restore — Restore soft-deleted listing.
+ * PATCH /api/admin/listings/:id/restore — Restore soft-deleted listing.
  */
-async function restoreCar(req, res, next) {
+async function restoreListing(req, res, next) {
   try {
-    const car = await prisma.car.findUnique({ where: { id: req.params.id } });
+    const listing = await prisma.listing.findUnique({ where: { id: req.params.id } });
 
-    if (!car) {
-      return res.status(404).json({ error: 'Car not found.' });
+    if (!listing) {
+      return res.status(404).json({ error: 'Listing not found.' });
     }
 
-    if (!car.isDeleted) {
-      return res.status(400).json({ error: 'Car is not in trash.' });
+    if (!listing.isDeleted) {
+      return res.status(400).json({ error: 'Listing is not in trash.' });
     }
 
-    const updated = await prisma.car.update({
+    const updated = await prisma.listing.update({
       where: { id: req.params.id },
       data: {
         isDeleted: false,
@@ -223,9 +224,9 @@ async function restoreCar(req, res, next) {
 
     await createAuditLog({
       userId: req.user.id,
-      action: 'CAR_RESTORE',
-      module: 'cars',
-      recordId: car.id,
+      action: 'LISTING_RESTORE',
+      module: 'listings',
+      recordId: listing.id,
       ipAddress: req.ip,
     });
 
@@ -236,11 +237,11 @@ async function restoreCar(req, res, next) {
 }
 
 /**
- * DELETE /api/admin/cars/:id/force — Super Admin: permanent delete.
+ * DELETE /api/admin/listings/:id/force — Super Admin: permanent delete.
  */
-async function forceDeleteCar(req, res, next) {
+async function forceDeleteListing(req, res, next) {
   try {
-    const car = await prisma.car.findUnique({
+    const listing = await prisma.listing.findUnique({
       where: { id: req.params.id },
       include: {
         seller: { select: { email: true } },
@@ -248,28 +249,26 @@ async function forceDeleteCar(req, res, next) {
       },
     });
 
-    if (!car) {
-      return res.status(404).json({ error: 'Car not found.' });
+    if (!listing) {
+      return res.status(404).json({ error: 'Listing not found.' });
     }
 
-    // Delete images from Cloudinary
     const cloudinary = require('../config/cloudinary');
-    for (const img of car.images) {
+    for (const img of listing.images) {
       await cloudinary.uploader.destroy(img.publicId).catch(() => {});
     }
 
-    // Permanent delete (cascades images, favorites)
-    await prisma.car.delete({ where: { id: req.params.id } });
+    await prisma.listing.delete({ where: { id: req.params.id } });
 
     await createAuditLog({
       userId: req.user.id,
-      action: 'CAR_FORCE_DELETE',
-      module: 'cars',
-      recordId: car.id,
+      action: 'LISTING_FORCE_DELETE',
+      module: 'listings',
+      recordId: listing.id,
       ipAddress: req.ip,
     });
 
-    sendListingForceDeletedEmail(car.seller.email, car.title);
+    sendListingForceDeletedEmail(listing.seller.email, listing.title);
 
     res.json({ message: 'Listing permanently deleted.' });
   } catch (err) {
@@ -278,7 +277,7 @@ async function forceDeleteCar(req, res, next) {
 }
 
 /**
- * GET /api/admin/cars/trash — List trashed listings.
+ * GET /api/admin/listings/trash — List trashed listings.
  */
 async function listTrash(req, res, next) {
   try {
@@ -286,8 +285,8 @@ async function listTrash(req, res, next) {
 
     const where = { isDeleted: true };
 
-    const [cars, total] = await Promise.all([
-      prisma.car.findMany({
+    const [listings, total] = await Promise.all([
+      prisma.listing.findMany({
         where,
         orderBy: { deletedAt: 'desc' },
         skip,
@@ -300,22 +299,22 @@ async function listTrash(req, res, next) {
           images: { where: { isPrimary: true }, take: 1 },
         },
       }),
-      prisma.car.count({ where }),
+      prisma.listing.count({ where }),
     ]);
 
-    res.json(paginatedResponse(cars, total, page, limit));
+    res.json(paginatedResponse(listings, total, page, limit));
   } catch (err) {
     next(err);
   }
 }
 
 module.exports = {
-  listAllCars,
-  listPendingCars,
-  approveCar,
-  rejectCar,
+  listAllListings,
+  listPendingListings,
+  approveListing,
+  rejectListing,
   adminSoftDelete,
-  restoreCar,
-  forceDeleteCar,
+  restoreListing,
+  forceDeleteListing,
   listTrash,
 };

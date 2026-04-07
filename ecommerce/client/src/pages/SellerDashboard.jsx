@@ -1,162 +1,37 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { carsAPI } from '../api/cars';
-import { sellerRequestsAPI } from '../api/sellerRequests';
+import { listingsAPI } from '../api/cars';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { formatPrice, getStatusBadgeClass } from '../utils/helpers';
-import { Plus, Eye, Edit, Trash2, Car, AlertCircle, Clock, CheckCircle, XCircle, Send } from 'lucide-react';
+import { Plus, Eye, Edit, Trash2, Package, AlertCircle } from 'lucide-react';
 
 export default function SellerDashboard() {
-  const { user, isSeller, isUser, refreshUser } = useAuth();
+  const { user, isSeller } = useAuth();
   const queryClient = useQueryClient();
-  const [requestReason, setRequestReason] = useState('');
-
-  // Seller request status query (for non-seller users)
-  const { data: requestData, isLoading: requestLoading } = useQuery({
-    queryKey: ['sellerRequest', 'my'],
-    queryFn: () => sellerRequestsAPI.getMy().then(r => r.data),
-    enabled: !isSeller,
-  });
 
   const { data, isLoading } = useQuery({
     queryKey: ['myListings'],
-    queryFn: () => carsAPI.myListings().then(r => r.data.data),
+    queryFn: () => listingsAPI.myListings().then(r => r.data.data),
     enabled: isSeller,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => carsAPI.delete(id),
+    mutationFn: (id) => listingsAPI.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['myListings'] }),
   });
 
-  const submitRequestMutation = useMutation({
-    mutationFn: (reason) => sellerRequestsAPI.submit({ reason }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['sellerRequest', 'my'] }),
-  });
-
-  // Show seller request flow if not yet a seller
+  // Non-sellers see a simple message
   if (!isSeller) {
-    if (requestLoading) return <LoadingSpinner size="lg" className="h-96" />;
-
-    const request = requestData?.request;
-
-    // Request is approved but user hasn't refreshed their role yet
-    if (request?.status === 'Approved') {
-      return (
-        <div className="mx-auto max-w-lg px-4 py-20 text-center">
-          <CheckCircle className="mx-auto h-16 w-16 text-status-success" />
-          <h1 className="mt-4 text-2xl font-bold text-gray-900">Request Approved!</h1>
-          <p className="mt-2 text-secondary-muted">
-            Your seller request has been approved. Please refresh to access your seller dashboard.
-          </p>
-          <button
-            onClick={() => refreshUser().then(() => window.location.reload())}
-            className="btn-primary mt-6"
-          >
-            Refresh My Account
-          </button>
-        </div>
-      );
-    }
-
-    // Has a pending request
-    if (request?.status === 'Pending') {
-      return (
-        <div className="mx-auto max-w-lg px-4 py-20 text-center">
-          <Clock className="mx-auto h-16 w-16 text-status-warning" />
-          <h1 className="mt-4 text-2xl font-bold text-gray-900">Request Pending</h1>
-          <p className="mt-2 text-secondary-muted">
-            Your request to become a seller is being reviewed by an admin. You&apos;ll be notified once it&apos;s processed.
-          </p>
-          <div className="mt-6 rounded-xl border border-status-warning/20 bg-status-warning/5 p-4 text-left">
-            <p className="text-sm font-medium text-gray-700">Submitted on</p>
-            <p className="text-sm text-secondary-muted">{new Date(request.createdAt).toLocaleDateString()}</p>
-            {request.reason && (
-              <>
-                <p className="mt-3 text-sm font-medium text-gray-700">Your reason</p>
-                <p className="text-sm text-secondary-muted">{request.reason}</p>
-              </>
-            )}
-          </div>
-        </div>
-      );
-    }
-
-    // Has a rejected request — allow re-submit
-    if (request?.status === 'Rejected') {
-      return (
-        <div className="mx-auto max-w-lg px-4 py-20 text-center">
-          <XCircle className="mx-auto h-16 w-16 text-status-error" />
-          <h1 className="mt-4 text-2xl font-bold text-gray-900">Request Rejected</h1>
-          <p className="mt-2 text-secondary-muted">
-            Your previous seller request was not approved.
-          </p>
-          {request.adminNote && (
-            <div className="mt-4 rounded-xl border border-status-error/20 bg-status-error/5 p-4 text-left">
-              <p className="text-sm font-medium text-status-error">Reason for rejection:</p>
-              <p className="mt-1 text-sm text-gray-700">{request.adminNote}</p>
-            </div>
-          )}
-          <div className="mt-6 text-left">
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Submit a new request (optional reason)
-            </label>
-            <textarea
-              rows={3}
-              value={requestReason}
-              onChange={(e) => setRequestReason(e.target.value)}
-              placeholder="Tell us why you'd like to become a seller..."
-              className="w-full rounded-lg border px-3 py-2 text-sm focus:border-primary-accent focus:outline-none focus:ring-1 focus:ring-primary-accent"
-            />
-            <button
-              onClick={() => submitRequestMutation.mutate(requestReason)}
-              disabled={submitRequestMutation.isPending}
-              className="btn-primary mt-3 flex w-full items-center justify-center gap-2"
-            >
-              <Send className="h-4 w-4" />
-              {submitRequestMutation.isPending ? 'Submitting...' : 'Resubmit Request'}
-            </button>
-            {submitRequestMutation.isError && (
-              <p className="mt-2 text-sm text-status-error">{submitRequestMutation.error?.response?.data?.error || 'Failed to submit.'}</p>
-            )}
-          </div>
-        </div>
-      );
-    }
-
-    // No request yet — show the form
     return (
       <div className="mx-auto max-w-lg px-4 py-20 text-center">
-        <Car className="mx-auto h-16 w-16 text-primary-accent" />
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">Become a Seller</h1>
+        <Package className="mx-auto h-16 w-16 text-gray-300" />
+        <h1 className="mt-4 text-2xl font-bold text-gray-900">Seller Access Required</h1>
         <p className="mt-2 text-secondary-muted">
-          Request seller access to start listing vehicles on the marketplace. An admin will review your request.
+          You need seller access to manage listings. Please contact an administrator.
         </p>
-        <div className="mt-6 text-left">
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Why do you want to become a seller? (optional)
-          </label>
-          <textarea
-            rows={3}
-            value={requestReason}
-            onChange={(e) => setRequestReason(e.target.value)}
-            placeholder="Tell us about yourself and why you'd like to sell vehicles..."
-            className="w-full rounded-lg border px-3 py-2 text-sm focus:border-primary-accent focus:outline-none focus:ring-1 focus:ring-primary-accent"
-          />
-          <button
-            onClick={() => submitRequestMutation.mutate(requestReason)}
-            disabled={submitRequestMutation.isPending}
-            className="btn-primary mt-3 flex w-full items-center justify-center gap-2"
-          >
-            <Send className="h-4 w-4" />
-            {submitRequestMutation.isPending ? 'Submitting...' : 'Submit Seller Request'}
-          </button>
-          {submitRequestMutation.isError && (
-            <p className="mt-2 text-sm text-status-error">{submitRequestMutation.error?.response?.data?.error || 'Failed to submit.'}</p>
-          )}
-        </div>
+        <Link to="/" className="btn-primary mt-6 inline-block">Browse Marketplace</Link>
       </div>
     );
   }
@@ -203,10 +78,10 @@ export default function SellerDashboard() {
       {/* Listings Table */}
       {listings.length === 0 ? (
         <div className="mt-12 text-center">
-          <Car className="mx-auto h-16 w-16 text-gray-300" />
+          <Package className="mx-auto h-16 w-16 text-gray-300" />
           <h2 className="mt-4 text-lg font-semibold text-gray-900">No Listings Yet</h2>
-          <p className="mt-1 text-secondary-muted">Create your first car listing to get started.</p>
-          <Link to="/seller/submit" className="btn-primary mt-4 inline-block">Submit a Car</Link>
+          <p className="mt-1 text-secondary-muted">Create your first listing to get started.</p>
+          <Link to="/seller/submit" className="btn-primary mt-4 inline-block">New Listing</Link>
         </div>
       ) : (
         <div className="mt-6 overflow-x-auto rounded-xl border">
@@ -229,7 +104,7 @@ export default function SellerDashboard() {
                         <img src={car.images[0].url} alt="" className="h-12 w-16 rounded-lg object-cover" />
                       ) : (
                         <div className="flex h-12 w-16 items-center justify-center rounded-lg bg-surface-card">
-                          <Car className="h-5 w-5 text-gray-400" />
+                          <Package className="h-5 w-5 text-gray-400" />
                         </div>
                       )}
                       <div>
@@ -254,7 +129,7 @@ export default function SellerDashboard() {
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1">
                       {car.status === 'Approved' && (
-                        <Link to={`/cars/${car.slug}`} className="rounded-lg p-1.5 text-gray-500 hover:bg-surface-card">
+                        <Link to={`/listings/${car.slug}`} className="rounded-lg p-1.5 text-gray-500 hover:bg-surface-card">
                           <Eye className="h-4 w-4" />
                         </Link>
                       )}

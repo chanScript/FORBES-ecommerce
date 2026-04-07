@@ -1,19 +1,22 @@
 import api from './axios';
 
-export const carsAPI = {
-  list: (params) => api.get('/cars', { params }),
-  getBySlug: (slug) => api.get(`/cars/${slug}`),
-  getSellerProfile: (sellerId, params) => api.get(`/cars/seller/${sellerId}`, { params }),
-  create: (data) => api.post('/cars', data),
-  update: (id, data) => api.put(`/cars/${id}`, data),
-  delete: (id) => api.delete(`/cars/${id}`),
-  myListings: (params) => api.get('/cars/my-listings', { params }),
+export const listingsAPI = {
+  list: (params) => api.get('/listings', { params }),
+  getBySlug: (slug) => api.get(`/listings/${slug}`),
+  getSellerProfile: (sellerId, params) => api.get(`/listings/seller/${sellerId}`, { params }),
+  create: (data) => api.post('/listings', data),
+  update: (id, data) => api.put(`/listings/${id}`, data),
+  delete: (id) => api.delete(`/listings/${id}`),
+  myListings: (params) => api.get('/listings/my-listings', { params }),
   uploadImages: (id, formData) =>
-    api.post(`/cars/${id}/images`, formData, {
+    api.post(`/listings/${id}/images`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
-  deleteImage: (imageId) => api.delete(`/cars/images/${imageId}`),
+  deleteImage: (imageId) => api.delete(`/listings/images/${imageId}`),
 };
+
+// Keep backward-compatible alias
+export const carsAPI = listingsAPI;
 
 export const brandsAPI = {
   list: () => api.get('/brands'),
@@ -40,17 +43,36 @@ export const filtersAPI = {
 
 export const favoritesAPI = {
   list: () => api.get('/favorites'),
-  add: (carId) => api.post(`/favorites/${carId}`),
-  remove: (carId) => api.delete(`/favorites/${carId}`),
+  add: (listingId) => api.post(`/favorites/${listingId}`),
+  remove: (listingId) => api.delete(`/favorites/${listingId}`),
 };
 
 export const adminAPI = {
-  listAll: (params) => api.get('/admin/cars', { params }),
-  listPending: (params) => api.get('/admin/cars/pending', { params }),
-  listTrash: (params) => api.get('/admin/cars/trash', { params }),
-  approve: (id) => api.patch(`/admin/cars/${id}/approve`),
-  reject: (id, reason) => api.patch(`/admin/cars/${id}/reject`, { reason }),
-  softDelete: (id) => api.delete(`/admin/cars/${id}`),
-  restore: (id) => api.patch(`/admin/cars/${id}/restore`),
-  forceDelete: (id) => api.delete(`/admin/cars/${id}/force`),
+  listAll: (params) => api.get('/admin/listings', { params }),
+  listPending: (params) => api.get('/admin/listings/pending', { params }),
+  listTrash: (params) => api.get('/admin/listings/trash', { params }),
+  approve: (id) => api.patch(`/admin/listings/${id}/approve`),
+  reject: (id, reason) => api.patch(`/admin/listings/${id}/reject`, { reason }),
+  softDelete: (id) => api.delete(`/admin/listings/${id}`),
+  restore: (id) => api.patch(`/admin/listings/${id}/restore`),
+  forceDelete: (id) => api.delete(`/admin/listings/${id}/force`),
+  // Submission management
+  listSubmissions: (params) => api.get('/admin/submissions', { params }),
+  getSubmission: (id) => api.get(`/admin/submissions/${id}`),
+  approveSubmission: (id) => api.patch(`/admin/submissions/${id}/approve`),
+  rejectSubmission: (id, reason) => api.patch(`/admin/submissions/${id}/reject`, { reason }),
+  convertSubmission: (id, overrides) => api.post(`/admin/submissions/${id}/convert`, overrides),
+  pendingSubmissionCount: () => api.get('/admin/submissions/count'),
+};
+
+export const submissionsAPI = {
+  create: (formData) =>
+    api.post('/submissions', formData),
+};
+
+export const inquiriesAPI = {
+  create: (listingId, data) => api.post(`/inquiries/${listingId}`, data),
+  listAdmin: (params) => api.get('/inquiries/admin', { params }),
+  updateStatus: (id, status) => api.patch(`/inquiries/admin/${id}/status`, { status }),
+  newCount: () => api.get('/inquiries/admin/count'),
 };
