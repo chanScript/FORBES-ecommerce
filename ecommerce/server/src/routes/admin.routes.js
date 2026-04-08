@@ -10,6 +10,7 @@ const {
   restoreListing,
   forceDeleteListing,
   listTrash,
+  markAsSold,
 } = require('../controllers/admin.controller');
 const {
   listSubmissions,
@@ -30,6 +31,7 @@ router.get('/listings/trash', listTrash);
 router.patch('/listings/:id/approve', approveListing);
 router.patch('/listings/:id/reject', rejectListing);
 router.patch('/listings/:id/restore', restoreListing);
+router.patch('/listings/:id/sold', markAsSold);
 router.delete('/listings/:id', adminSoftDelete);
 router.delete('/listings/:id/force', rbac('Super Admin'), forceDeleteListing);
 

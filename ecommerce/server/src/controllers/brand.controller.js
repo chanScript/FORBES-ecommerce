@@ -10,7 +10,7 @@ async function listBrands(req, res, next) {
       include: {
         _count: {
           select: {
-            cars: { where: { isDeleted: false, status: 'Approved' } },
+            listings: { where: { isDeleted: false, status: 'Approved' } },
           },
         },
       },
@@ -41,7 +41,7 @@ async function getModelsByBrand(req, res, next) {
       include: {
         _count: {
           select: {
-            cars: { where: { isDeleted: false, status: 'Approved' } },
+            listings: { where: { isDeleted: false, status: 'Approved' } },
           },
         },
       },
@@ -110,9 +110,9 @@ async function updateBrand(req, res, next) {
 async function deleteBrand(req, res, next) {
   try {
     const id = parseInt(req.params.id, 10);
-    const carCount = await prisma.car.count({ where: { brandId: id } });
-    if (carCount > 0) {
-      return res.status(400).json({ error: 'Cannot delete brand — it has associated car listings.' });
+    const listingCount = await prisma.listing.count({ where: { brandId: id } });
+    if (listingCount > 0) {
+      return res.status(400).json({ error: 'Cannot delete brand — it has associated listings.' });
     }
     // Delete child models first
     await prisma.model.deleteMany({ where: { brandId: id } });

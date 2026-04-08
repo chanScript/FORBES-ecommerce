@@ -4,6 +4,7 @@ const { parsePagination, paginatedResponse } = require('../utils/pagination');
 const { createAuditLog } = require('../middleware/audit.middleware');
 const cloudinary = require('../config/cloudinary');
 const { uploadToCloudinary } = require('../middleware/upload.middleware');
+const { createNotification } = require('../utils/notification.service');
 
 /**
  * GET /api/listings — Public: list approved, non-deleted listings with filters.
@@ -50,6 +51,7 @@ async function getListingBySlug(req, res, next) {
         model: true,
         vehicleType: true,
         images: { orderBy: { sortOrder: 'asc' } },
+        documents: true,
         seller: { select: { id: true, name: true, phone: true, email: true } },
         _count: { select: { favorites: true } },
       },
@@ -153,6 +155,18 @@ async function createListing(req, res, next) {
       recordId: listing.id,
       ipAddress: req.ip,
     });
+
+    // Notify admins of new listing
+    if (!isAdmin) {
+      const io = req.app.get('io');
+      createNotification({
+        type: 'NEW_LISTING',
+        title: 'New Listing Submitted',
+        message: `${req.user.name} submitted a new ${category} listing: "${listing.title}".`,
+        metadata: { listingId: listing.id, category },
+        io,
+      });
+    }
 
     res.status(201).json(listing);
   } catch (err) {

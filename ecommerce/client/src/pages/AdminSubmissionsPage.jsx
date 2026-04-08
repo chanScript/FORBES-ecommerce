@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminAPI } from '../api/cars';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Pagination from '../components/ui/Pagination';
 import { formatPrice } from '../utils/helpers';
 import {
-  ClipboardList, Eye, Check, X, RotateCcw, AlertTriangle,
-  Mail, Phone, User, ArrowRight, Package
+  ClipboardList, Eye, Check, X, AlertTriangle,
+  ArrowRight, Package
 } from 'lucide-react';
 
 const STATUS_STYLES = {
@@ -27,9 +28,9 @@ const SUBTYPE_LABELS = {
 
 export default function AdminSubmissionsPage() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('Pending');
-  const [viewId, setViewId] = useState(null);
   const [rejectId, setRejectId] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
   const [convertError, setConvertError] = useState(null);
@@ -40,17 +41,9 @@ export default function AdminSubmissionsPage() {
     queryFn: () => adminAPI.listSubmissions({ page, limit: 15, status: statusFilter || undefined }).then(r => r.data),
   });
 
-  // Detail
-  const { data: detail, isLoading: detailLoading } = useQuery({
-    queryKey: ['adminSubmission', viewId],
-    queryFn: () => adminAPI.getSubmission(viewId).then(r => r.data),
-    enabled: !!viewId,
-  });
-
   // Mutations
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['adminSubmissions'] });
-    queryClient.invalidateQueries({ queryKey: ['adminSubmission'] });
   };
 
   const approveMutation = useMutation({
@@ -65,7 +58,7 @@ export default function AdminSubmissionsPage() {
 
   const convertMutation = useMutation({
     mutationFn: (id) => adminAPI.convertSubmission(id),
-    onSuccess: () => { setViewId(null); setConvertError(null); invalidate(); },
+    onSuccess: () => { setConvertError(null); invalidate(); },
     onError: (err) => {
       const msg = err?.response?.data?.error || 'Failed to convert submission.';
       setConvertError(msg);
@@ -159,7 +152,7 @@ export default function AdminSubmissionsPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
                         <button
-                          onClick={() => setViewId(sub.id)}
+                          onClick={() => navigate(`/admin/submissions/${sub.id}`)}
                           className="rounded p-1.5 text-gray-500 hover:bg-surface-card"
                           title="View Details"
                         >
@@ -237,100 +230,6 @@ export default function AdminSubmissionsPage() {
         </div>
       )}
 
-      {/* Detail Modal */}
-      {viewId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-surface-light p-6 shadow-xl">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">Submission Details</h3>
-              <button onClick={() => setViewId(null)} className="rounded p-1 hover:bg-surface-card">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            {detailLoading ? (
-              <LoadingSpinner className="h-32" />
-            ) : detail ? (
-              <div className="mt-4 space-y-4">
-                {/* Contact */}
-                <div className="rounded-lg bg-surface-card p-4">
-                  <h4 className="text-sm font-semibold text-gray-700">Contact Info</h4>
-                  <div className="mt-2 space-y-1 text-sm">
-                    <p className="flex items-center gap-2"><User className="h-4 w-4 text-gray-400" /> {detail.fullName}</p>
-                    <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-gray-400" /> {detail.email}</p>
-                    <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-gray-400" /> {detail.phone}</p>
-                  </div>
-                </div>
-
-                {/* Property Info */}
-                <div className="rounded-lg bg-surface-card p-4">
-                  <h4 className="text-sm font-semibold text-gray-700">Property Info</h4>
-                  <div className="mt-2 space-y-1 text-sm">
-                    <p><strong>Category:</strong> {CATEGORY_LABELS[detail.category]}</p>
-                    {detail.vehicleSubtype && <p><strong>Type:</strong> {SUBTYPE_LABELS[detail.vehicleSubtype]}</p>}
-                    {detail.realEstateSubtype && <p><strong>Type:</strong> {SUBTYPE_LABELS[detail.realEstateSubtype]}</p>}
-                    {detail.price && <p><strong>Asking Price:</strong> {formatPrice(detail.price)}</p>}
-                  </div>
-                </div>
-
-                {/* Details */}
-                <div className="rounded-lg bg-surface-card p-4">
-                  <h4 className="text-sm font-semibold text-gray-700">Details</h4>
-                  <p className="mt-2 whitespace-pre-line text-sm text-gray-700">{detail.propertyDetails}</p>
-                </div>
-
-                {/* Images */}
-                {detail.images?.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-semibold text-gray-700">Photos</h4>
-                    <div className="mt-2 grid grid-cols-3 gap-2">
-                      {detail.images.map((img) => (
-                        <img key={img.id} src={img.url} alt="" className="rounded-lg object-cover aspect-video" />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Actions */}
-                {detail.status === 'Pending' && (
-                  <div className="flex gap-2 border-t pt-4">
-                    <button
-                      onClick={() => { approveMutation.mutate(detail.id); setViewId(null); }}
-                      className="btn-primary flex items-center gap-2"
-                    >
-                      <Check className="h-4 w-4" /> Approve
-                    </button>
-                    <button
-                      onClick={() => { setViewId(null); setRejectId(detail.id); }}
-                      className="rounded-lg border border-status-error px-4 py-2 text-sm font-medium text-status-error hover:bg-status-error/5"
-                    >
-                      Reject
-                    </button>
-                  </div>
-                )}
-                {detail.convertedListing ? (
-                  <div className="border-t pt-4">
-                    <p className="flex items-center gap-2 text-sm font-medium text-status-success">
-                      <Check className="h-4 w-4" /> Converted to listing: <strong>{detail.convertedListing.title}</strong>
-                    </p>
-                  </div>
-                ) : detail.status === 'Approved' && (
-                  <div className="border-t pt-4">
-                    <button
-                      onClick={() => handleConvert(detail.id)}
-                      disabled={convertMutation.isPending}
-                      className="btn-primary flex items-center gap-2"
-                    >
-                      <ArrowRight className="h-4 w-4" />
-                      {convertMutation.isPending ? 'Converting...' : 'Convert to Listing'}
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : null}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

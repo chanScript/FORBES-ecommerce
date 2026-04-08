@@ -56,6 +56,7 @@ export const adminAPI = {
   softDelete: (id) => api.delete(`/admin/listings/${id}`),
   restore: (id) => api.patch(`/admin/listings/${id}/restore`),
   forceDelete: (id) => api.delete(`/admin/listings/${id}/force`),
+  markAsSold: (id) => api.patch(`/admin/listings/${id}/sold`),
   // Submission management
   listSubmissions: (params) => api.get('/admin/submissions', { params }),
   getSubmission: (id) => api.get(`/admin/submissions/${id}`),
@@ -63,6 +64,10 @@ export const adminAPI = {
   rejectSubmission: (id, reason) => api.patch(`/admin/submissions/${id}/reject`, { reason }),
   convertSubmission: (id, overrides) => api.post(`/admin/submissions/${id}/convert`, overrides),
   pendingSubmissionCount: () => api.get('/admin/submissions/count'),
+  // Application management
+  listApplications: (params) => api.get('/applications/admin', { params }),
+  updateApplicationStatus: (id, status) => api.patch(`/applications/admin/${id}/status`, { status }),
+  applicationCount: () => api.get('/applications/admin/count'),
 };
 
 export const submissionsAPI = {
@@ -70,9 +75,14 @@ export const submissionsAPI = {
     api.post('/submissions', formData),
 };
 
+export const applicationsAPI = {
+  create: (data) => api.post('/applications', data),
+};
+
 export const inquiriesAPI = {
   create: (listingId, data) => api.post(`/inquiries/${listingId}`, data),
   listAdmin: (params) => api.get('/inquiries/admin', { params }),
   updateStatus: (id, status) => api.patch(`/inquiries/admin/${id}/status`, { status }),
   newCount: () => api.get('/inquiries/admin/count'),
+  deleteInquiry: (id) => api.delete(`/inquiries/admin/${id}`),
 };

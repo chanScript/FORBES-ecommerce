@@ -1,6 +1,7 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { submissionsAPI } from '../api/cars';
-import { Upload, X, AlertCircle, CheckCircle, Send } from 'lucide-react';
+import { documentsAPI } from '../api/documents';
+import { Upload, X, AlertCircle, CheckCircle, Send, FileText } from 'lucide-react';
 
 const CATEGORIES = [
   { value: 'Vehicle', label: 'Vehicle', subtypes: [
@@ -27,6 +28,7 @@ export default function SellerSubmissionPage() {
     price: '',
   });
   const [images, setImages] = useState([]);
+  const [documents, setDocuments] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -43,6 +45,17 @@ export default function SellerSubmissionPage() {
   };
 
   const removeImage = (idx) => setImages(prev => prev.filter((_, i) => i !== idx));
+
+  const handleDocSelect = (e) => {
+    const files = Array.from(e.target.files);
+    if (documents.length + files.length > 5) {
+      setError('Maximum 5 documents.');
+      return;
+    }
+    setDocuments(prev => [...prev, ...files]);
+  };
+
+  const removeDoc = (idx) => setDocuments(prev => prev.filter((_, i) => i !== idx));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,7 +78,10 @@ export default function SellerSubmissionPage() {
       if (form.price) formData.append('price', form.price);
       images.forEach((img) => formData.append('images', img));
 
-      await submissionsAPI.create(formData);
+      const res = await submissionsAPI.create(formData);
+      if (documents.length > 0 && res.data?.id) {
+        await documentsAPI.uploadForSubmission(res.data.id, documents);
+      }
       setSuccess(true);
     } catch (err) {
       setError(err.response?.data?.error || err.response?.data?.errors?.[0]?.msg || 'Submission failed. Please try again.');
@@ -83,7 +99,7 @@ export default function SellerSubmissionPage() {
           Thank you for your submission. Our team will review it and get back to you at <strong>{form.email}</strong>.
         </p>
         <button
-          onClick={() => { setSuccess(false); setForm({ fullName: '', email: '', phone: '', category: '', vehicleSubtype: '', realEstateSubtype: '', propertyDetails: '', price: '' }); setImages([]); }}
+          onClick={() => { setSuccess(false); setForm({ fullName: '', email: '', phone: '', category: '', vehicleSubtype: '', realEstateSubtype: '', propertyDetails: '', price: '' }); setImages([]); setDocuments([]); }}
           className="btn-primary mt-6"
         >
           Submit Another
@@ -251,6 +267,40 @@ export default function SellerSubmissionPage() {
               onChange={handleImageSelect}
               className="hidden"
             />
+          </label>
+        </div>
+
+        {/* Documents */}
+        <div>
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            Documents ({documents.length}/5)
+          </label>
+          <p className="mb-3 text-xs text-secondary-muted">
+            Upload supporting documents such as OR/CR, deed of sale, title, etc. (optional)
+          </p>
+
+          {documents.length > 0 && (
+            <div className="mb-3 space-y-2">
+              {documents.map((doc, idx) => (
+                <div key={idx} className="flex items-center justify-between rounded-lg border px-3 py-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <FileText className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-700 truncate">{doc.name}</span>
+                    <span className="text-xs text-secondary-muted flex-shrink-0">({(doc.size / 1024).toFixed(0)} KB)</span>
+                  </div>
+                  <button type="button" onClick={() => removeDoc(idx)} className="ml-2 rounded p-1 text-gray-400 hover:text-status-error">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <label className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 p-6 text-center transition-colors hover:border-primary-accent">
+            <FileText className="h-8 w-8 text-gray-400" />
+            <span className="text-sm text-secondary-muted">Click to upload documents</span>
+            <span className="text-xs text-gray-400">PDF, JPG, PNG (max 10MB each)</span>
+            <input type="file" accept=".pdf,image/jpeg,image/png,image/webp" multiple onChange={handleDocSelect} className="hidden" />
           </label>
         </div>
 

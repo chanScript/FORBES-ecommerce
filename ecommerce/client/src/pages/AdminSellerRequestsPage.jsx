@@ -142,9 +142,11 @@ export default function AdminSellerRequestsPage() {
                       )}
                     </td>
                     <td className="px-4 py-3">
+                      
                       <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGE[req.status] || ''}`}>
                         {req.status}
                       </span>
+
                     </td>
                     <td className="px-4 py-3 text-xs text-secondary-muted">
                       {new Date(req.createdAt).toLocaleDateString()}
@@ -187,7 +189,6 @@ export default function AdminSellerRequestsPage() {
               </tbody>
             </table>
           </div>
-
           {pagination && (
             <div className="mt-6">
               <Pagination

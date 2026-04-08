@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { inquiriesAPI } from '../api/inquiries';
+import { adminAPI } from '../api/cars';
 import { Link } from 'react-router-dom';
 import { formatPrice } from '../utils/helpers';
 import Pagination from '../components/ui/Pagination';
 import {
   MessageSquare, Eye, CheckCircle, Clock, Phone, Mail,
-  ExternalLink, Filter, Car
+  ExternalLink, Filter, Car, Trash2, Tag
 } from 'lucide-react';
 
 const STATUS_STYLES = {
@@ -30,6 +31,22 @@ export default function AdminInquiriesPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminInquiries'] });
       queryClient.invalidateQueries({ queryKey: ['inquiryCount'] });
+    },
+  });
+
+  const deleteInquiryMutation = useMutation({
+    mutationFn: (id) => inquiriesAPI.adminDelete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminInquiries'] });
+      queryClient.invalidateQueries({ queryKey: ['inquiryCount'] });
+    },
+  });
+
+  const markAsSoldMutation = useMutation({
+    mutationFn: (listingId) => adminAPI.markAsSold(listingId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['adminInquiries'] });
+      queryClient.invalidateQueries({ queryKey: ['adminListings'] });
     },
   });
 
@@ -177,6 +194,37 @@ export default function AdminInquiriesPage() {
                         </button>
                       )}
                     </div>
+
+                    {/* Mark as Sold */}
+                    {inquiry.listing && inquiry.listing.status !== 'Sold' && (
+                      <button
+                        onClick={() => {
+                          if (window.confirm('Mark this listing as Sold? It will be removed from the marketplace.')) {
+                            markAsSoldMutation.mutate(inquiry.listing.id);
+                          }
+                        }}
+                        className="rounded-lg border border-orange-200 px-3 py-1.5 text-xs font-medium text-orange-700 hover:bg-orange-50 transition-colors"
+                      >
+                        <Tag className="inline h-3 w-3 mr-1" /> Mark as Sold
+                      </button>
+                    )}
+                    {inquiry.listing?.status === 'Sold' && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700">
+                        <Tag className="h-3 w-3" /> Sold
+                      </span>
+                    )}
+
+                    {/* Delete */}
+                    <button
+                      onClick={() => {
+                        if (window.confirm('Delete this inquiry? This cannot be undone.')) {
+                          deleteInquiryMutation.mutate(inquiry.id);
+                        }
+                      }}
+                      className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      <Trash2 className="inline h-3 w-3 mr-1" /> Delete
+                    </button>
                   </div>
                 </div>
               </div>

@@ -16,11 +16,7 @@ async function listModels(req, res, next) {
       orderBy: { name: 'asc' },
       include: {
         brand: { select: { id: true, name: true, slug: true } },
-        _count: {
-          select: {
-            cars: { where: { isDeleted: false, status: 'Approved' } },
-          },
-        },
+       
       },
     });
 
@@ -63,14 +59,14 @@ async function createModel(req, res, next) {
 }
 
 /**
- * DELETE /api/models/:id — Admin/Seller: delete a model (only if no cars reference it).
+ * DELETE /api/models/:id — Admin/Seller: delete a model (only if no listings reference it).
  */
 async function deleteModel(req, res, next) {
   try {
     const id = parseInt(req.params.id, 10);
-    const carCount = await prisma.car.count({ where: { modelId: id } });
-    if (carCount > 0) {
-      return res.status(400).json({ error: 'Cannot delete model — it has associated car listings.' });
+    const listingCount = await prisma.listing.count({ where: { modelId: id } });
+    if (listingCount > 0) {
+      return res.status(400).json({ error: 'Cannot delete model — it has associated listings.' });
     }
     await prisma.model.delete({ where: { id } });
     res.json({ message: 'Model deleted.' });

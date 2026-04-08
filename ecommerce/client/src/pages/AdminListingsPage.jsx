@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Pagination from '../components/ui/Pagination';
 import { formatPrice, getStatusBadgeClass } from '../utils/helpers';
-import { Check, X, Trash2, RotateCcw, Eye, AlertTriangle, Car } from 'lucide-react';
+import { Check, X, Trash2, RotateCcw, Eye, AlertTriangle, Car, Pencil } from 'lucide-react';
 
 const TABS = [
   { key: 'all', label: 'All Listings' },
@@ -117,11 +117,14 @@ export default function AdminListingsPage() {
             </>
           ) : (
             <>
-              {car.status === 'Approved' && car.slug && (
-                <a href={`/listings/${car.slug}`} target="_blank" rel="noreferrer" className="rounded p-1.5 text-gray-500 hover:bg-surface-card">
+              {car.slug && (
+                <a href={`/listings/${car.slug}`} target="_blank" rel="noreferrer" className="rounded p-1.5 text-gray-500 hover:bg-surface-card" title="View">
                   <Eye className="h-4 w-4" />
                 </a>
               )}
+              <a href={`/seller/listings/${car.id}/edit`} className="rounded p-1.5 text-primary-accent hover:bg-primary-accent/10" title="Edit">
+                <Pencil className="h-4 w-4" />
+              </a>
               {car.status === 'Pending' && (
                 <>
                   <button

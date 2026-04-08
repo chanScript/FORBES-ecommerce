@@ -4,6 +4,7 @@ const { parsePagination, paginatedResponse } = require('../utils/pagination');
 const { createAuditLog } = require('../middleware/audit.middleware');
 const { sendEmail, sendSubmissionReceivedEmail, sendSubmissionStatusEmail } = require('../utils/email');
 const { uploadToCloudinary } = require('../middleware/upload.middleware');
+const { createNotification } = require('../utils/notification.service');
 
 /**
  * POST /api/submissions — Public: anonymous seller submission.
@@ -75,6 +76,16 @@ async function createSubmission(req, res, next) {
     // Confirmation to submitter (non-blocking)
     setImmediate(() => sendSubmissionReceivedEmail(email, fullName));
 
+    // Real-time notification for admins
+    const io = req.app.get('io');
+    createNotification({
+      type: 'NEW_SUBMISSION',
+      title: 'New Seller Submission',
+      message: `${fullName} submitted a new ${category} listing for review.`,
+      metadata: { submissionId: submission.id, category },
+      io,
+    });
+
     res.status(201).json({ message: 'Submission received. We will review it shortly.', id: submission.id });
   } catch (err) {
     next(err);
@@ -100,6 +111,7 @@ async function listSubmissions(req, res, next) {
         take: limit,
         include: {
           images: true,
+          documents: true,
           reviewer: { select: { id: true, name: true } },
           convertedListing: { select: { id: true, title: true, slug: true } },
         },
@@ -122,6 +134,7 @@ async function getSubmission(req, res, next) {
       where: { id: parseInt(req.params.id, 10) },
       include: {
         images: true,
+        documents: true,
         reviewer: { select: { id: true, name: true } },
         convertedListing: { select: { id: true, title: true, slug: true, status: true } },
       },

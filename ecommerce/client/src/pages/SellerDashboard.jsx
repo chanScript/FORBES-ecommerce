@@ -5,7 +5,8 @@ import { listingsAPI } from '../api/cars';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { formatPrice, getStatusBadgeClass } from '../utils/helpers';
-import { Plus, Eye, Edit, Trash2, Package, AlertCircle } from 'lucide-react';
+import { Plus, Eye, Edit, Trash2, Package, AlertCircle, ShoppingBag } from 'lucide-react';
+import ApplySellerModal from '../components/ui/ApplySellerModal';
 
 export default function SellerDashboard() {
   const { user, isSeller } = useAuth();
@@ -22,17 +23,10 @@ export default function SellerDashboard() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['myListings'] }),
   });
 
-  // Non-sellers see a simple message
+  // Non-sellers see apply button
   if (!isSeller) {
     return (
-      <div className="mx-auto max-w-lg px-4 py-20 text-center">
-        <Package className="mx-auto h-16 w-16 text-gray-300" />
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">Seller Access Required</h1>
-        <p className="mt-2 text-secondary-muted">
-          You need seller access to manage listings. Please contact an administrator.
-        </p>
-        <Link to="/" className="btn-primary mt-6 inline-block">Browse Marketplace</Link>
-      </div>
+      <NonSellerView />
     );
   }
 
@@ -150,6 +144,26 @@ export default function SellerDashboard() {
           </table>
         </div>
       )}
+    </div>
+  );
+}
+
+function NonSellerView() {
+  const [modalOpen, setModalOpen] = useState(false);
+  return (
+    <div className="mx-auto max-w-lg px-4 py-20 text-center">
+      <ShoppingBag className="mx-auto h-16 w-16 text-gray-300" />
+      <h1 className="mt-4 text-2xl font-bold text-gray-900">Become a Seller</h1>
+      <p className="mt-2 text-secondary-muted">
+        Apply to become a seller and start listing your vehicles or properties on our marketplace.
+      </p>
+      <div className="mt-6 flex flex-col items-center gap-3">
+        <button onClick={() => setModalOpen(true)} className="btn-primary inline-flex items-center gap-2">
+          <ShoppingBag className="h-4 w-4" /> Apply as Seller
+        </button>
+        <Link to="/" className="text-sm text-secondary-muted hover:text-primary-accent">Browse Marketplace</Link>
+      </div>
+      <ApplySellerModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }

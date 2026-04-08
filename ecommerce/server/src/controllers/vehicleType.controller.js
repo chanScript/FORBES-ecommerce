@@ -11,7 +11,7 @@ async function listVehicleTypes(req, res, next) {
       include: {
         _count: {
           select: {
-            cars: { where: { isDeleted: false, status: 'Approved' } },
+            listings: { where: { isDeleted: false, status: 'Approved' } },
           },
         },
       },
@@ -50,9 +50,9 @@ async function createVehicleType(req, res, next) {
 async function deleteVehicleType(req, res, next) {
   try {
     const id = parseInt(req.params.id, 10);
-    const carCount = await prisma.car.count({ where: { vehicleTypeId: id } });
-    if (carCount > 0) {
-      return res.status(400).json({ error: 'Cannot delete type — it has associated car listings.' });
+    const listingCount = await prisma.listing.count({ where: { vehicleTypeId: id } });
+    if (listingCount > 0) {
+      return res.status(400).json({ error: 'Cannot delete type — it has associated listings.' });
     }
     await prisma.vehicleType.delete({ where: { id } });
     res.json({ message: 'Vehicle type deleted.' });

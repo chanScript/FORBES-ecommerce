@@ -2,6 +2,7 @@ const prisma = require('../config/db');
 const { parsePagination, paginatedResponse } = require('../utils/pagination');
 const { createAuditLog } = require('../middleware/audit.middleware');
 const { sendEmail } = require('../utils/email');
+const { createNotification } = require('../utils/notification.service');
 
 /**
  * POST /api/inquiries/:listingId — Public: submit an inquiry (no login required).
@@ -36,13 +37,29 @@ async function createInquiry(req, res, next) {
       },
     });
 
-    // Email admin(s) about new inquiry
-    const admins = await prisma.user.findMany({
-      where: { role: { name: { in: ['Admin', 'Super Admin'] } } },
-      select: { email: true },
+    // Real-time notification for admins
+    const io = req.app.get('io');
+    createNotification({
+      type: 'NEW_INQUIRY',
+      title: 'New Inquiry Received',
+      message: `${name} inquired about "${listing.title}".`,
+      metadata: { inquiryId: inquiry.id, listingId },
+      io,
     });
 
-    const adminEmails = admins.map(a => a.email);
+    // Email admin(s) about new inquiry — use configurable recipient or fallback to all admins
+    let adminEmails = [];
+    const emailSetting = await prisma.systemSetting.findUnique({ where: { key: 'inquiry_email' } });
+    if (emailSetting && emailSetting.value) {
+      adminEmails = [emailSetting.value];
+    } else {
+      const admins = await prisma.user.findMany({
+        where: { role: { name: { in: ['Admin', 'Super Admin'] } } },
+        select: { email: true },
+      });
+      adminEmails = admins.map(a => a.email);
+    }
+
     if (adminEmails.length > 0) {
       const imgUrl = listing.images[0]?.url || '';
       await sendEmail(
@@ -137,9 +154,37 @@ async function getNewInquiryCount(req, res, next) {
   }
 }
 
+/**
+ * DELETE /api/inquiries/admin/:id — Admin: delete an inquiry.
+ */
+async function deleteInquiry(req, res, next) {
+  try {
+    const id = parseInt(req.params.id, 10);
+    const inquiry = await prisma.inquiry.findUnique({ where: { id } });
+    if (!inquiry) {
+      return res.status(404).json({ error: 'Inquiry not found.' });
+    }
+
+    await prisma.inquiry.delete({ where: { id } });
+
+    await createAuditLog({
+      userId: req.user.id,
+      action: 'INQUIRY_DELETED',
+      module: 'inquiries',
+      recordId: String(id),
+      ipAddress: req.ip,
+    });
+
+    res.json({ message: 'Inquiry deleted.' });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   createInquiry,
   listInquiries,
   updateInquiryStatus,
   getNewInquiryCount,
+  deleteInquiry,
 };

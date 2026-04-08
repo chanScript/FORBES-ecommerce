@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { adminAPI } from '../api/cars';
 import { inquiriesAPI } from '../api/inquiries';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
-import { LayoutDashboard, ClipboardCheck, List, Trash2, ClipboardList, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, ClipboardCheck, List, Trash2, ClipboardList, MessageSquare, FileText } from 'lucide-react';
 
 export default function AdminDashboard() {
   const { data: allListings, isLoading: allLoading } = useQuery({
@@ -31,7 +31,12 @@ export default function AdminDashboard() {
     queryFn: () => inquiriesAPI.adminCount().then(r => r.data),
   });
 
-  const isLoading = allLoading || pendingLoading || trashLoading || subLoading || inquiryLoading;
+  const { data: appCountData, isLoading: appLoading } = useQuery({
+    queryKey: ['admin', 'applicationCount'],
+    queryFn: () => adminAPI.applicationCount().then(r => r.data),
+  });
+
+  const isLoading = allLoading || pendingLoading || trashLoading || subLoading || inquiryLoading || appLoading;
 
   if (isLoading) return <LoadingSpinner size="lg" className="h-96" />;
 
@@ -40,12 +45,14 @@ export default function AdminDashboard() {
   const trashCount = trashListings?.length || 0;
   const submissionCount = submissionCountData?.count || 0;
   const inquiryCount = inquiryCountData?.count || 0;
+  const applicationCount = appCountData?.count || 0;
 
   const cards = [
     { label: 'Total Listings', value: totalCount, icon: List, link: '/admin/listings', color: 'bg-primary-blue' },
     { label: 'Pending Approval', value: pendingCount, icon: ClipboardCheck, link: '/admin/listings?tab=pending', color: 'bg-status-warning' },
     { label: 'Submissions', value: submissionCount, icon: ClipboardList, link: '/admin/submissions', color: 'bg-primary-accent' },
     { label: 'New Inquiries', value: inquiryCount, icon: MessageSquare, link: '/admin/inquiries', color: 'bg-primary-blue' },
+    { label: 'Applications', value: applicationCount, icon: FileText, link: '/admin/applications', color: 'bg-status-success' },
     { label: 'In Trash', value: trashCount, icon: Trash2, link: '/admin/listings?tab=trash', color: 'bg-status-error' },
   ];
 
@@ -56,7 +63,7 @@ export default function AdminDashboard() {
         <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
       </div>
 
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((c) => (
           <Link
             key={c.label}

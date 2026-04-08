@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { listingsAPI, brandsAPI, modelsAPI, vehicleTypesAPI } from '../api/cars';
+import { documentsAPI } from '../api/documents';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ManageableSelect from '../components/ui/ManageableSelect';
-import { Upload, X, AlertCircle } from 'lucide-react';
+import { Upload, X, AlertCircle, FileText } from 'lucide-react';
 
 const FUEL_TYPES = ['Gasoline', 'Diesel', 'Hybrid', 'Electric', 'LPG'];
 const TRANSMISSIONS = ['Automatic', 'Manual', 'CVT'];
@@ -45,6 +46,7 @@ export default function SellerSubmitPage() {
   const [form, setForm] = useState(INITIAL_FORM);
   const [images, setImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
+  const [documents, setDocuments] = useState([]);
   const [error, setError] = useState('');
 
   const isVehicle = form.category === 'Vehicle';
@@ -122,6 +124,9 @@ export default function SellerSubmitPage() {
         images.forEach((img) => formData.append('images', img));
         await listingsAPI.uploadImages(listing.id, formData);
       }
+      if (documents.length > 0) {
+        await documentsAPI.uploadForListing(listing.id, documents);
+      }
       return listing;
     },
     onSuccess: () => {
@@ -144,6 +149,17 @@ export default function SellerSubmitPage() {
   };
 
   const removeNewImage = (idx) => setImages(prev => prev.filter((_, i) => i !== idx));
+
+  const handleDocSelect = (e) => {
+    const files = Array.from(e.target.files);
+    if (documents.length + files.length > 5) {
+      setError('Maximum 5 documents per listing.');
+      return;
+    }
+    setDocuments(prev => [...prev, ...files]);
+  };
+
+  const removeDoc = (idx) => setDocuments(prev => prev.filter((_, i) => i !== idx));
 
   const handleDeleteExistingImage = async (imageId) => {
     try {
@@ -439,6 +455,40 @@ export default function SellerSubmitPage() {
             <span className="text-sm text-secondary-muted">Click to upload photos</span>
             <span className="text-xs text-gray-400">JPG, PNG, WebP (max 5MB each)</span>
             <input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={handleImageSelect} className="hidden" />
+          </label>
+        </div>
+
+        {/* Documents */}
+        <div>
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            Documents ({documents.length}/5)
+          </label>
+          <p className="mb-3 text-xs text-secondary-muted">
+            Upload supporting documents such as OR/CR, deed of sale, title, etc.
+          </p>
+
+          {documents.length > 0 && (
+            <div className="mb-3 space-y-2">
+              {documents.map((doc, idx) => (
+                <div key={idx} className="flex items-center justify-between rounded-lg border px-3 py-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <FileText className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    <span className="text-sm text-gray-700 truncate">{doc.name}</span>
+                    <span className="text-xs text-secondary-muted flex-shrink-0">({(doc.size / 1024).toFixed(0)} KB)</span>
+                  </div>
+                  <button type="button" onClick={() => removeDoc(idx)} className="ml-2 rounded p-1 text-gray-400 hover:text-status-error">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <label className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 p-6 text-center transition-colors hover:border-primary-accent">
+            <FileText className="h-8 w-8 text-gray-400" />
+            <span className="text-sm text-secondary-muted">Click to upload documents</span>
+            <span className="text-xs text-gray-400">PDF, JPG, PNG (max 10MB each)</span>
+            <input type="file" accept=".pdf,image/jpeg,image/png,image/webp" multiple onChange={handleDocSelect} className="hidden" />
           </label>
         </div>
 

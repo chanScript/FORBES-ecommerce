@@ -1,9 +1,12 @@
 require('dotenv').config();
 
 const express = require('express');
+const http = require('http');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { Server } = require('socket.io');
+const { verifyToken } = require('./src/utils/jwt');
 
 const authRoutes = require('./src/routes/auth.routes');
 const listingRoutes = require('./src/routes/listing.routes');
@@ -15,9 +18,52 @@ const favoriteRoutes = require('./src/routes/favorite.routes');
 const filterRoutes = require('./src/routes/filter.routes');
 const submissionRoutes = require('./src/routes/submission.routes');
 const inquiryRoutes = require('./src/routes/inquiry.routes');
+const applicationRoutes = require('./src/routes/application.routes');
+const documentRoutes = require('./src/routes/document.routes');
+const notificationRoutes = require('./src/routes/notification.routes');
+const settingsRoutes = require('./src/routes/settings.routes');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
+
+// ----------------------------------------------------------
+// CORS Origins (shared between Express & Socket.io)
+// ----------------------------------------------------------
+const corsOrigins = [
+  process.env.CLIENT_URL || 'http://localhost:5173',
+  'http://192.168.34.86:5173',
+  'http://192.168.34.86:8080',
+  'http://localhost:5173/',
+];
+
+// ----------------------------------------------------------
+// Socket.io — Real-Time Notifications
+// ----------------------------------------------------------
+const io = new Server(server, {
+  cors: { origin: corsOrigins, credentials: true },
+});
+
+// Authenticate socket connections via JWT
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token;
+  if (!token) return next(new Error('Authentication required'));
+  try {
+    const decoded = verifyToken(token);
+    socket.userId = decoded.userId;
+    next();
+  } catch {
+    next(new Error('Invalid token'));
+  }
+});
+
+io.on('connection', (socket) => {
+  // Join a personal room so we can target notifications per-user
+  socket.join(`user:${socket.userId}`);
+});
+
+// Make io available to controllers via req.app
+app.set('io', io);
 
 // ----------------------------------------------------------
 // Security Middleware
@@ -25,12 +71,7 @@ const PORT = process.env.PORT || 3000;
 app.use(helmet());
 
 app.use(cors({
-  origin: [
-    process.env.CLIENT_URL || 'http://localhost:5173',
-    'http://192.168.34.86:5173',
-    'http://192.168.34.86:8080',
-       'http://localhost:5173/'
-  ],
+  origin: corsOrigins,
   credentials: true,
 }));
 
@@ -62,6 +103,10 @@ app.use('/api/favorites', favoriteRoutes);
 app.use('/api/filters', filterRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/inquiries', inquiryRoutes);
+app.use('/api/applications', applicationRoutes);
+app.use('/api/documents', documentRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // ----------------------------------------------------------
 // Health Check
@@ -84,9 +129,9 @@ app.use((err, _req, res, _next) => {
 });
 
 // ----------------------------------------------------------
-// Start Server
+// Start Server (HTTP server for Express + Socket.io)
 // ----------------------------------------------------------
-app.listen(PORT, '0.0.0.0', () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`[Server] Running on port ${PORT} (${process.env.NODE_ENV || 'development'})`);
   console.log(`[Server] Network access: http://192.168.34.86:${PORT}`);
 });

@@ -5,4 +5,5 @@ export const inquiriesAPI = {
   adminList: (params) => api.get('/inquiries/admin', { params }),
   adminCount: () => api.get('/inquiries/admin/count'),
   adminUpdateStatus: (id, status) => api.patch(`/inquiries/admin/${id}/status`, { status }),
+  adminDelete: (id) => api.delete(`/inquiries/admin/${id}`),
 };

@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 import { listingsAPI, favoritesAPI, filtersAPI } from '../api/cars';
 import { useAuth } from '../context/AuthContext';
 import CarGrid from '../components/cars/CarGrid';
@@ -8,8 +9,7 @@ import ErrorBoundary from '../components/ui/ErrorBoundary';
 import FilterSidebar from '../components/filters/FilterSidebar';
 import SearchBar from '../components/filters/SearchBar';
 import SortDropdown from '../components/filters/SortDropdown';
-import Pagination from '../components/ui/Pagination';
-import { SlidersHorizontal, X, Car, Truck, Home, Building2, LandPlot } from 'lucide-react';
+import { SlidersHorizontal, X, Car, Truck, Home, Building2, LandPlot, Loader2 } from 'lucide-react';
 
 const CATEGORY_TABS = [
   { key: '', label: 'All', icon: null },
@@ -52,11 +52,37 @@ const DEFAULT_FILTERS = {
 export default function HomePage() {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const [sort, setSort] = useState('newest');
+  // Initialize filters from URL search params (supports deep-linking from landing pages)
+  const initialFilters = useMemo(() => {
+    const f = { ...DEFAULT_FILTERS };
+    const urlKeys = ['category', 'vehicleSubtype', 'realEstateSubtype', 'brand', 'model',
+      'vehicleType', 'minPrice', 'maxPrice', 'minYear', 'maxYear', 'fuelType',
+      'transmission', 'city', 'search'];
+    for (const key of urlKeys) {
+      const val = searchParams.get(key);
+      if (val) f[key] = val;
+    }
+    return f;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
+
+  const [filters, setFilters] = useState(initialFilters);
+  const [sort, setSort] = useState(searchParams.get('sort') || 'newest');
   const [page, setPage] = useState(1);
+  const [loadedPages, setLoadedPages] = useState([]);
   const [mobileSidebar, setMobileSidebar] = useState(false);
+
+  // Sync filters back to URL (skip empty values)
+  useEffect(() => {
+    const params = {};
+    for (const [key, val] of Object.entries(filters)) {
+      if (val) params[key] = val;
+    }
+    if (sort && sort !== 'newest') params.sort = sort;
+    setSearchParams(params, { replace: true });
+  }, [filters, sort, setSearchParams]);
 
   // Build query params (strip empty values)
   const queryParams = {
@@ -67,11 +93,31 @@ export default function HomePage() {
   };
 
   // Fetch listings
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isFetching } = useQuery({
     queryKey: ['listings', queryParams],
     queryFn: () => listingsAPI.list(queryParams).then(r => r.data),
     placeholderData: (prev) => prev,
   });
+
+  // Accumulate pages for "Load More"
+  const currentPageData = data?.data || [];
+  const pagination = data?.pagination;
+
+  // When data changes from a new page, accumulate 
+  const allListings = useMemo(() => {
+    if (page === 1) return currentPageData;
+    // For subsequent pages, accumulate
+    return [...loadedPages, ...currentPageData];
+  }, [currentPageData, loadedPages, page]);
+
+  const handleLoadMore = () => {
+    if (pagination && page < pagination.totalPages) {
+      setLoadedPages(allListings);
+      setPage(prev => prev + 1);
+    }
+  };
+
+  const hasMore = pagination && page < pagination.totalPages;
 
   // Fetch favorites (if logged in)
   const { data: favoritesData } = useQuery({
@@ -113,11 +159,13 @@ export default function HomePage() {
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
     setPage(1);
+    setLoadedPages([]);
   };
 
   const handleCategoryChange = (category) => {
     setFilters({ ...DEFAULT_FILTERS, category, search: filters.search });
     setPage(1);
+    setLoadedPages([]);
   };
 
   const handleSubtypeChange = (subtype) => {
@@ -127,17 +175,20 @@ export default function HomePage() {
       setFilters({ ...filters, realEstateSubtype: subtype });
     }
     setPage(1);
+    setLoadedPages([]);
   };
 
   const handleSearch = (searchTerm) => {
     setFilters(prev => ({ ...prev, search: searchTerm }));
     setPage(1);
+    setLoadedPages([]);
   };
 
   const handleReset = () => {
     setFilters(DEFAULT_FILTERS);
     setSort('newest');
     setPage(1);
+    setLoadedPages([]);
   };
 
   return (
@@ -146,7 +197,7 @@ export default function HomePage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Marketplace</h1>
         <p className="mt-1 text-sm text-secondary-muted">
-          {data?.pagination?.total?.toLocaleString() || 0} listings available
+          {pagination?.total?.toLocaleString() || 0} listings available
         </p>
       </div>
 
@@ -198,7 +249,7 @@ export default function HomePage() {
           <SearchBar value={filters.search} onSearch={handleSearch} />
         </div>
         <div className="flex items-center gap-3">
-          <SortDropdown value={sort} onChange={(v) => { setSort(v); setPage(1); }} />
+          <SortDropdown value={sort} onChange={(v) => { setSort(v); setPage(1); setLoadedPages([]); }} />
           <button
             onClick={() => setMobileSidebar(true)}
             className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 lg:hidden"
@@ -234,23 +285,34 @@ export default function HomePage() {
         {/* Car Grid */}
         <div className="flex-1">
           <ErrorBoundary>
-          {isLoading ? (
+          {isLoading && page === 1 ? (
             <CarCardSkeleton count={6} />
           ) : (
             <>
               <CarGrid
-                cars={data?.data || []}
+                cars={allListings}
                 onToggleFavorite={handleToggleFavorite}
                 favoritedIds={favoritedIds}
               />
-              {data?.pagination && (
-                <div className="mt-8">
-                  <Pagination
-                    page={data.pagination.page}
-                    totalPages={data.pagination.totalPages}
-                    onPageChange={setPage}
-                  />
+              {hasMore && (
+                <div className="mt-8 text-center">
+                  <button
+                    onClick={handleLoadMore}
+                    disabled={isFetching}
+                    className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-surface-light px-8 py-2.5 text-sm font-medium text-gray-700 transition hover:border-primary-accent hover:text-primary-accent disabled:opacity-50"
+                  >
+                    {isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                    {isFetching ? 'Loading...' : 'Load More'}
+                  </button>
+                  <p className="mt-2 text-xs text-secondary-muted">
+                    Showing {allListings.length} of {pagination?.total || 0} results
+                  </p>
                 </div>
+              )}
+              {!hasMore && allListings.length > 0 && (
+                <p className="mt-8 text-center text-sm text-secondary-muted">
+                  Showing all {allListings.length} results
+                </p>
               )}
             </>
           )}

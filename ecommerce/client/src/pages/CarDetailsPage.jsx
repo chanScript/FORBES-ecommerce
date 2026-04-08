@@ -1,13 +1,12 @@
-import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { carsAPI, favoritesAPI } from '../api/cars';
 import { inquiriesAPI } from '../api/inquiries';
 import { useAuth } from '../context/AuthContext';
 import ImageGallery from '../components/cars/ImageGallery';
-import SellerDetailsModal from '../components/cars/SellerDetailsModal';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { formatPrice, formatMileage } from '../utils/helpers';
+import { useState } from 'react';
 import {
   Heart, MapPin, Fuel, Gauge, Calendar, Settings, Palette,
   Users, Phone, Mail, ArrowLeft, Share2, Car, Eye, Send, CheckCircle
@@ -17,7 +16,6 @@ export default function CarDetailsPage() {
   const { slug } = useParams();
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
-  const [sellerModalId, setSellerModalId] = useState(null);
   const [inquiryMessage, setInquiryMessage] = useState('');
   const [showInquiryForm, setShowInquiryForm] = useState(false);
 
@@ -178,13 +176,13 @@ export default function CarDetailsPage() {
                 </a>
               )}
 
-              {/* View Seller Details Button (replaces Email Seller) */}
-              <button
-                onClick={() => setSellerModalId(car.seller?.id)}
+              {/* View Seller Details Button (links to seller profile page) */}
+              <Link
+                to={`/sellers/${car.seller?.id}`}
                 className="btn-outline flex w-full items-center justify-center gap-2"
               >
                 <Eye className="h-4 w-4" /> View Seller Details
-              </button>
+              </Link>
 
               {/* Inquiry / I'm Interested */}
               {isAuthenticated && (
@@ -246,11 +244,6 @@ export default function CarDetailsPage() {
           </div>
         </div>
       </div>
-
-      {/* Seller Details Modal */}
-      {sellerModalId && (
-        <SellerDetailsModal sellerId={sellerModalId} onClose={() => setSellerModalId(null)} />
-      )}
     </div>
   );
 }

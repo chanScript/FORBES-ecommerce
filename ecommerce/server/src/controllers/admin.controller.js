@@ -308,6 +308,41 @@ async function listTrash(req, res, next) {
   }
 }
 
+/**
+ * PATCH /api/admin/listings/:id/sold — Mark listing as sold.
+ */
+async function markAsSold(req, res, next) {
+  try {
+    const listing = await prisma.listing.findUnique({ where: { id: req.params.id } });
+
+    if (!listing || listing.isDeleted) {
+      return res.status(404).json({ error: 'Listing not found.' });
+    }
+
+    if (listing.status === 'Sold') {
+      return res.status(400).json({ error: 'Listing is already marked as sold.' });
+    }
+
+    const updated = await prisma.listing.update({
+      where: { id: req.params.id },
+      data: { status: 'Sold' },
+      include: { brand: true, model: true },
+    });
+
+    await createAuditLog({
+      userId: req.user.id,
+      action: 'LISTING_MARKED_SOLD',
+      module: 'listings',
+      recordId: listing.id,
+      ipAddress: req.ip,
+    });
+
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   listAllListings,
   listPendingListings,
@@ -317,4 +352,5 @@ module.exports = {
   restoreListing,
   forceDeleteListing,
   listTrash,
+  markAsSold,
 };
