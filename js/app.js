@@ -29,20 +29,20 @@
 
     // Nav wrapper classes differ: transparent (index) vs solid (other pages)
     const navClasses = isTransparent
-      ? 'fixed top-0 left-0 right-0 z-50 backdrop-blur-md transition-all duration-500 border-b border-transparent'
+      ? 'fixed top-0 left-0 right-0 z-50 bg-white/97 backdrop-blur-md transition-all duration-300 border-b border-gray-100'
       : 'fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md transition-all duration-300 border-b border-gray-100';
 
     // Link color classes
-    const brandClass = isTransparent ? 'nav-brand text-white' : 'text-primary-900';
+    const brandClass = isTransparent ? 'nav-brand text-primary-900' : 'text-primary-900';
     const accentClass = isTransparent ? 'nav-accent text-accent' : 'text-accent';
     const linkClass = isTransparent
-      ? 'nav-link text-white/90 hover:text-white'
+      ? 'nav-link text-gray-600 hover:text-primary-900'
       : 'text-gray-600 hover:text-primary-900';
     const ctaClass = isTransparent
-      ? 'nav-cta ml-4 bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-sm'
+      ? 'nav-cta ml-4 bg-primary-900 hover:bg-primary-800 text-white border border-primary-900 shadow-md'
       : 'ml-4 bg-primary-900 hover:bg-primary-800 text-white shadow-md';
     const mobileBtnClass = isTransparent
-      ? 'nav-mobile-btn lg:hidden text-white p-2 rounded-lg hover:bg-white/10 transition-colors duration-500'
+      ? 'nav-mobile-btn lg:hidden text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors'
       : 'lg:hidden text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors';
     const transitionDuration = isTransparent ? 'transition-colors duration-500' : 'transition-colors';
     const aboutBtnClass = isTransparent
@@ -83,7 +83,7 @@
               </div>
             </div>
             <a href="calculator.html" class="${linkClass} px-4 py-${isTransparent ? '3' : '2'} text-sm font-medium tracking-wide uppercase ${transitionDuration}">Calculator</a>
-            <a href="http://localhost:5173" class="${linkClass} px-4 py-${isTransparent ? '3' : '2'} text-sm font-medium tracking-wide uppercase ${transitionDuration} flex items-center gap-1"> Ecommerce</a>
+            <a href="http://192.168.34.86:5173" class="${linkClass} px-4 py-${isTransparent ? '3' : '2'} text-sm font-medium tracking-wide uppercase ${transitionDuration} flex items-center gap-1"> Ecommerce</a>
             <a href="https://negrec.forbesfinancial.mweeb.com/signin" target="_blank" rel="noopener noreferrer" class="${linkClass} px-4 py-${isTransparent ? '3' : '2'} text-sm font-medium tracking-wide uppercase ${transitionDuration} flex items-center gap-1">Login <i data-lucide="external-link" class="w-3.5 h-3.5"></i></a>
             <a href="contact.html" class="${ctaClass} px-6 py-2.5 rounded-lg text-sm font-semibold tracking-wide uppercase transition-all">Book an Appointment</a>
           </div>

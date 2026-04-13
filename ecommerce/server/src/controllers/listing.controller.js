@@ -34,6 +34,14 @@ async function listListings(req, res, next) {
       prisma.listing.count({ where }),
     ]);
 
+    // Use sellerName if available (from submission conversion)
+    listings.forEach(listing => {
+      if (listing.sellerName) {
+        listing.seller.name = listing.sellerName;
+        if (listing.sellerPhone) listing.seller.phone = listing.sellerPhone;
+      }
+    });
+
     res.json(paginatedResponse(listings, total, page, limit));
   } catch (err) {
     next(err);
@@ -65,6 +73,12 @@ async function getListingBySlug(req, res, next) {
         where: { userId_listingId: { userId: req.user.id, listingId: listing.id } },
       });
       isFavorited = !!fav;
+    }
+
+    // Use sellerName and sellerPhone if available (from submission conversion)
+    if (listing.sellerName) {
+      listing.seller.name = listing.sellerName;
+      if (listing.sellerPhone) listing.seller.phone = listing.sellerPhone;
     }
 
     res.json({ ...listing, isFavorited });

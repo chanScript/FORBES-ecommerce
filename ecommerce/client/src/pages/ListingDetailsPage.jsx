@@ -426,11 +426,7 @@ export default function ListingDetailsPage() {
                     <p className="text-xs text-secondary-muted">Verified Seller</p>
                   </div>
                 </div>
-                {listing.seller.phone && (
-                  <a href={`tel:${listing.seller.phone}`} className="btn-primary mt-4 flex w-full items-center justify-center gap-2">
-                    <Phone className="h-4 w-4" /> Call Seller
-                  </a>
-                )}
+                
               </div>
             )}
 

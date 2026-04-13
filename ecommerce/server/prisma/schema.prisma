@@ -212,6 +212,8 @@ model Listing {
   // ── Seller ──
   sellerId      String      @db.VarChar(36)
   seller        User        @relation("SellerListings", fields: [sellerId], references: [id])
+  sellerName    String?     @db.VarChar(255)
+  sellerPhone   String?     @db.VarChar(50)
 
   // ── Approval tracking ──
   approvedAt      DateTime?

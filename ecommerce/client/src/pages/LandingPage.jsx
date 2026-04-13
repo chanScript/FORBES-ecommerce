@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SERVICE_CATEGORIES } from '../data/services';
+import ApplicationModal from '../components/ApplicationModal';
 import {
   ArrowRight, Shield, CreditCard, RefreshCw, Handshake, Car, Home,
   ChevronRight, CheckCircle,
@@ -13,6 +15,8 @@ const CATEGORY_ICONS = {
 };
 
 export default function LandingPage() {
+  const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
+
   return (
     <>
       {/* Hero Section */}
@@ -169,16 +173,16 @@ export default function LandingPage() {
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-white lg:text-3xl">Ready to Get Started?</h2>
             <p className="mt-3 text-gray-300">
-              Create an account and explore everything our platform has to offer.
+              Apply and explore everything our platform has to offer.
             </p>
           </div>
           <div className="flex shrink-0 gap-3">
-            <Link
-              to="/register"
+            <button
+              onClick={() => setIsApplicationModalOpen(true)}
               className="inline-flex items-center gap-2 rounded-lg bg-primary-accent px-7 py-3 font-semibold text-white shadow-lg transition hover:bg-red-700"
             >
-              Create Account
-            </Link>
+              Apply Now
+            </button>
             <Link
               to="/browse"
               className="inline-flex items-center gap-2 rounded-lg border border-white/30 px-7 py-3 font-semibold text-white transition hover:bg-white/10"
@@ -188,6 +192,12 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Application Modal */}
+      <ApplicationModal 
+        isOpen={isApplicationModalOpen}
+        onClose={() => setIsApplicationModalOpen(false)}
+      />
     </>
   );
 }

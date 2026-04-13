@@ -11,8 +11,8 @@
       theme: {
         extend: {
           colors: {
-            primary: { 50:'#f0f4ff',100:'#e0e9ff',200:'#c7d6fe',300:'#a3b8fc',400:'#7a95f8',500:'#5b73f0',600:'#3b4fe4',700:'#2d3dca',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
-            accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
+            primary: { 50:'#eef2ff',100:'#dce7ff',200:'#b8ccff',300:'#8aaaf5',400:'#5c82ec',500:'#3660d9',600:'#2449b8',700:'#1c3899',800:'#163083',900:'#1a3978',950:'#0e2358' },
+            accent: { DEFAULT:'#F0A800', light:'#F5BA30', dark:'#D08900' },
             success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
           },
         },
@@ -26,17 +26,16 @@
   <style>
     body { font-family: 'DM Sans', system-ui, sans-serif; }
     .font-heading { font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif; }
-    .text-gradient { background: linear-gradient(135deg, #c9a84c, #d4b96a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .text-gradient { background: linear-gradient(135deg, #F0A800, #F5BA30); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-    /* Transparent nav → solid on scroll */
-    #navbar { background: transparent; border-color: transparent; }
-    #navbar.nav-scrolled { background-color: rgba(255,255,255,0.97) !important; border-color: rgba(229,231,235,1); box-shadow: 0 1px 12px rgba(0,0,0,0.08); }
-    #navbar.nav-scrolled .nav-link { color: #4b5563; }
-    #navbar.nav-scrolled .nav-link:hover { color: #0f172a; }
-    #navbar.nav-scrolled .nav-brand { color: #0f172a; }
-    #navbar.nav-scrolled .nav-accent { color: #c9a84c; }
-    #navbar.nav-scrolled .nav-cta { background: #0f172a; color: #fff; }
-    #navbar.nav-scrolled .nav-mobile-btn { color: #374151; }
+    /* White navbar background */
+    #navbar { background-color: rgba(255,255,255,0.97); border-color: rgba(229,231,235,1); box-shadow: 0 1px 12px rgba(0,0,0,0.08); }
+    #navbar .nav-link { color: #4b5563; }
+    #navbar .nav-link:hover { color: #1a3978; }
+    #navbar .nav-brand { color: #1a3978; }
+    #navbar .nav-accent { color: #F0A800; }
+    #navbar .nav-cta { background: #1a3978; color: #fff; }
+    #navbar .nav-mobile-btn { color: #374151; }
     .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
     .mobile-menu.open { max-height: 800px; }
     .dropdown-menu { opacity:0; visibility:hidden; transform:translateY(10px); transition:all 0.3s ease; pointer-events:none; }
@@ -51,9 +50,9 @@
     @keyframes blink { 50% { opacity:0; } }
 
     /* Hero carousel */
-    .hero-slide { position:absolute; inset:0; opacity:0; transition:opacity 1s ease; }
+    .hero-slide { position:absolute; inset:0; opacity:0; transition:opacity 1s ease;  }
     .hero-slide.active { opacity:1; }
-    .hero-gradient { background: radial-gradient(circle at center, rgba(50, 52, 56, 0.295), rgba(67, 68, 71, 0.432)); }
+    .hero-gradient { background: radial-gradient(circle at center, rgba(1, 17, 49, 0.295), rgba(7, 33, 109, 0.432)); }
 
     /* Honeycomb */
     .honeycomb { display:flex; flex-wrap:wrap; justify-content:center; margin:0 auto; max-width:750px; }
@@ -72,68 +71,68 @@
 
     /* ── Embedded Handbook Flipbook ── */
     #handbook .page { background:linear-gradient(135deg,#fefefe 0%,#f8f6f4 100%); overflow:hidden; display:flex; flex-direction:column; padding:36px; }
-    #handbook .page-cover { background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0a1128 100%); position:relative; align-items:center; justify-content:center; text-align:center; color:white; }
+    #handbook .page-cover { background:linear-gradient(135deg,#1a3978 0%,#1c3899 50%,#0e2358 100%); position:relative; align-items:center; justify-content:center; text-align:center; color:white; }
     #handbook .page-cover::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 30%,rgba(201,168,76,0.08),transparent 60%); }
-    #handbook .cover-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.05rem; font-weight:800; color:#c9a84c; line-height:1.3; padding:0 16px; position:relative; z-index:1; letter-spacing:0.5px; }
+    #handbook .cover-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.05rem; font-weight:800; color:#F0A800; line-height:1.3; padding:0 16px; position:relative; z-index:1; letter-spacing:0.5px; }
     #handbook .cover-rule { width:56px; height:2px; background:rgba(201,168,76,0.5); margin:14px auto; position:relative; z-index:1; }
     #handbook .cover-sub { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.2rem; font-weight:300; color:#fff; position:relative; z-index:1; }
     #handbook .cover-tagline { font-size:0.7rem; color:#9ca3af; margin-top:10px; font-style:italic; position:relative; z-index:1; }
     #handbook .back-title { font-size:1rem; font-weight:600; color:#fff; margin-bottom:8px; line-height:1.4; position:relative; z-index:1; }
-    #handbook .back-sub { font-size:0.875rem; color:#c9a84c; font-weight:600; position:relative; z-index:1; }
+    #handbook .back-sub { font-size:0.875rem; color:#F0A800; font-weight:600; position:relative; z-index:1; }
     #handbook .back-contact { font-size:0.75rem; color:#9ca3af; margin-top:8px; position:relative; z-index:1; }
     #handbook .ch { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-    #handbook .icon-box { width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,#c9a84c,#b08d2f); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; color:#fff; }
+    #handbook .icon-box { width:36px; height:36px; border-radius:8px; background:linear-gradient(135deg,#F0A800,#D08900); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; color:#fff; }
     #handbook .section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.95rem; font-weight:700; color:#92400e; }
     #handbook .divider { width:100%; height:2px; background:linear-gradient(to right,rgba(201,168,76,0.6),transparent); margin-bottom:10px; }
-    #handbook .sub-heading { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.8rem; font-weight:700; color:#0f172a; margin-bottom:8px; }
+    #handbook .sub-heading { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.8rem; font-weight:700; color:#1a3978; margin-bottom:8px; }
     #handbook p.bt { font-size:0.7rem; line-height:1.75; color:#374151; margin-bottom:6px; text-align:justify; }
     #handbook .vm-page { background:#f8fafc; padding:40px; justify-content:center; }
     #handbook .vm-card { background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:12px; padding:22px; margin-bottom:18px; }
     #handbook .vm-card h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.85rem; font-weight:700; color:#92400e; margin-bottom:8px; }
     #handbook .vm-card p { font-size:0.7rem; line-height:1.8; color:#475569; }
     #handbook .highlight-page { background:#f8fafc; align-items:center; justify-content:center; text-align:center; padding:48px; }
-    #handbook .hl-icon { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#c9a84c,#b08d2f); display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:18px; color:#fff; }
+    #handbook .hl-icon { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#F0A800,#D08900); display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:18px; color:#fff; }
     #handbook .highlight-page h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:700; color:#92400e; margin-bottom:14px; }
     #handbook .highlight-page p { font-size:0.8rem; line-height:1.8; color:#475569; max-width:340px; }
     #handbook .values-page { background:#f8fafc; padding:40px; justify-content:center; }
     #handbook .values-page h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.2rem; font-weight:800; color:#92400e; text-align:center; margin-bottom:6px; }
-    #handbook .values-rule { width:60px; height:3px; background:#c9a84c; margin:0 auto 22px; border-radius:2px; }
-    #handbook .value-row { display:flex; align-items:center; gap:16px; background:#fff; border-radius:10px; padding:14px 18px; border-left:5px solid #c9a84c; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-bottom:14px; }
-    #handbook .vl { width:44px; height:44px; border-radius:8px; background:linear-gradient(135deg,#c9a84c,#b08d2f); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900; color:#fff; flex-shrink:0; }
-    #handbook .vw { font-size:0.875rem; font-weight:700; color:#0f172a; }
+    #handbook .values-rule { width:60px; height:3px; background:#F0A800; margin:0 auto 22px; border-radius:2px; }
+    #handbook .value-row { display:flex; align-items:center; gap:16px; background:#fff; border-radius:10px; padding:14px 18px; border-left:5px solid #F0A800; box-shadow:0 1px 4px rgba(0,0,0,0.06); margin-bottom:14px; }
+    #handbook .vl { width:44px; height:44px; border-radius:8px; background:linear-gradient(135deg,#F0A800,#D08900); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900; color:#fff; flex-shrink:0; }
+    #handbook .vw { font-size:0.875rem; font-weight:700; color:#1a3978; }
     #handbook .vd { font-size:0.7rem; color:#64748b; margin-top:2px; }
-    #handbook .svc-row { display:flex; align-items:flex-start; gap:12px; background:#fff; border-radius:8px; padding:11px 14px; border-left:4px solid #c9a84c; margin-bottom:8px; }
-    #handbook .svc-row h4 { font-size:0.75rem; font-weight:700; color:#0f172a; margin-bottom:3px; }
+    #handbook .svc-row { display:flex; align-items:flex-start; gap:12px; background:#fff; border-radius:8px; padding:11px 14px; border-left:4px solid #F0A800; margin-bottom:8px; }
+    #handbook .svc-row h4 { font-size:0.75rem; font-weight:700; color:#1a3978; margin-bottom:3px; }
     #handbook .svc-row p { font-size:0.62rem; line-height:1.55; color:#475569; }
     #handbook .detail-page { padding:32px; }
-    #handbook .feature-item { display:flex; align-items:flex-start; gap:10px; background:#f8fafc; border-radius:8px; padding:9px 12px; border-left:3px solid #c9a84c; margin-bottom:7px; }
-    #handbook .fdot { width:6px; height:6px; background:#c9a84c; border-radius:50%; margin-top:5px; flex-shrink:0; }
+    #handbook .feature-item { display:flex; align-items:flex-start; gap:10px; background:#f8fafc; border-radius:8px; padding:9px 12px; border-left:3px solid #F0A800; margin-bottom:7px; }
+    #handbook .fdot { width:6px; height:6px; background:#F0A800; border-radius:50%; margin-top:5px; flex-shrink:0; }
     #handbook .ft { font-size:0.65rem; line-height:1.65; color:#374151; }
-    #handbook .ft strong { color:#0f172a; }
+    #handbook .ft strong { color:#1a3978; }
     #handbook .team-page { padding:32px; }
     #handbook .team-grid { display:flex; flex-wrap:wrap; gap:14px; margin-top:14px; justify-content:center; }
     #handbook .team-card { width:110px; text-align:center; }
-    #handbook .team-photo { width:72px; height:72px; border-radius:50%; border:3px solid #c9a84c; object-fit:cover; display:block; margin:0 auto 6px; }
-    #handbook .team-initial { width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg,#c9a84c,#b08d2f); display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:900; color:#fff; margin:0 auto 6px; }
-    #handbook .tname { font-size:0.6rem; font-weight:700; color:#0f172a; }
+    #handbook .team-photo { width:72px; height:72px; border-radius:50%; border:3px solid #F0A800; object-fit:cover; display:block; margin:0 auto 6px; }
+    #handbook .team-initial { width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg,#F0A800,#D08900); display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:900; color:#fff; margin:0 auto 6px; }
+    #handbook .tname { font-size:0.6rem; font-weight:700; color:#1a3978; }
     #handbook .trole { font-size:0.55rem; color:#64748b; margin-top:2px; }
-    #handbook .profile-page { background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%); align-items:center; justify-content:center; text-align:center; padding:48px; }
-    #handbook .profile-photo-wrap { width:140px; height:140px; border-radius:50%; border:5px solid #c9a84c; overflow:hidden; margin:0 auto 18px; }
+    #handbook .profile-page { background:linear-gradient(135deg,#1a3978 0%,#1c3899 100%); align-items:center; justify-content:center; text-align:center; padding:48px; }
+    #handbook .profile-photo-wrap { width:140px; height:140px; border-radius:50%; border:5px solid #F0A800; overflow:hidden; margin:0 auto 18px; }
     #handbook .profile-photo-wrap img { width:100%; height:100%; object-fit:cover; }
     #handbook .profile-name { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.1rem; font-weight:800; color:#fff; }
-    #handbook .profile-role { font-size:0.75rem; color:#c9a84c; font-weight:600; margin-top:5px; letter-spacing:1px; }
-    #handbook .profile-rule { width:48px; height:3px; background:#c9a84c; border-radius:2px; margin:14px auto 0; }
+    #handbook .profile-role { font-size:0.75rem; color:#F0A800; font-weight:600; margin-top:5px; letter-spacing:1px; }
+    #handbook .profile-rule { width:48px; height:3px; background:#F0A800; border-radius:2px; margin:14px auto 0; }
     #handbook .story-page { padding:32px; background:linear-gradient(135deg,#fefefe 0%,#f8f6f4 100%); }
     #handbook p.story-text { font-size:0.62rem; line-height:1.8; color:#374151; margin-bottom:4px; text-align:justify; }
     #handbook .story-footer { margin-top:auto; padding-top:10px; border-top:1px solid rgba(201,168,76,0.3); }
-    #handbook .sfn { font-size:0.75rem; font-weight:700; color:#0f172a; }
+    #handbook .sfn { font-size:0.75rem; font-weight:700; color:#1a3978; }
     #handbook .sfr { font-size:0.65rem; color:#64748b; }
     #handbook .sfc { font-size:0.6rem; color:#94a3b8; }
     #handbook .controls { display:flex; align-items:center; gap:16px; }
-    #handbook .controls button { padding:10px 24px; border-radius:10px; border:1px solid rgba(201,168,76,0.3); background:rgba(201,168,76,0.1); color:#c9a84c; cursor:pointer; font-size:0.875rem; font-weight:600; transition:all 0.2s; letter-spacing:0.5px; }
-    #handbook .controls button:hover:not(:disabled) { background:#c9a84c; color:#0f172a; border-color:#c9a84c; }
+    #handbook .controls button { padding:10px 24px; border-radius:10px; border:1px solid rgba(201,168,76,0.3); background:rgba(201,168,76,0.1); color:#F0A800; cursor:pointer; font-size:0.875rem; font-weight:600; transition:all 0.2s; letter-spacing:0.5px; }
+    #handbook .controls button:hover:not(:disabled) { background:#F0A800; color:#1a3978; border-color:#F0A800; }
     #handbook .controls button:disabled { opacity:0.3; cursor:not-allowed; }
-    #handbook .page-counter { color:#c9a84c; font-weight:600; font-size:0.875rem; min-width:70px; text-align:center; }
+    #handbook .page-counter { color:#F0A800; font-weight:600; font-size:0.875rem; min-width:70px; text-align:center; }
   </style>
 </head>
 <body class="bg-white text-gray-700 antialiased">
@@ -148,18 +147,18 @@
       <img src="images/assets/pexels-jakubzerdzicki-24017830.jpg" alt="Forbes Financial — Credit Intelligence" class="w-full h-full object-cover" />
       <div class="absolute inset-0 hero-gradient"></div>
       <div class="absolute inset-0 flex items-center ">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 p-5 lg:px-8 w-full ">
-          <div class="max-w-2xl ">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 p-5 lg:px-8 w-full">
+          <div class="max-w-4xl ">
             <div class="inline-flex items-center gap-2 bg-accent/15 border border-accent/25 rounded-full px-4 py-1.5 mb-6">
               <span class="text-accent text-sm font-medium">Established 2003</span>
             </div>
             <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-5 leading-tight drop-shadow-lg">
-              Your Premier Source of <span class="text-accent">Credit Intelligence</span>
+              Your Premier Source of <span class="text-accent text-8xl">Credit Intelligence</span>
             </h1>
             <p class="text-white/80 text-lg sm:text-xl leading-relaxed mb-8 max-w-xl">Combining Integrity, Innovation and Intelligence in delivering value-driven financial information services for over two decades.</p>
             <div class="flex flex-col sm:flex-row gap-4">
               <a href="services.html" class="bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg">Explore Services</a>
-              <a href="contact.html" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide backdrop-blur-sm transition-all">Get Started</a>
+              <a href="contact.html" class=" text-white border border-primary px-8 py-3.5 rounded-lg font-semibold text-sm uppercase  transition-all">Get Started</a>
             </div>
           </div>
         </div>
@@ -170,13 +169,13 @@
       <img src="images/assets/pexels-luis-ruiz-1774937.jpg" alt="Forbes Financial — Financial Consulting" class="w-full h-full object-cover" />
       <div class="absolute inset-0 hero-gradient"></div>
       <div class="absolute inset-0 flex items-center">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div class="max-w-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full p-5">
+          <div class="max-w-4xl">
             <div class="inline-flex items-center gap-2 bg-accent/15 border border-accent/25 rounded-full px-4 py-1.5 mb-6">
               <span class="text-accent text-sm font-medium">22+ Years of Excellence</span>
             </div>
             <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-5 leading-tight drop-shadow-lg">
-              Comprehensive <span class="text-accent">Business Intelligence</span> Solutions
+              Comprehensive <span class="text-accent text-8xl">Business Intelligence</span> Solutions
             </h1>
             <p class="text-white/80 text-lg sm:text-xl leading-relaxed mb-8 max-w-xl">From credit investigation and risk assessment to due diligence — we deliver data-driven insights that empower sound financial decisions.</p>
             <div class="flex flex-col sm:flex-row gap-4">
@@ -192,13 +191,13 @@
       <img src="images/assets/pexels-mikhail-nilov-8101929.jpg" alt="Forbes Financial — Recovery Management" class="w-full h-full object-cover" />
       <div class="absolute inset-0 hero-gradient"></div>
       <div class="absolute inset-0 flex items-center">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div class="max-w-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full p-5">
+          <div class="max-w-4xl">
             <div class="inline-flex items-center gap-2 bg-accent/15 border border-accent/25 rounded-full px-4 py-1.5 mb-6">
               <span class="text-accent text-sm font-medium">End-to-End Solutions</span>
             </div>
             <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-5 leading-tight drop-shadow-lg">
-              Strategic <span class="text-accent">Recovery Management</span> &amp; Collection
+              Strategic <span class="text-accent text-8xl">Recovery Management &amp; Collection</span> 
             </h1>
             <p class="text-white/80 text-lg sm:text-xl leading-relaxed mb-8 max-w-xl">Bridging information services with innovative collection strategies — offering end-to-end credit lifecycle support, from evaluation to recovery.</p>
             <div class="flex flex-col sm:flex-row gap-4">
@@ -461,7 +460,7 @@
             <div class="page page-cover" data-density="hard">
               <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;">
                 <img src="images/logo.png" alt="FFCC Logo" style="width:64px;height:64px;object-fit:contain;margin-bottom:4px;border-radius:8px;" onerror="this.style.display='none'">
-                <span style="border:1.5px solid #c9a84c;color:#c9a84c;font-size:8px;letter-spacing:3px;text-transform:uppercase;padding:4px 18px;border-radius:99px;">Est. 2003</span>
+                <span style="border:1.5px solid #F0A800;color:#F0A800;font-size:8px;letter-spacing:3px;text-transform:uppercase;padding:4px 18px;border-radius:99px;">Est. 2003</span>
                 <p class="cover-title">FORBES FINANCIAL CONSULTANCY CORPORATION</p>
                 <div class="cover-rule"></div>
                 <p class="cover-sub">Digital Handbook</p>

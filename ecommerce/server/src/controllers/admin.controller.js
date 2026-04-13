@@ -32,6 +32,13 @@ async function listAllListings(req, res, next) {
       prisma.listing.count({ where }),
     ]);
 
+    // Use sellerName if available (from submission conversion)
+    listings.forEach(listing => {
+      if (listing.sellerName) {
+        listing.seller.name = listing.sellerName;
+      }
+    });
+
     res.json(paginatedResponse(listings, total, page, limit));
   } catch (err) {
     next(err);
@@ -61,6 +68,13 @@ async function listPendingListings(req, res, next) {
       }),
       prisma.listing.count({ where }),
     ]);
+
+    // Use sellerName if available (from submission conversion)
+    listings.forEach(listing => {
+      if (listing.sellerName) {
+        listing.seller.name = listing.sellerName;
+      }
+    });
 
     res.json(paginatedResponse(listings, total, page, limit));
   } catch (err) {
@@ -291,6 +305,13 @@ async function listTrash(req, res, next) {
       }),
       prisma.listing.count({ where }),
     ]);
+
+    // Use sellerName if available (from submission conversion)
+    listings.forEach(listing => {
+      if (listing.sellerName) {
+        listing.seller.name = listing.sellerName;
+      }
+    });
 
     res.json(paginatedResponse(listings, total, page, limit));
   } catch (err) {

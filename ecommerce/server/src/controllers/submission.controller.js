@@ -301,6 +301,8 @@ async function convertToListing(req, res, next) {
       status: 'Approved',
       category: effectiveCategory,
       sellerId: req.user.id,
+      sellerName: submission.fullName,
+      sellerPhone: submission.phone,
       approvedAt: new Date(),
       approvedBy: req.user.id,
       sourceSubmissionId: submission.id,
