@@ -69,10 +69,15 @@ export default function CarDetailsPage() {
     { icon: Gauge, label: 'Mileage', value: formatMileage(car.mileage) },
     { icon: Fuel, label: 'Fuel Type', value: car.fuelType },
     { icon: Settings, label: 'Transmission', value: car.transmission },
-    { icon: Car, label: 'Body Type', value: car.vehicleType?.name },
+    { icon: Car, label: 'Body Type', value: car.bodyType },
     { icon: Palette, label: 'Color', value: car.color || 'N/A' },
     { icon: Users, label: 'Seats', value: car.seats || 'N/A' },
     ...(car.engineCapacity ? [{ icon: Settings, label: 'Engine', value: `${car.engineCapacity}cc` }] : []),
+    ...(car.engineType ? [{ icon: Settings, label: 'Engine Type', value: car.engineType }] : []),
+    ...(car.horsepower ? [{ icon: Gauge, label: 'Horsepower', value: `${car.horsepower} HP` }] : []),
+    ...(car.torque ? [{ icon: Gauge, label: 'Torque', value: `${car.torque} Nm` }] : []),
+    ...(car.fuelEconomy ? [{ icon: Fuel, label: 'Fuel Economy', value: `${car.fuelEconomy} km/L` }] : []),
+    ...(car.topSpeed ? [{ icon: Gauge, label: 'Top Speed', value: `${car.topSpeed} km/h` }] : []),
   ];
 
   return (
@@ -83,9 +88,9 @@ export default function CarDetailsPage() {
           <ArrowLeft className="h-4 w-4" /> Back to Listings
         </Link>
         <span>/</span>
-        <span>{car.brand?.name}</span>
+        <span>{car.brand}</span>
         <span>/</span>
-        <span className="text-gray-900">{car.model?.name}</span>
+        <span className="text-gray-900">{car.model}</span>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-3">

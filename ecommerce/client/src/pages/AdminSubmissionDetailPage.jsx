@@ -6,9 +6,11 @@ import { documentsAPI } from '../api/documents';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { formatPrice } from '../utils/helpers';
 import {
-  ArrowLeft, ClipboardList, User, Mail, Phone, MapPin,
+  ArrowLeft, ClipboardList, Mail, Phone,
   Check, X, ArrowRight, AlertTriangle, FileText, Download,
-  Image as ImageIcon, ChevronLeft, ChevronRight, Calendar, Tag, Package
+  Image as ImageIcon, ChevronLeft, ChevronRight, Calendar, Tag, Package,
+  Car, Gauge, Fuel, Settings, Palette, Users, Zap, ShieldCheck,
+  ClipboardCheck, Key, Info,
 } from 'lucide-react';
 
 const STATUS_STYLES = {
@@ -27,6 +29,34 @@ const SUBTYPE_LABELS = {
   Car: 'Car', Motorcycle: 'Motorcycle', Truck: 'Truck',
   HouseAndLot: 'House & Lot', VacantLot: 'Vacant Lot', CommercialProperty: 'Commercial Property',
 };
+
+const FEATURE_LABELS = {
+  sunroof: 'Sunroof', bluetooth: 'Bluetooth', navigation: 'Navigation',
+  powerSeats: 'Power Seats', soundSystem: 'Sound System', infotainment: 'Infotainment',
+  keylessEntry: 'Keyless Entry', powerWindows: 'Power Windows', cruiseControl: 'Cruise Control',
+  climateControl: 'Climate Control', leatherSeats: 'Leather Seats', rearCamera: 'Rear Camera',
+};
+
+const SAFETY_LABELS = {
+  abs: 'ABS', ebd: 'EBD', airbags: 'Airbags', blindSpot: 'Blind Spot Monitor',
+  camera360: '360° Camera', laneDeparture: 'Lane Departure', parkingSensors: 'Parking Sensors',
+  tractionControl: 'Traction Control', stabilityControl: 'Stability Control',
+};
+
+const OWNERSHIP_LABELS = {
+  fullyPaid: 'Fully Paid', orCrAvailable: 'OR/CR Available', openDeedOfSale: 'Open Deed of Sale',
+  registeredOwner: 'Registered Owner', withEncumbrance: 'With Encumbrance',
+};
+
+function SpecRow({ label, value }) {
+  if (value === null || value === undefined || value === '') return null;
+  return (
+    <div>
+      <p className="text-xs text-secondary-muted">{label}</p>
+      <p className="mt-0.5 text-sm font-medium text-gray-900">{value}</p>
+    </div>
+  );
+}
 
 export default function AdminSubmissionDetailPage() {
   const { id } = useParams();
@@ -91,6 +121,8 @@ export default function AdminSubmissionDetailPage() {
   const images = submission.images || [];
   const isPending = submission.status === 'Pending';
   const isApproved = submission.status === 'Approved';
+  const isVehicle = submission.category === 'Vehicle';
+  const vd = submission.vehicleData || {};
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8">
@@ -260,6 +292,128 @@ export default function AdminSubmissionDetailPage() {
               </div>
             )}
           </div>
+
+          {/* Vehicle Specs — only shown when category is Vehicle and vehicleData exists */}
+          {isVehicle && Object.keys(vd).length > 0 && (
+            <div className="rounded-xl border p-6 space-y-6">
+              <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                <Car className="h-4 w-4" /> Vehicle Specifications
+              </h3>
+
+              {/* Overview */}
+              <div>
+                <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-secondary-muted">Overview</p>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
+                  <SpecRow label="Brand" value={vd.brand} />
+                  <SpecRow label="Model" value={vd.model} />
+                  <SpecRow label="Variant" value={vd.variant} />
+                  <SpecRow label="Year" value={vd.year} />
+                  <SpecRow label="Body Type" value={vd.bodyType} />
+                  <SpecRow label="Plate Number" value={vd.plateNumber} />
+                  <SpecRow label="VIN Number" value={vd.vinNumber} />
+                  <SpecRow label="Exterior Color" value={vd.color} />
+                  <SpecRow label="Interior Color" value={vd.interiorColor} />
+                  <SpecRow label="Seats" value={vd.seats} />
+                </div>
+              </div>
+
+              {/* Performance */}
+              <div className="border-t pt-4">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-secondary-muted">Performance</p>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
+                  <SpecRow label="Mileage" value={vd.mileage != null ? `${Number(vd.mileage).toLocaleString()} km` : null} />
+                  <SpecRow label="Fuel Type" value={vd.fuelType} />
+                  <SpecRow label="Transmission" value={vd.transmission} />
+                  <SpecRow label="Drivetrain" value={vd.drivetrain} />
+                  <SpecRow label="Engine Capacity" value={vd.engineCapacity ? `${vd.engineCapacity} cc` : null} />
+                  <SpecRow label="Engine Type" value={vd.engineType} />
+                  <SpecRow label="Horsepower" value={vd.horsepower ? `${vd.horsepower} HP` : null} />
+                  <SpecRow label="Torque" value={vd.torque ? `${vd.torque} Nm` : null} />
+                  <SpecRow label="Top Speed" value={vd.topSpeed ? `${vd.topSpeed} km/h` : null} />
+                  <SpecRow label="Fuel Economy" value={vd.fuelEconomy ? `${vd.fuelEconomy} km/L` : null} />
+                </div>
+              </div>
+
+              {/* Condition & History */}
+              <div className="border-t pt-4">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-secondary-muted">Condition & History</p>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
+                  <SpecRow label="Overall Condition" value={vd.overallCondition} />
+                  <SpecRow label="Accident History" value={vd.accidentHistory != null ? (vd.accidentHistory ? 'Yes' : 'No') : null} />
+                  <SpecRow label="Service History" value={vd.serviceHistoryAvailable != null ? (vd.serviceHistoryAvailable ? 'Available' : 'Not Available') : null} />
+                  <SpecRow label="Previous Owners" value={vd.previousOwners} />
+                  <SpecRow label="Last Maintenance" value={vd.lastMaintenanceDate} />
+                  <SpecRow label="Tires Condition" value={vd.tiresCondition} />
+                </div>
+                {vd.knownIssues && (
+                  <div className="mt-4">
+                    <p className="text-xs text-secondary-muted">Known Issues</p>
+                    <p className="mt-0.5 text-sm text-gray-900 whitespace-pre-wrap">{vd.knownIssues}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Ownership Details */}
+              {vd.ownershipDetails && Object.keys(vd.ownershipDetails).length > 0 && (
+                <div className="border-t pt-4">
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-secondary-muted">Ownership</p>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(vd.ownershipDetails).map(([key, val]) => (
+                      val ? (
+                        <span key={key} className="flex items-center gap-1 rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700 border border-green-200">
+                          <Check className="h-3 w-3" /> {OWNERSHIP_LABELS[key] || key}
+                        </span>
+                      ) : null
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Features */}
+              {vd.features && Object.values(vd.features).some(Boolean) && (
+                <div className="border-t pt-4">
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-secondary-muted">Features</p>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(vd.features).map(([key, val]) => (
+                      val ? (
+                        <span key={key} className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 border border-blue-200">
+                          {FEATURE_LABELS[key] || key}
+                        </span>
+                      ) : null
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Safety Features */}
+              {vd.safetyFeatures && Object.values(vd.safetyFeatures).some(Boolean) && (
+                <div className="border-t pt-4">
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-secondary-muted">Safety Features</p>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(vd.safetyFeatures).map(([key, val]) => (
+                      val ? (
+                        <span key={key} className="flex items-center gap-1 rounded-full bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700 border border-purple-200">
+                          <ShieldCheck className="h-3 w-3" /> {SAFETY_LABELS[key] || key}
+                        </span>
+                      ) : null
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Selling Info */}
+              {(vd.negotiable != null || vd.reasonForSelling || vd.viewingAvailability) && (
+                <div className="border-t pt-4">
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-secondary-muted">Selling Details</p>
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
+                    <SpecRow label="Negotiable" value={vd.negotiable != null ? (vd.negotiable ? 'Yes' : 'No') : null} />
+                    <SpecRow label="Reason for Selling" value={vd.reasonForSelling} />
+                    <SpecRow label="Viewing Availability" value={vd.viewingAvailability} />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Documents */}
           {documents.length > 0 && (

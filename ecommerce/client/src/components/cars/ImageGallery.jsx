@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { getImageUrl } from '../../utils/imageHelpers';
 
 export default function ImageGallery({ images }) {
   const [current, setCurrent] = useState(0);
@@ -62,7 +63,7 @@ export default function ImageGallery({ images }) {
               }`}
             >
               <img
-                src={img.url}
+                src={getImageUrl(img.url, 'thumb')}
                 alt={`Thumbnail ${i + 1}`}
                 className="h-16 w-20 object-cover"
                 loading="lazy"

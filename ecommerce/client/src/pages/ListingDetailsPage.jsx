@@ -150,7 +150,7 @@ export default function ListingDetailsPage() {
     listing.mileage != null && { icon: Gauge, label: 'Mileage', value: formatMileage(listing.mileage) },
     listing.fuelType && { icon: Fuel, label: 'Fuel Type', value: listing.fuelType },
     listing.transmission && { icon: Settings, label: 'Transmission', value: listing.transmission },
-    listing.vehicleType?.name && { icon: Package, label: 'Body Type', value: listing.vehicleType.name },
+    listing.bodyType && { icon: Package, label: 'Body Type', value: listing.bodyType },
     listing.color && { icon: Palette, label: 'Exterior Color', value: listing.color },
     listing.interiorColor && { icon: Palette, label: 'Interior Color', value: listing.interiorColor },
     listing.seats && { icon: Users, label: 'Seats', value: listing.seats },
@@ -179,7 +179,12 @@ export default function ListingDetailsPage() {
   // Features & Safety data
   const featureEntries = listing.features ? Object.entries(listing.features).filter(([, v]) => v) : [];
   const safetyEntries = listing.safetyFeatures ? Object.entries(listing.safetyFeatures).filter(([, v]) => v) : [];
-  const condDetails = listing.conditionDetails || {};
+  const condDetails = {};
+  if (listing.serviceHistoryAvailable != null) condDetails.serviceHistory = listing.serviceHistoryAvailable ? 'Available' : 'Not Available';
+  if (listing.previousOwners != null) condDetails.previousOwners = listing.previousOwners;
+  if (listing.lastMaintenanceDate) condDetails.lastMaintenance = listing.lastMaintenanceDate;
+  if (listing.tiresCondition) condDetails.tiresCondition = listing.tiresCondition;
+  if (listing.knownIssues) condDetails.knownIssues = listing.knownIssues;
   const ownDetails = listing.ownershipDetails || {};
 
   // Determine which vehicle tabs have content
@@ -201,8 +206,8 @@ export default function ListingDetailsPage() {
         </Link>
         <span>/</span>
         <span>{subtype || (isVehicle ? 'Vehicle' : 'Real Estate')}</span>
-        {isVehicle && listing.brand?.name && (
-          <><span>/</span><span>{listing.brand.name}</span></>
+        {isVehicle && listing.brand && (
+          <><span>/</span><span>{listing.brand}</span></>
         )}
       </div>
 
@@ -363,10 +368,10 @@ export default function ListingDetailsPage() {
           )}
 
           {/* Selling Details */}
-          {listing.sellingDetails?.viewingAvailability && (
+          {listing.viewingAvailability && (
             <div className="mt-6">
               <h2 className="text-lg font-semibold text-gray-900">Viewing Availability</h2>
-              <p className="mt-2 text-sm text-gray-700">{listing.sellingDetails.viewingAvailability}</p>
+              <p className="mt-2 text-sm text-gray-700">{listing.viewingAvailability}</p>
             </div>
           )}
 

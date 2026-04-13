@@ -15,7 +15,7 @@ router.post(
     body('category').isIn(['Vehicle', 'RealEstate']).withMessage('Valid category is required.'),
     body('vehicleSubtype').optional().isIn(['Car', 'Motorcycle', 'Truck']),
     body('realEstateSubtype').optional().isIn(['HouseAndLot', 'VacantLot', 'CommercialProperty']),
-    body('propertyDetails').trim().notEmpty().withMessage('Property details are required.'),
+    body('propertyDetails').optional().trim(),
     body('price').optional().isFloat({ gt: 0 }),
   ],
   validate,

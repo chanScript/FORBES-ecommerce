@@ -14,12 +14,14 @@ const {
   uploadImages,
   deleteImage,
   getSellerProfile,
+  getSimilarListings,
 } = require('../controllers/listing.controller');
 
 // ---- Public Routes ----
 router.get('/', optionalAuth, listListings);
 router.get('/my-listings', authenticate, rbac('Seller', 'Admin', 'Super Admin'), getMyListings);
 router.get('/seller/:sellerId', getSellerProfile);
+router.get('/:id/similar', getSimilarListings);
 router.get('/:slug', optionalAuth, getListingBySlug);
 
 // ---- Seller / Admin Routes ----
@@ -40,12 +42,30 @@ router.post(
     body('mileage').optional().isInt({ min: 0 }),
     body('fuelType').optional().isIn(['Gasoline', 'Diesel', 'Electric', 'Hybrid', 'LPG']),
     body('transmission').optional().isIn(['Automatic', 'Manual']),
-    body('brandId').optional().isInt({ gt: 0 }),
-    body('modelId').optional().isInt({ gt: 0 }),
-    body('vehicleTypeId').optional().isInt({ gt: 0 }),
+    body('brand').optional().trim(),
+    body('model').optional().trim(),
+    body('bodyType').optional().trim(),
     body('engineCapacity').optional().isInt({ gt: 0 }),
     body('color').optional().trim(),
     body('seats').optional().isInt({ gt: 0 }),
+    body('engineType').optional().trim(),
+    body('horsepower').optional().isInt({ min: 0 }),
+    body('torque').optional().isInt({ min: 0 }),
+    body('fuelEconomy').optional().isFloat({ min: 0 }),
+    body('topSpeed').optional().isInt({ min: 0 }),
+    body('variant').optional().trim(),
+    body('interiorColor').optional().trim(),
+    body('drivetrain').optional().isIn(['FWD', 'RWD', 'AWD', '4WD']),
+    body('plateNumber').optional().trim(),
+    body('vinNumber').optional().trim(),
+    body('overallCondition').optional().isIn(['Excellent', 'Good', 'Fair', 'Poor']),
+    body('previousOwners').optional().isInt({ min: 0 }),
+    body('lastMaintenanceDate').optional().trim(),
+    body('tiresCondition').optional().trim(),
+    body('knownIssues').optional().trim(),
+    body('negotiable').optional().isBoolean(),
+    body('reasonForSelling').optional().trim(),
+    body('viewingAvailability').optional().trim(),
     // Real estate optional fields
     body('lotArea').optional().isFloat({ gt: 0 }),
     body('floorArea').optional().isFloat({ gt: 0 }),

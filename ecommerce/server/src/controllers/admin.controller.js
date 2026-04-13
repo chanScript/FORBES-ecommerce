@@ -25,9 +25,6 @@ async function listAllListings(req, res, next) {
         skip,
         take: limit,
         include: {
-          brand: true,
-          model: true,
-          vehicleType: true,
           seller: { select: { id: true, name: true, email: true } },
           images: { where: { isPrimary: true }, take: 1 },
         },
@@ -58,9 +55,6 @@ async function listPendingListings(req, res, next) {
         skip,
         take: limit,
         include: {
-          brand: true,
-          model: true,
-          vehicleType: true,
           seller: { select: { id: true, name: true, email: true } },
           images: { orderBy: { sortOrder: 'asc' } },
         },
@@ -100,7 +94,6 @@ async function approveListing(req, res, next) {
         approvedBy: req.user.id,
         rejectionReason: null,
       },
-      include: { brand: true, model: true },
     });
 
     await createAuditLog({
@@ -145,7 +138,6 @@ async function rejectListing(req, res, next) {
         status: 'Rejected',
         rejectionReason: reason || null,
       },
-      include: { brand: true, model: true },
     });
 
     await createAuditLog({
@@ -253,9 +245,9 @@ async function forceDeleteListing(req, res, next) {
       return res.status(404).json({ error: 'Listing not found.' });
     }
 
-    const cloudinary = require('../config/cloudinary');
+    const { deleteLocalFile } = require('../middleware/upload.middleware');
     for (const img of listing.images) {
-      await cloudinary.uploader.destroy(img.publicId).catch(() => {});
+      deleteLocalFile(img.publicId, 'image');
     }
 
     await prisma.listing.delete({ where: { id: req.params.id } });
@@ -292,8 +284,6 @@ async function listTrash(req, res, next) {
         skip,
         take: limit,
         include: {
-          brand: true,
-          model: true,
           seller: { select: { id: true, name: true, email: true } },
           deletedByUser: { select: { id: true, name: true } },
           images: { where: { isPrimary: true }, take: 1 },
@@ -326,7 +316,6 @@ async function markAsSold(req, res, next) {
     const updated = await prisma.listing.update({
       where: { id: req.params.id },
       data: { status: 'Sold' },
-      include: { brand: true, model: true },
     });
 
     await createAuditLog({

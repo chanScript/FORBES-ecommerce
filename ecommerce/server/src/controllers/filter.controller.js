@@ -13,8 +13,8 @@ async function getFilterOptions(req, res, next) {
     if (req.query.realEstateSubtype) baseWhere.realEstateSubtype = req.query.realEstateSubtype;
 
     const [
-      brands,
-      vehicleTypes,
+      brandCounts,
+      bodyTypeCounts,
       priceRange,
       yearRange,
       cities,
@@ -23,24 +23,18 @@ async function getFilterOptions(req, res, next) {
       categoryCounts,
       totalCount,
     ] = await Promise.all([
-      prisma.brand.findMany({
-        orderBy: { name: 'asc' },
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          _count: { select: { listings: { where: baseWhere } } },
-        },
+      prisma.listing.groupBy({
+        by: ['brand'],
+        where: { ...baseWhere, brand: { not: null } },
+        _count: { brand: true },
+        orderBy: { _count: { brand: 'desc' } },
       }),
 
-      prisma.vehicleType.findMany({
-        orderBy: { name: 'asc' },
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          _count: { select: { listings: { where: baseWhere } } },
-        },
+      prisma.listing.groupBy({
+        by: ['bodyType'],
+        where: { ...baseWhere, bodyType: { not: null } },
+        _count: { bodyType: true },
+        orderBy: { _count: { bodyType: 'desc' } },
       }),
 
       prisma.listing.aggregate({
@@ -86,8 +80,8 @@ async function getFilterOptions(req, res, next) {
     res.json({
       totalCount,
       categories: categoryCounts.map(c => ({ name: c.category, count: c._count.category })),
-      brands: brands.filter(b => b._count.listings > 0),
-      vehicleTypes: vehicleTypes.filter(vt => vt._count.listings > 0),
+      brands: brandCounts.map(b => ({ name: b.brand, count: b._count.brand })),
+      vehicleTypes: bodyTypeCounts.map(bt => ({ name: bt.bodyType, count: bt._count.bodyType })),
       priceRange: {
         min: priceRange._min.price ? Number(priceRange._min.price) : 0,
         max: priceRange._max.price ? Number(priceRange._max.price) : 0,

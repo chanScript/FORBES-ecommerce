@@ -1,5 +1,5 @@
 const prisma = require('../config/db');
-const { uploadDocToCloudinary } = require('../middleware/upload.middleware');
+const { uploadDocLocal } = require('../middleware/upload.middleware');
 const { createNotification } = require('../utils/notification.service');
 const { createAuditLog } = require('../middleware/audit.middleware');
 
@@ -24,18 +24,27 @@ async function uploadListingDocuments(req, res, next) {
 
     const documents = [];
     for (const file of req.files) {
-      const { publicId, url } = await uploadDocToCloudinary(file.buffer, file.originalname);
-      const doc = await prisma.document.create({
-        data: {
-          listingId,
-          fileName: file.originalname,
-          fileType: file.mimetype,
-          fileSize: file.size,
-          url,
-          publicId,
-        },
-      });
-      documents.push(doc);
+      try {
+        const { publicId, url } = uploadDocLocal(file.buffer, file.originalname, file.mimetype);
+        const doc = await prisma.document.create({
+          data: {
+            listingId,
+            fileName: file.originalname,
+            fileType: file.mimetype,
+            fileSize: file.size,
+            url,
+            publicId,
+          },
+        });
+        documents.push(doc);
+      } catch (fileErr) {
+        console.error(`[Documents] Failed to upload file ${file.originalname}:`, fileErr.message);
+        // Continue with other files if one fails
+      }
+    }
+
+    if (documents.length === 0) {
+      return res.status(400).json({ error: 'Failed to upload any documents.' });
     }
 
     // Notify admins
@@ -50,6 +59,7 @@ async function uploadListingDocuments(req, res, next) {
 
     res.status(201).json({ message: `${documents.length} document(s) uploaded.`, documents });
   } catch (err) {
+    console.error('[Documents] Listing upload error:', err);
     next(err);
   }
 }
@@ -60,6 +70,10 @@ async function uploadListingDocuments(req, res, next) {
 async function uploadSubmissionDocuments(req, res, next) {
   try {
     const submissionId = parseInt(req.params.submissionId, 10);
+
+    if (!submissionId || isNaN(submissionId)) {
+      return res.status(400).json({ error: 'Invalid submission ID.' });
+    }
 
     const submission = await prisma.sellerSubmission.findUnique({
       where: { id: submissionId },
@@ -75,22 +89,32 @@ async function uploadSubmissionDocuments(req, res, next) {
 
     const documents = [];
     for (const file of req.files) {
-      const { publicId, url } = await uploadDocToCloudinary(file.buffer, file.originalname);
-      const doc = await prisma.document.create({
-        data: {
-          submissionId,
-          fileName: file.originalname,
-          fileType: file.mimetype,
-          fileSize: file.size,
-          url,
-          publicId,
-        },
-      });
-      documents.push(doc);
+      try {
+        const { publicId, url } = uploadDocLocal(file.buffer, file.originalname, file.mimetype);
+        const doc = await prisma.document.create({
+          data: {
+            submissionId,
+            fileName: file.originalname,
+            fileType: file.mimetype,
+            fileSize: file.size,
+            url,
+            publicId,
+          },
+        });
+        documents.push(doc);
+      } catch (fileErr) {
+        console.error(`[Documents] Failed to upload file ${file.originalname}:`, fileErr.message);
+        // Continue with other files if one fails
+      }
+    }
+
+    if (documents.length === 0) {
+      return res.status(400).json({ error: 'Failed to upload any documents.' });
     }
 
     res.status(201).json({ message: `${documents.length} document(s) uploaded.`, documents });
   } catch (err) {
+    console.error('[Documents] Submission upload error:', err);
     next(err);
   }
 }

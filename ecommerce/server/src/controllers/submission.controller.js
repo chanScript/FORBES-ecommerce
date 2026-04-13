@@ -3,8 +3,20 @@ const slugify = require('slugify');
 const { parsePagination, paginatedResponse } = require('../utils/pagination');
 const { createAuditLog } = require('../middleware/audit.middleware');
 const { sendEmail, sendSubmissionReceivedEmail, sendSubmissionStatusEmail } = require('../utils/email');
-const { uploadToCloudinary } = require('../middleware/upload.middleware');
+const { uploadImageLocal } = require('../middleware/upload.middleware');
 const { createNotification } = require('../utils/notification.service');
+
+// Prisma enum whitelists — safely null out values not in the enum
+const VALID_TRANSMISSIONS = ['Automatic', 'Manual', 'CVT'];
+const VALID_FUEL_TYPES = ['Gasoline', 'Diesel', 'Electric', 'Hybrid', 'LPG'];
+
+function sanitizeTransmission(val) {
+  return VALID_TRANSMISSIONS.includes(val) ? val : null;
+}
+
+function sanitizeFuelType(val) {
+  return VALID_FUEL_TYPES.includes(val) ? val : null;
+}
 
 /**
  * POST /api/submissions — Public: anonymous seller submission.
@@ -14,8 +26,14 @@ async function createSubmission(req, res, next) {
     const {
       fullName, email, phone,
       category, vehicleSubtype, realEstateSubtype,
-      propertyDetails, price,
+      propertyDetails, price, vehicleData: vehicleDataRaw,
     } = req.body;
+
+    let vehicleData = null;
+    if (category === 'Vehicle' && vehicleDataRaw) {
+      try { vehicleData = typeof vehicleDataRaw === 'string' ? JSON.parse(vehicleDataRaw) : vehicleDataRaw; }
+      catch { vehicleData = null; }
+    }
 
     const submission = await prisma.sellerSubmission.create({
       data: {
@@ -25,7 +43,8 @@ async function createSubmission(req, res, next) {
         category,
         vehicleSubtype: vehicleSubtype || null,
         realEstateSubtype: realEstateSubtype || null,
-        propertyDetails,
+        propertyDetails: propertyDetails || null,
+        vehicleData,
         price: price ? parseFloat(price) : null,
       },
     });
@@ -34,7 +53,7 @@ async function createSubmission(req, res, next) {
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
         try {
-          const { publicId, url } = await uploadToCloudinary(file.buffer);
+          const { publicId, url } = await uploadImageLocal(file.buffer);
           await prisma.sellerSubmissionImage.create({
             data: {
               submissionId: submission.id,
@@ -255,12 +274,12 @@ async function convertToListing(req, res, next) {
       return res.status(400).json({ error: 'Submission already converted to a listing.' });
     }
 
-    // Accept optional overrides from admin
+    // Accept optional overrides from admin; fall back to stored vehicleData for vehicle fields
+    const vd = submission.vehicleData || {};
     const {
       title: customTitle, description, price, city, condition, category,
       vehicleSubtype, realEstateSubtype,
       year, mileage, fuelType, transmission, engineCapacity, color, seats,
-      brandId, modelId, vehicleTypeId,
       lotArea, floorArea, bedrooms, bathrooms, parkingSpaces,
       furnishingStatus, amenities, propertyAge, titleType,
     } = req.body;
@@ -275,7 +294,7 @@ async function convertToListing(req, res, next) {
     const data = {
       title,
       slug,
-      description: description || submission.propertyDetails,
+      description: description || submission.propertyDetails || '',
       price: price ? parseFloat(price) : (submission.price ? Number(submission.price) : 0),
       city: effectiveCity,
       condition: condition || 'Used',
@@ -289,16 +308,39 @@ async function convertToListing(req, res, next) {
 
     if (effectiveCategory === 'Vehicle') {
       data.vehicleSubtype = vehicleSubtype || submission.vehicleSubtype;
-      data.year = year ? parseInt(year, 10) : null;
-      data.mileage = mileage ? parseInt(mileage, 10) : null;
-      data.fuelType = fuelType || null;
-      data.transmission = transmission || null;
-      data.engineCapacity = engineCapacity ? parseInt(engineCapacity, 10) : null;
-      data.color = color || null;
-      data.seats = seats ? parseInt(seats, 10) : null;
-      data.brandId = brandId ? parseInt(brandId, 10) : null;
-      data.modelId = modelId ? parseInt(modelId, 10) : null;
-      data.vehicleTypeId = vehicleTypeId ? parseInt(vehicleTypeId, 10) : null;
+      data.year = year ? parseInt(year, 10) : (vd.year ? parseInt(vd.year, 10) : null);
+      data.mileage = mileage ? parseInt(mileage, 10) : (vd.mileage ? parseInt(vd.mileage, 10) : null);
+      data.fuelType = sanitizeFuelType(fuelType || vd.fuelType);
+      data.transmission = sanitizeTransmission(transmission || vd.transmission);
+      data.drivetrain = vd.drivetrain || null;
+      data.engineCapacity = engineCapacity ? parseInt(engineCapacity, 10) : (vd.engineCapacity ? parseInt(vd.engineCapacity, 10) : null);
+      data.engineType = vd.engineType || null;
+      data.color = color || vd.color || null;
+      data.interiorColor = vd.interiorColor || null;
+      data.seats = seats ? parseInt(seats, 10) : (vd.seats ? parseInt(vd.seats, 10) : null);
+      data.horsepower = vd.horsepower ? parseInt(vd.horsepower, 10) : null;
+      data.torque = vd.torque ? parseInt(vd.torque, 10) : null;
+      data.topSpeed = vd.topSpeed ? parseInt(vd.topSpeed, 10) : null;
+      data.fuelEconomy = vd.fuelEconomy ? parseFloat(vd.fuelEconomy) : null;
+      data.brand = vd.brand || null;
+      data.model = vd.model || null;
+      data.variant = vd.variant || null;
+      data.bodyType = vd.bodyType || null;
+      data.plateNumber = vd.plateNumber || null;
+      data.vinNumber = vd.vinNumber || null;
+      data.features = vd.features || null;
+      data.safetyFeatures = vd.safetyFeatures || null;
+      data.overallCondition = vd.overallCondition || null;
+      data.accidentHistory = vd.accidentHistory != null ? Boolean(vd.accidentHistory) : null;
+      data.serviceHistoryAvailable = vd.serviceHistoryAvailable != null ? Boolean(vd.serviceHistoryAvailable) : null;
+      data.previousOwners = vd.previousOwners ? parseInt(vd.previousOwners, 10) : null;
+      data.lastMaintenanceDate = vd.lastMaintenanceDate || null;
+      data.tiresCondition = vd.tiresCondition || null;
+      data.knownIssues = vd.knownIssues || null;
+      data.ownershipDetails = vd.ownershipDetails || null;
+      data.negotiable = vd.negotiable != null ? Boolean(vd.negotiable) : false;
+      data.reasonForSelling = vd.reasonForSelling || null;
+      data.viewingAvailability = vd.viewingAvailability || null;
     } else if (effectiveCategory === 'RealEstate') {
       data.realEstateSubtype = realEstateSubtype || submission.realEstateSubtype;
       data.lotArea = lotArea ? parseFloat(lotArea) : null;

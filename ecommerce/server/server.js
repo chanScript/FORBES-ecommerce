@@ -2,17 +2,16 @@ require('dotenv').config();
 
 const express = require('express');
 const http = require('http');
+const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { Server } = require('socket.io');
 const { verifyToken } = require('./src/utils/jwt');
+const { initUploadDirs } = require('./src/config/storage');
 
 const authRoutes = require('./src/routes/auth.routes');
 const listingRoutes = require('./src/routes/listing.routes');
-const brandRoutes = require('./src/routes/brand.routes');
-const modelRoutes = require('./src/routes/model.routes');
-const vehicleTypeRoutes = require('./src/routes/vehicleType.routes');
 const adminRoutes = require('./src/routes/admin.routes');
 const favoriteRoutes = require('./src/routes/favorite.routes');
 const filterRoutes = require('./src/routes/filter.routes');
@@ -91,13 +90,21 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // ----------------------------------------------------------
+// Local File Storage — Serve optimized images & documents
+// ----------------------------------------------------------
+initUploadDirs();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  maxAge: '30d',
+  immutable: true,
+  etag: true,
+  lastModified: true,
+}));
+
+// ----------------------------------------------------------
 // API Routes
 // ----------------------------------------------------------
 app.use('/api/auth', authRoutes);
 app.use('/api/listings', listingRoutes);
-app.use('/api/brands', brandRoutes);
-app.use('/api/models', modelRoutes);
-app.use('/api/vehicle-types', vehicleTypeRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/filters', filterRoutes);

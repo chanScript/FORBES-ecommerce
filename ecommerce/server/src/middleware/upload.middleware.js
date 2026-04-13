@@ -1,8 +1,10 @@
 const multer = require('multer');
-const cloudinary = require('../config/cloudinary');
-const { Readable } = require('stream');
+const path = require('path');
+const fs = require('fs');
+const { IMAGES_DIR, DOCUMENTS_DIR, generateFilePath } = require('../config/storage');
+const { processImage } = require('../utils/imageProcessor');
 
-// Use memory storage; we upload to Cloudinary manually in the controller helper.
+// Use memory storage; buffers are processed by Sharp before writing to disk.
 const storage = multer.memoryStorage();
 
 const upload = multer({
@@ -33,49 +35,86 @@ const uploadDocs = multer({
 });
 
 /**
- * Upload a single buffer to Cloudinary and return { public_id, secure_url }.
+ * Upload an image buffer to local disk as optimized WebP variants.
+ * Returns { publicId, url } — publicId is "bucket/id", url is the large variant path.
  */
-function uploadToCloudinary(buffer) {
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      {
-        folder: 'car-marketplace',
-        transformation: [{ width: 1200, height: 800, crop: 'limit', quality: 'auto' }],
-      },
-      (error, result) => {
-        if (error) return reject(error);
-        resolve({ publicId: result.public_id, url: result.secure_url });
-      },
-    );
-    const readable = Readable.from(buffer);
-    readable.pipe(stream);
-  });
+async function uploadImageLocal(buffer) {
+  const { id, bucket, dirPath } = generateFilePath(IMAGES_DIR);
+
+  // Process image into thumb, medium, large WebP variants
+  const variants = await processImage(buffer);
+
+  // Write all variants to disk
+  for (const [variant, data] of Object.entries(variants)) {
+    const filePath = path.join(dirPath, `${id}_${variant}.webp`);
+    fs.writeFileSync(filePath, data);
+  }
+
+  const publicId = `${bucket}/${id}`;
+  const url = `/uploads/images/${bucket}/${id}_large.webp`;
+
+  return { publicId, url };
 }
 
 /**
- * Upload a document (PDF or image) to Cloudinary.
- * PDFs use resource_type 'raw'; images use 'image'.
+ * Upload a document (PDF or image) to local disk.
+ * Documents are stored as-is (no image processing).
+ * Returns { publicId, url }.
  */
-function uploadDocToCloudinary(buffer, originalName) {
-  const isPdf = originalName.toLowerCase().endsWith('.pdf');
-  return new Promise((resolve, reject) => {
-    const opts = {
-      folder: 'car-marketplace/documents',
-      resource_type: isPdf ? 'raw' : 'image',
-      public_id: `${Date.now()}-${originalName.replace(/[^a-zA-Z0-9._-]/g, '_')}`,
-    };
+function uploadDocLocal(buffer, originalName, mimetype) {
+  const { id, bucket, dirPath } = generateFilePath(DOCUMENTS_DIR);
 
-    if (!isPdf) {
-      opts.transformation = [{ width: 1200, height: 800, crop: 'limit', quality: 'auto' }];
-    }
+  // Preserve original extension
+  const extMap = {
+    'image/jpeg': '.jpg',
+    'image/png': '.png',
+    'image/webp': '.webp',
+    'application/pdf': '.pdf',
+  };
+  const ext = extMap[mimetype] || path.extname(originalName) || '.bin';
+  const fileName = `${id}${ext}`;
+  const filePath = path.join(dirPath, fileName);
 
-    const stream = cloudinary.uploader.upload_stream(opts, (error, result) => {
-      if (error) return reject(error);
-      resolve({ publicId: result.public_id, url: result.secure_url });
-    });
-    const readable = Readable.from(buffer);
-    readable.pipe(stream);
-  });
+  fs.writeFileSync(filePath, buffer);
+
+  const publicId = `${bucket}/${fileName}`;
+  const url = `/uploads/documents/${bucket}/${fileName}`;
+
+  return { publicId, url };
 }
 
-module.exports = { upload, uploadDocs, uploadToCloudinary, uploadDocToCloudinary };
+/**
+ * Delete a locally stored file by its publicId.
+ * For images: deletes all 3 variant files (thumb, medium, large).
+ * For documents: deletes the single file.
+ */
+function deleteLocalFile(publicId, type = 'image') {
+  try {
+    if (type === 'image') {
+      // publicId format: "bucket/id" — derive variant file paths
+      const variants = ['thumb', 'medium', 'large'];
+      for (const variant of variants) {
+        const filePath = path.join(IMAGES_DIR, `${publicId}_${variant}.webp`);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      }
+    } else {
+      // publicId format: "bucket/filename.ext"
+      const filePath = path.join(DOCUMENTS_DIR, publicId);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+  } catch (err) {
+    console.error('[Storage] Delete error:', err.message);
+  }
+}
+
+module.exports = {
+  upload,
+  uploadDocs,
+  uploadImageLocal,
+  uploadDocLocal,
+  deleteLocalFile,
+};

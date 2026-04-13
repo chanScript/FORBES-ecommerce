@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Heart, MapPin, Fuel, Gauge, Calendar, BedDouble, Maximize, Home } from 'lucide-react';
-import { formatPrice, formatMileage, optimizeCloudinaryUrl } from '../../utils/helpers';
+import { formatPrice, formatMileage } from '../../utils/helpers';
+import { getImageUrl } from '../../utils/imageHelpers';
 
 const SUBTYPE_LABELS = {
   Car: 'Car', Motorcycle: 'Motorcycle', Truck: 'Truck',
@@ -9,7 +10,7 @@ const SUBTYPE_LABELS = {
 
 export default function CarCard({ car, onToggleFavorite, isFavorited }) {
   const primaryImage = car.images?.[0]?.url;
-  const optimizedImage = primaryImage ? optimizeCloudinaryUrl(primaryImage, 400) : null;
+  const optimizedImage = primaryImage ? getImageUrl(primaryImage, 'medium') : null;
   const isVehicle = car.category === 'Vehicle';
   const subtype = isVehicle ? car.vehicleSubtype : car.realEstateSubtype;
 

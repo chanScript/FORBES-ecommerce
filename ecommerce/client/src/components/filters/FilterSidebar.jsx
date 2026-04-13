@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { filtersAPI, brandsAPI } from '../../api/cars';
+import { filtersAPI } from '../../api/cars';
 import { SlidersHorizontal, ChevronDown, X } from 'lucide-react';
 
 export default function FilterSidebar({ filters, onFilterChange, onReset }) {
@@ -21,23 +21,6 @@ export default function FilterSidebar({ filters, onFilterChange, onReset }) {
     queryKey: ['filterOptions'],
     queryFn: () => filtersAPI.getOptions().then(r => r.data),
   });
-
-  const [selectedBrandSlug, setSelectedBrandSlug] = useState(null);
-
-  const { data: brandModels } = useQuery({
-    queryKey: ['brandModels', selectedBrandSlug],
-    queryFn: () => brandsAPI.getModels(selectedBrandSlug).then(r => r.data),
-    enabled: !!selectedBrandSlug,
-  });
-
-  useEffect(() => {
-    if (filters.brand && filterOptions) {
-      const brand = filterOptions.brands?.find(b => b.slug === filters.brand || b.id === Number(filters.brand));
-      setSelectedBrandSlug(brand?.slug || filters.brand || null);
-    } else {
-      setSelectedBrandSlug(null);
-    }
-  }, [filters.brand, filterOptions]);
 
   const toggleSection = (key) => {
     setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }));
@@ -83,49 +66,24 @@ export default function FilterSidebar({ filters, onFilterChange, onReset }) {
           <>
             {/* Brand Filter */}
             <FilterSection title="Brand" expanded={expandedSections.brand} onToggle={() => toggleSection('brand')}>
-              <select
+              <input
+                type="text"
+                placeholder="Search brand..."
                 value={filters.brand || ''}
                 onChange={(e) => handleChange('brand', e.target.value)}
                 className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-primary-accent focus:outline-none focus:ring-1 focus:ring-primary-accent"
-              >
-                <option value="">All Brands</option>
-                {filterOptions.brands?.map((b) => (
-                  <option key={b.id} value={b.slug}>
-                    {b.name} ({b._count?.listings ?? b._count?.cars ?? 0})
-                  </option>
-                ))}
-              </select>
-
-              {selectedBrandSlug && brandModels && (
-                <select
-                  value={filters.model || ''}
-                  onChange={(e) => handleChange('model', e.target.value)}
-                  className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-primary-accent focus:outline-none focus:ring-1 focus:ring-primary-accent"
-                >
-                  <option value="">All Models</option>
-                  {brandModels.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.name} ({m._count?.listings ?? m._count?.cars ?? 0})
-                    </option>
-                  ))}
-                </select>
-              )}
+              />
             </FilterSection>
 
-            {/* Vehicle Type */}
+            {/* Body Type */}
             <FilterSection title="Body Type" expanded={expandedSections.vehicleType} onToggle={() => toggleSection('vehicleType')}>
-              <select
+              <input
+                type="text"
+                placeholder="Search body type..."
                 value={filters.vehicleType || ''}
                 onChange={(e) => handleChange('vehicleType', e.target.value)}
                 className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-primary-accent focus:outline-none focus:ring-1 focus:ring-primary-accent"
-              >
-                <option value="">All Types</option>
-                {filterOptions.vehicleTypes?.map((vt) => (
-                  <option key={vt.id} value={vt.slug}>
-                    {vt.name} ({vt._count?.listings ?? vt._count?.cars ?? 0})
-                  </option>
-                ))}
-              </select>
+              />
             </FilterSection>
 
             {/* Year */}

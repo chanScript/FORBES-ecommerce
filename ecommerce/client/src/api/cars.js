@@ -3,6 +3,7 @@ import api from './axios';
 export const listingsAPI = {
   list: (params) => api.get('/listings', { params }),
   getBySlug: (slug) => api.get(`/listings/${slug}`),
+  getSimilar: (id) => api.get(`/listings/${id}/similar`),
   getSellerProfile: (sellerId, params) => api.get(`/listings/seller/${sellerId}`, { params }),
   create: (data) => api.post('/listings', data),
   update: (id, data) => api.put(`/listings/${id}`, data),
@@ -17,25 +18,6 @@ export const listingsAPI = {
 
 // Keep backward-compatible alias
 export const carsAPI = listingsAPI;
-
-export const brandsAPI = {
-  list: () => api.get('/brands'),
-  getModels: (slug) => api.get(`/brands/${slug}/models`),
-  create: (name) => api.post('/brands', { name }),
-  delete: (id) => api.delete(`/brands/${id}`),
-};
-
-export const modelsAPI = {
-  list: (brandId) => api.get('/models', { params: brandId ? { brandId } : {} }),
-  create: (name, brandId) => api.post('/models', { name, brandId }),
-  delete: (id) => api.delete(`/models/${id}`),
-};
-
-export const vehicleTypesAPI = {
-  list: () => api.get('/vehicle-types'),
-  create: (name) => api.post('/vehicle-types', { name }),
-  delete: (id) => api.delete(`/vehicle-types/${id}`),
-};
 
 export const filtersAPI = {
   getOptions: () => api.get('/filters/options'),
