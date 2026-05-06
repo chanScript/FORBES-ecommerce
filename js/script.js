@@ -174,9 +174,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const carousel = document.getElementById('about-carousel');
   if (carousel) {
     const slides = carousel.querySelectorAll('.carousel-slide');
-    const prevBtn = carousel.querySelector('.carousel-prev');
-    const nextBtn = carousel.querySelector('.carousel-next');
-    const dots = carousel.querySelectorAll('.carousel-dot');
+    const carouselSection = carousel.closest('section') || document;
+    const prevBtn = document.getElementById('carousel-prev') || carouselSection.querySelector('.carousel-prev');
+    const nextBtn = document.getElementById('carousel-next') || carouselSection.querySelector('.carousel-next');
+    const dots = carouselSection.querySelectorAll('.carousel-dot');
     let currentSlide = 0;
     let autoplayTimer;
 

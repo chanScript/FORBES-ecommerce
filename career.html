@@ -11,7 +11,7 @@
       theme: {
         extend: {
           colors: {
-            primary: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
+            primary: { 50:'#f0f5ff',100:'#e0eafc',200:'#c7d6f8',300:'#a3b8fc',400:'#7a95f8',500:'#5b73f0',600:'#3b4fe4',700:'#2d3dca',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
             accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
             success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
           },
@@ -40,12 +40,12 @@
     .toast.show { transform: translateX(0); }
   </style>
 </head>
-<body class="bg-white text-gray-800 antialiased">
+<body class="bg-white text-gray-700 antialiased">
   <!-- ====== NAVIGATION (rendered by app.js) ====== -->
   <div id="navbar-container"></div>
 
   <!-- ====== HERO ====== -->
-  <section class="relative pt-32 pb-20 bg-primary-900 overflow-hidden">
+  <section class="relative pt-32 pb-20 bg-white overflow-hidden">
     <div class="absolute inset-0">
       <div class="absolute top-20 right-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl"></div>
       <div class="absolute bottom-20 left-10 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl"></div>
@@ -54,19 +54,19 @@
       <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
         <span class="text-accent text-sm font-medium">Join Our Team</span>
       </div>
-      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">Career <span class="text-gradient">Opportunities</span></h1>
-      <p class="text-gray-400 text-lg max-w-2xl mx-auto">Be part of a dynamic team committed to excellence in financial consultancy. Discover opportunities to grow your career with Forbes Financial.</p>
+      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-900 mb-4">Join Our <span class="text-gradient">Team</span></h1>
+      <p class="text-gray-500 text-lg max-w-2xl mx-auto">Be part of a dynamic team committed to integrity, excellence, and innovation in financial consultancy. Discover opportunities to grow your career with Forbes Financial.</p>
     </div>
   </section>
 
   <!-- ====== NO POSITIONS (Empty State) ====== -->
-  <section class="py-20 lg:py-28 bg-white">
+  <section class="py-20 lg:py-28 bg-white border-t border-gray-100">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
       <div class="bg-gray-50 border border-gray-200 rounded-2xl p-12">
         <div class="w-20 h-20 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
           <i data-lucide="briefcase" class="w-10 h-10 text-accent"></i>
         </div>
-        <h2 class="font-heading text-2xl font-bold text-primary-900 mb-3">No Open Positions</h2>
+        <h2 class="font-heading text-2xl font-bold text-accent mb-3">No Open Positions</h2>
         <p class="text-gray-500 mb-8">We don't have any open positions at the moment. Please check back later or send us your resume for future opportunities.</p>
         <a href="#apply" class="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg shadow-accent/25">
           Send Your Resume
@@ -80,7 +80,7 @@
   <section id="apply" class="py-20 lg:py-28 bg-gray-50 scroll-mt-24">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
       <div class="text-center mb-12">
-        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900 mb-4">Don't See a Perfect Fit?</h2>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-accent mb-4">Don't See a Perfect Fit?</h2>
         <p class="text-gray-500 text-lg">We're always looking for talented individuals. Send us your resume and we'll keep you in mind for future opportunities.</p>
       </div>
 

@@ -11,7 +11,7 @@
       theme: {
         extend: {
           colors: {
-            primary: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
+            primary: { 50:'#f0f5ff',100:'#e0eafc',200:'#c7d6f8',300:'#a3b8fc',400:'#7a95f8',500:'#5b73f0',600:'#3b4fe4',700:'#2d3dca',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
             accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
             success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
           },
@@ -38,12 +38,12 @@
     .reveal.active { opacity:1; transform:translateY(0); }
   </style>
 </head>
-<body class="bg-white text-gray-800 antialiased">
+<body class="bg-white text-gray-700 antialiased">
   <!-- ====== NAVIGATION (rendered by app.js) ====== -->
   <div id="navbar-container"></div>
 
   <!-- ====== HERO ====== -->
-  <section class="relative pt-32 pb-20 bg-primary-900 overflow-hidden">
+  <section class="relative pt-32 pb-20 bg-white overflow-hidden">
     <div class="absolute inset-0">
       <div class="absolute top-20 right-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl"></div>
     </div>
@@ -51,19 +51,19 @@
       <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
         <span class="text-accent text-sm font-medium">Financial Tool</span>
       </div>
-      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">Loan <span class="text-gradient">Calculator</span></h1>
-      <p class="text-gray-400 text-lg max-w-2xl mx-auto">Estimate your monthly payments quickly and easily</p>
+      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-900 mb-4">Loan <span class="text-gradient">Calculator</span></h1>
+      <p class="text-gray-500 text-lg max-w-2xl mx-auto">Estimate your monthly payments and plan your finances with our easy-to-use loan calculator.</p>
     </div>
   </section>
 
   <!-- ====== CALCULATOR SECTION ====== -->
-  <section class="py-20 lg:py-28 bg-white">
+  <section class="py-20 lg:py-28 bg-white border-t border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-12">
         <!-- Calculator Form -->
         <div class="reveal">
           <div class="bg-gray-50 border border-gray-100 rounded-2xl p-8 lg:p-10">
-            <h2 class="font-heading text-2xl font-bold text-primary-900 mb-6">Calculate Your Loan</h2>
+            <h2 class="font-heading text-2xl font-bold text-accent mb-6">Calculate Your Loan</h2>
             <form id="loan-calculator" novalidate>
               <div class="mb-6">
                 <label for="product_type" class="block text-sm font-medium text-gray-700 mb-2">Product Type</label>
@@ -184,10 +184,10 @@
 
       <!-- How to Use -->
       <div class="mt-20 reveal">
-        <h3 class="font-heading text-2xl font-bold text-primary-900 mb-8 text-center">How to Use This Calculator</h3>
+        <h3 class="font-heading text-2xl font-bold text-accent mb-8 text-center">How to Use This Calculator</h3>
         <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
           <div class="text-center p-4">
-            <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center mx-auto mb-3 text-primary-900 font-bold text-sm">1</div>
+            <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center mx-auto mb-3 text-accent font-bold text-sm">1</div>
             <p class="text-gray-600 text-sm">Select the loan product type</p>
           </div>
           <div class="text-center p-4">
@@ -203,7 +203,7 @@
             <p class="text-gray-600 text-sm">Choose the interest rate</p>
           </div>
           <div class="text-center p-4">
-            <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center mx-auto mb-3 text-primary-900 font-bold text-sm">5</div>
+            <div class="w-10 h-10 bg-accent rounded-full flex items-center justify-center mx-auto mb-3 text-accent font-bold text-sm">5</div>
             <p class="text-gray-600 text-sm">Click Calculate to see results</p>
           </div>
         </div>
@@ -214,11 +214,11 @@
   <!-- ====== CTA ====== -->
   <section class="py-20 bg-primary-900 relative overflow-hidden">
     <div class="absolute inset-0">
-      <div class="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+      <div class="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
     </div>
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
       <h2 class="font-heading text-3xl sm:text-4xl font-bold text-white mb-6">Ready to Explore Loan Options?</h2>
-      <p class="text-gray-400 text-lg mb-8">Discover loan options that suit your needs through our Loan Marketing services.</p>
+      <p class="text-gray-300 text-lg mb-8">Discover loan options that suit your needs through our Loan Marketing services.</p>
       <a href="services.html#loan-marketing" class="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg shadow-accent/25">
         View Loan Marketing Services
         <i data-lucide="arrow-right" class="w-4 h-4"></i>

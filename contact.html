@@ -11,7 +11,7 @@
       theme: {
         extend: {
           colors: {
-            primary: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
+            primary: { 50:'#f0f5ff',100:'#e0eafc',200:'#c7d6f8',300:'#a3b8fc',400:'#7a95f8',500:'#5b73f0',600:'#3b4fe4',700:'#2d3dca',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
             accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
             success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
           },
@@ -41,12 +41,12 @@
     .toast.show { transform: translateX(0); }
   </style>
 </head>
-<body class="bg-white text-gray-800 antialiased">
+<body class="bg-white text-gray-700 antialiased">
   <!-- ====== NAVIGATION (rendered by app.js) ====== -->
   <div id="navbar-container"></div>
 
   <!-- ====== HERO ====== -->
-  <section class="relative pt-32 pb-20 bg-primary-900 overflow-hidden">
+  <section class="relative pt-32 pb-20 bg-white overflow-hidden">
     <div class="absolute inset-0">
       <div class="absolute top-20 right-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl"></div>
       <div class="absolute bottom-20 left-10 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl"></div>
@@ -55,25 +55,25 @@
       <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
         <span class="text-accent text-sm font-medium">Get In Touch</span>
       </div>
-      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">Contact <span class="text-gradient">Us</span></h1>
-      <p class="text-gray-400 text-lg max-w-2xl mx-auto">Let's discuss how we can help your business make informed financial decisions</p>
+      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-900 mb-4">Get in <span class="text-gradient">Touch</span></h1>
+      <p class="text-gray-500 text-lg max-w-2xl mx-auto">We'd love to hear from you. Reach out to us for inquiries, partnerships, or to learn more about our services.</p>
     </div>
   </section>
 
   <!-- ====== CONTACT SECTION ====== -->
-  <section class="py-20 lg:py-28 bg-white">
+  <section class="py-20 lg:py-28 bg-white border-t border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-3 gap-12">
         <!-- Contact Info -->
         <div class="lg:col-span-1 reveal">
-          <h2 class="font-heading text-2xl font-bold text-primary-900 mb-6">Contact Information</h2>
+          <h2 class="font-heading text-2xl font-bold text-accent mb-6">Contact Information</h2>
           <div class="space-y-6">
             <div class="flex items-start gap-4">
               <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
                 <i data-lucide="map-pin" class="w-5 h-5 text-accent"></i>
               </div>
               <div>
-                <h4 class="font-semibold text-primary-900 mb-1">Our Location</h4>
+                <h4 class="font-semibold text-accent mb-1">Our Location</h4>
                 <p class="text-gray-500 text-sm">Philippines</p>
               </div>
             </div>
@@ -82,7 +82,7 @@
                 <i data-lucide="phone" class="w-5 h-5 text-accent"></i>
               </div>
               <div>
-                <h4 class="font-semibold text-primary-900 mb-1">Phone Number</h4>
+                <h4 class="font-semibold text-accent mb-1">Phone Number</h4>
                 <p class="text-gray-500 text-sm">Contact for inquiry</p>
               </div>
             </div>
@@ -91,7 +91,7 @@
                 <i data-lucide="mail" class="w-5 h-5 text-accent"></i>
               </div>
               <div>
-                <h4 class="font-semibold text-primary-900 mb-1">Email Address</h4>
+                <h4 class="font-semibold text-accent mb-1">Email Address</h4>
                 <a href="mailto:rsalas@forbesfinancial.com.ph" class="text-accent hover:text-accent-dark text-sm transition-colors">rsalas@forbesfinancial.com.ph</a>
               </div>
             </div>
@@ -100,7 +100,7 @@
                 <i data-lucide="clock" class="w-5 h-5 text-accent"></i>
               </div>
               <div>
-                <h4 class="font-semibold text-primary-900 mb-1">Business Hours</h4>
+                <h4 class="font-semibold text-accent mb-1">Business Hours</h4>
                 <p class="text-gray-500 text-sm">Mon-Fri: 8AM-5PM</p>
               </div>
             </div>
@@ -108,19 +108,19 @@
 
           <!-- Social -->
           <div class="mt-10">
-            <h4 class="font-semibold text-primary-900 mb-4">Follow Us</h4>
+            <h4 class="font-semibold text-accent mb-4">Follow Us</h4>
             <div class="flex gap-3">
               <a href="https://facebook.com/profile.php?id=61584665866351" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-100 hover:bg-accent rounded-lg flex items-center justify-center transition-colors group">
-                <i data-lucide="facebook" class="w-5 h-5 text-gray-500 group-hover:text-primary-900"></i>
+                <i data-lucide="facebook" class="w-5 h-5 text-gray-500 group-hover:text-accent"></i>
               </a>
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-100 hover:bg-accent rounded-lg flex items-center justify-center transition-colors group">
-                <i data-lucide="linkedin" class="w-5 h-5 text-gray-500 group-hover:text-primary-900"></i>
+                <i data-lucide="linkedin" class="w-5 h-5 text-gray-500 group-hover:text-accent"></i>
               </a>
               <a href="mailto:rsalas@forbesfinancial.com.ph" class="w-10 h-10 bg-gray-100 hover:bg-accent rounded-lg flex items-center justify-center transition-colors group">
-                <i data-lucide="mail" class="w-5 h-5 text-gray-500 group-hover:text-primary-900"></i>
+                <i data-lucide="mail" class="w-5 h-5 text-gray-500 group-hover:text-accent"></i>
               </a>
               <a href="https://tiktok.com/@ffcc.ortigas" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-gray-100 hover:bg-accent rounded-lg flex items-center justify-center transition-colors group">
-                <i data-lucide="music" class="w-5 h-5 text-gray-500 group-hover:text-primary-900"></i>
+                <i data-lucide="music" class="w-5 h-5 text-gray-500 group-hover:text-accent"></i>
               </a>
             </div>
           </div>
@@ -129,7 +129,7 @@
         <!-- Contact Form -->
         <div class="lg:col-span-2 reveal">
           <div class="bg-gray-50 border border-gray-100 rounded-2xl p-8 lg:p-10">
-            <h2 class="font-heading text-2xl font-bold text-primary-900 mb-6">Send Us a Message</h2>
+            <h2 class="font-heading text-2xl font-bold text-accent mb-6">Send Us a Message</h2>
             <form id="contact-form" action="php/contact.php" method="POST" novalidate>
               <div class="grid sm:grid-cols-2 gap-6 mb-6">
                 <div>
