@@ -27,27 +27,17 @@
 
     const isTransparent = container.getAttribute('data-transparent') === 'true';
 
-    // Nav wrapper classes differ: transparent (index) vs solid (other pages)
-    const navClasses = isTransparent
-      ? 'fixed top-0 left-0 right-0 z-50 backdrop-blur-md transition-all duration-500 border-b border-transparent'
-      : 'fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md transition-all duration-300 border-b border-gray-100';
+    // Nav wrapper classes - transparent navbar over the background
+    const navClasses = 'fixed top-0 left-0 right-0 z-[9999] bg-transparent backdrop-blur-sm transition-all duration-300';
 
-    // Link color classes
-    const brandClass = isTransparent ? 'nav-brand text-white' : 'text-primary-900';
-    const accentClass = isTransparent ? 'nav-accent text-accent' : 'text-accent';
-    const linkClass = isTransparent
-      ? 'nav-link text-white/90 hover:text-white'
-      : 'text-gray-600 hover:text-primary-900';
-    const ctaClass = isTransparent
-      ? 'nav-cta ml-4 bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-sm'
-      : 'ml-4 bg-primary-900 hover:bg-primary-800 text-white shadow-md';
-    const mobileBtnClass = isTransparent
-      ? 'nav-mobile-btn lg:hidden text-white p-2 rounded-lg hover:bg-white/10 transition-colors duration-500'
-      : 'lg:hidden text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors';
-    const transitionDuration = isTransparent ? 'transition-colors duration-500' : 'transition-colors';
-    const aboutBtnClass = isTransparent
-      ? `${linkClass} px-4 py-3 text-sm font-medium tracking-wide uppercase ${transitionDuration} flex items-center gap-1`
-      : 'text-primary-900 font-semibold px-4 py-2 text-sm tracking-wide uppercase transition-colors flex items-center gap-1';
+    // Link color classes - dark colors for light background
+    const brandClass = 'text-primary-900';
+    const accentClass = 'text-accent';
+    const linkClass = 'text-primary-900 hover:text-primary-800';
+    const ctaClass = 'ml-4 bg-primary-900 hover:bg-primary-800 text-white shadow-md';
+    const mobileBtnClass = 'lg:hidden text-primary-900 p-2 rounded-lg hover:bg-primary-100/40 transition-colors';
+    const transitionDuration = 'transition-colors';
+    const aboutBtnClass = 'text-primary-900 font-semibold px-4 py-2 text-sm tracking-wide uppercase transition-colors flex items-center gap-1';
 
     container.innerHTML = `
     <nav id="navbar" class="${navClasses}">
@@ -65,15 +55,15 @@
           <div class="hidden lg:flex items-center space-x-${isTransparent ? '2' : '1'}">
             <div class="dropdown relative">
               <button class="${aboutBtnClass}">About <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
-              <div class="dropdown-menu absolute left-0 top-full mt-${isTransparent ? '2' : '1'} w-52 bg-white border border-gray-100 rounded-xl shadow-${isTransparent ? 'xl' : 'lg'} py-2">
+              <div class="dropdown-menu absolute left-0 top-full mt-1 w-52 bg-white border border-gray-100 rounded-xl shadow-lg py-2">
                 <a href="about.html" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-primary-900 hover:bg-gray-50 transition-colors">Our Organization</a>
                 <a href="career.html" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-primary-900 hover:bg-gray-50 transition-colors">Career</a>
                 <a href="news.html" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-primary-900 hover:bg-gray-50 transition-colors">News</a>
               </div>
             </div>
             <div class="dropdown relative">
-              <button class="${linkClass} px-4 py-${isTransparent ? '3' : '2'} text-sm font-medium tracking-wide uppercase ${transitionDuration} flex items-center gap-1">Services <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
-              <div class="dropdown-menu absolute left-0 top-full mt-${isTransparent ? '2' : '1'} w-56 bg-white border border-gray-100 rounded-xl shadow-${isTransparent ? 'xl' : 'lg'} py-2">
+              <button class="${linkClass} px-4 py-2 text-sm font-medium tracking-wide uppercase ${transitionDuration} flex items-center gap-1">Services <i data-lucide="chevron-down" class="w-4 h-4"></i></button>
+              <div class="dropdown-menu absolute left-0 top-full mt-1 w-56 bg-white border border-gray-100 rounded-xl shadow-lg py-2">
                 <a href="services.html#credit-investigation" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-primary-900 hover:bg-gray-50 transition-colors">Credit Investigation</a>
                 <a href="services.html#background-investigation" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-primary-900 hover:bg-gray-50 transition-colors">Background Investigation</a>
                 <a href="services.html#appraisal-services" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-primary-900 hover:bg-gray-50 transition-colors">Appraisal Services</a>
@@ -82,8 +72,8 @@
                 <a href="services.html#collection-services" class="block px-4 py-2.5 text-sm text-gray-600 hover:text-primary-900 hover:bg-gray-50 transition-colors">Collection Services</a>
               </div>
             </div>
-            <a href="calculator.html" class="${linkClass} px-4 py-${isTransparent ? '3' : '2'} text-sm font-medium tracking-wide uppercase ${transitionDuration}">Calculator</a>
-            <a href="https://negrec.forbesfinancial.mweeb.com/signin" target="_blank" rel="noopener noreferrer" class="${linkClass} px-4 py-${isTransparent ? '3' : '2'} text-sm font-medium tracking-wide uppercase ${transitionDuration} flex items-center gap-1">Login <i data-lucide="external-link" class="w-3.5 h-3.5"></i></a>
+            <a href="calculator.html" class="${linkClass} px-4 py-2 text-sm font-medium tracking-wide uppercase ${transitionDuration}">Calculator</a>
+            <a href="https://negrec.forbesfinancial.mweeb.com/signin" target="_blank" rel="noopener noreferrer" class="${linkClass} px-4 py-2 text-sm font-medium tracking-wide uppercase ${transitionDuration} flex items-center gap-1">Login <i data-lucide="external-link" class="w-3.5 h-3.5"></i></a>
             <a href="contact.html" class="${ctaClass} px-6 py-2.5 rounded-lg text-sm font-semibold tracking-wide uppercase transition-all">Book an Appointment</a>
           </div>
           <!-- Mobile Toggle -->

@@ -39,19 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  /* ---------- Navbar Scroll Effect ---------- */
-  const SCROLL_THRESHOLD = 40;
-  function handleNavScroll() {
-    if (!navbar) return;
-    if (window.scrollY > SCROLL_THRESHOLD) {
-      navbar.classList.add('nav-scrolled');
-    } else {
-      navbar.classList.remove('nav-scrolled');
-    }
-  }
-  window.addEventListener('scroll', handleNavScroll, { passive: true });
-  handleNavScroll();
-
   /* ---------- Desktop Dropdown Click Toggle ---------- */
   document.querySelectorAll('.dropdown > button').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -69,7 +56,37 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.dropdown.active').forEach(d => d.classList.remove('active'));
   });
 
-  /* ---------- Back-to-Top Button ---------- */
+  // Handle Navbar Auto-Hide on Scroll
+  let lastScrollY = 0;
+  let ticking = false;
+
+  const handleNavbarScroll = () => {
+    if (!navbar) return;
+    
+    const currentScrollY = window.scrollY;
+    
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      // Scrolling down - hide navbar
+      navbar.style.transform = 'translateY(-100%)';
+      navbar.style.transition = 'transform 0.3s ease-in-out';
+    } else {
+      // Scrolling up or at top - show navbar
+      navbar.style.transform = 'translateY(0)';
+      navbar.style.transition = 'transform 0.3s ease-in-out';
+    }
+    
+    lastScrollY = currentScrollY;
+    ticking = false;
+  };
+
+  const requestTick = () => {
+    if (!ticking) {
+      requestAnimationFrame(handleNavbarScroll);
+      ticking = true;
+    }
+  };
+
+  window.addEventListener('scroll', requestTick, { passive: true });
   if (backToTopBtn) {
     window.addEventListener('scroll', () => {
       if (window.scrollY > 400) {
@@ -219,13 +236,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let heroTimer;
 
     function heroGoTo(idx) {
-      heroSlides.forEach(s => s.classList.remove('active'));
-      heroDots.forEach(d => { d.classList.remove('bg-white/80'); d.classList.add('bg-white/30'); });
+      // Instant slide change - no fade effect
+      heroSlides.forEach(s => {
+        s.classList.remove('active');
+        s.style.opacity = '0';
+      });
+      heroDots.forEach(d => { d.classList.remove('bg-accent'); d.classList.add('bg-accent/30'); });
       heroIdx = (idx + heroSlides.length) % heroSlides.length;
+      
+      // Make active slide instantly visible
+      heroSlides[heroIdx].style.opacity = '1';
       heroSlides[heroIdx].classList.add('active');
+      
       if (heroDots[heroIdx]) {
-        heroDots[heroIdx].classList.add('bg-white/80');
-        heroDots[heroIdx].classList.remove('bg-white/30');
+        heroDots[heroIdx].classList.add('bg-accent');
+        heroDots[heroIdx].classList.remove('bg-accent/30');
       }
     }
 
