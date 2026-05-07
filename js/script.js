@@ -233,19 +233,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroSlides = heroCarousel.querySelectorAll('.hero-slide');
     const heroDots   = heroCarousel.querySelectorAll('.hero-dot');
     let heroIdx = 0;
+    let heroPrevIdx = 0;
     let heroTimer;
 
     function heroGoTo(idx) {
-      // Instant slide change - no fade effect
-      heroSlides.forEach(s => {
-        s.classList.remove('active');
-        s.style.opacity = '0';
+      heroSlides.forEach((slide, slideIndex) => {
+        slide.classList.remove('prev');
+        slide.classList.remove('active');
       });
       heroDots.forEach(d => { d.classList.remove('bg-accent'); d.classList.add('bg-accent/30'); });
+      heroPrevIdx = heroIdx;
       heroIdx = (idx + heroSlides.length) % heroSlides.length;
       
-      // Make active slide instantly visible
-      heroSlides[heroIdx].style.opacity = '1';
+      if (heroSlides[heroPrevIdx] && heroPrevIdx !== heroIdx) {
+        heroSlides[heroPrevIdx].classList.add('prev');
+      }
       heroSlides[heroIdx].classList.add('active');
       
       if (heroDots[heroIdx]) {
