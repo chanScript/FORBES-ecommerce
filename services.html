@@ -48,6 +48,11 @@
     .reveal.active { opacity:1; transform:translateY(0); }
     .process-step { counter-increment: step; }
     .process-step::before { content: counter(step); }
+    /* Ensure badge numbers are readable on accent backgrounds */
+    .bg-accent.text-accent {
+      color: #000000 !important;
+      -webkit-text-fill-color: #000000 !important;
+    }
   </style>
 </head>
 <body class="bg-white text-gray-700 antialiased">

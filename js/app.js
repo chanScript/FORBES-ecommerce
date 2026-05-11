@@ -73,6 +73,7 @@
               </div>
             </div>
             <a href="calculator.html" class="${linkClass} px-4 py-2 text-sm font-medium tracking-wide uppercase ${transitionDuration}">Calculator</a>
+            <a href="http://localhost:5173" class="${linkClass} px-4 py-2 text-sm font-medium tracking-wide uppercase ${transitionDuration}">Ecommerce</a>
             <a href="https://negrec.forbesfinancial.mweeb.com/signin" target="_blank" rel="noopener noreferrer" class="${linkClass} px-4 py-2 text-sm font-medium tracking-wide uppercase ${transitionDuration} flex items-center gap-1">Login <i data-lucide="external-link" class="w-3.5 h-3.5"></i></a>
             <a href="contact.html" class="${ctaClass} px-6 py-2.5 rounded-lg text-sm font-semibold tracking-wide uppercase transition-all">Book an Appointment</a>
           </div>
@@ -106,7 +107,7 @@
             </div>
           </div>
           <a href="calculator.html" class="block text-gray-600 hover:text-primary-900 px-4 py-3 text-sm font-medium uppercase">Calculator</a>
-          <a href="http://localhost:5173" class="block text-gray-600 hover:text-primary-900 px-4 py-3 text-sm font-medium uppercase flex items-center gap-2"><i data-lucide="car" class="w-4 h-4"></i> Ecommerce</a>
+          <a href="http://localhost:5173" class="block text-gray-600 hover:text-primary-900 px-4 py-3 text-sm font-medium uppercase">Ecommerce</a>
           <a href="https://negrec.forbesfinancial.mweeb.com/signin" target="_blank" rel="noopener noreferrer" class="block text-gray-600 hover:text-primary-900 px-4 py-3 text-sm font-medium uppercase">Login</a>
           <div class="pt-2"><a href="contact.html" class="block bg-primary-900 hover:bg-primary-800 text-white px-4 py-3 rounded-lg text-sm font-semibold text-center uppercase">Book an Appointment</a></div>
         </div>

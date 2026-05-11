@@ -115,13 +115,26 @@
         z-index: 51;
       }
       .reveal {
-        opacity: 1;
-        transform: translateY(0);
-        transition: none;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .reveal.active {
         opacity: 1;
         transform: translateY(0);
+      }
+      
+      /* Force handbook section to animate on scroll */
+      #handbook .reveal {
+        opacity: 0;
+        transform: translateY(80px) scale(0.9);
+        transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
+      }
+      
+      #handbook .reveal.active {
+        opacity: 1;
+        transform: translateY(0) scale(1);
       }
 
       /* Typewriter cursor */
@@ -414,6 +427,37 @@
       .reveal:nth-child(6) {
         transition-delay: 0.75s;
       }
+      
+      /* Handbook section stagger */
+      #handbook .reveal:nth-child(1) {
+        transition-delay: 0s;
+      }
+      #handbook .reveal:nth-child(2) {
+        transition-delay: 0.3s;
+      }
+      #handbook .reveal:nth-child(3) {
+        transition-delay: 0.6s;
+      }
+      
+      /* Add bounce effect for handbook */
+      @keyframes handbookBounceIn {
+        0% {
+          opacity: 0;
+          transform: translateY(100px) scale(0.8);
+        }
+        60% {
+          opacity: 1;
+          transform: translateY(-10px) scale(1.02);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      
+      #handbook .reveal.active {
+        animation: handbookBounceIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
 
       /* ========== LIGHT MODERN BACKGROUND - S.P. MADRID STYLE ========== */
       .midnight-elementor-bg {
@@ -684,6 +728,27 @@
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
       }
 
+      .midnight-elementor-bg .hero-title {
+        font-weight: 900 !important;
+      }
+
+      .midnight-elementor-bg .hero-title .text-accent {
+        font-weight: 800 !important;
+      }
+
+      .midnight-elementor-bg .hero-charcoal,
+      .midnight-elementor-bg .hero-charcoal-soft,
+      .midnight-elementor-bg .hero-title {
+        color: #0f2a4d !important;
+        -webkit-text-fill-color: #0f2a4d !important;
+      }
+
+      /* Badge legibility: make number readable on gold background */
+      .bg-accent.text-accent {
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+      }
+
       /* Make ALL text elements dark and clear - HEADINGS STAY DARK */
       .midnight-elementor-bg *,
       .midnight-elementor-bg p,
@@ -720,6 +785,497 @@
         font-weight: 300 !important;
         opacity: 0.8 !important;
       }
+
+      /* ===== Flipbook / Cover improvements ===== */
+      #book .page.page-cover {
+        background-image: url('images/ivana-cajina-asuyh-_ZX54-unsplash.jpg') !important;
+        background-size: cover !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+        background-color: #1b3f69;
+        position: relative;
+        color: #f8fafc;
+        border: 1px solid rgba(201, 168, 76, 0.35);
+      }
+      #book .page.page-cover::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(160deg, rgba(15, 42, 77, 0.75) 0%, rgba(27, 63, 105, 0.65) 65%, rgba(16, 39, 69, 0.75) 100%);
+        z-index: 1;
+      }
+      #book .page-cover .cover-inner {
+        position: relative;
+        z-index: 2;
+        background: transparent;
+        border: none;
+        padding: 28px 24px;
+        border-radius: 14px;
+        box-shadow: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        max-width: 100%;
+        margin: auto;
+      }
+      #book .page-cover .cover-logo {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+        border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      }
+      #book .page-cover .est-badge {
+        border: 1px solid #c9a84c;
+        color: #0f2a4d;
+        background: linear-gradient(180deg, #e5c46f, #c9a84c);
+        font-size: 11px;
+        letter-spacing: 2.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 6px 20px;
+        border-radius: 999px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+        animation: fadeSlideIn 0.8s ease-out 0.2s both;
+      }
+      #book .page-cover .cover-title {
+        font-weight: 800;
+        color: #ffffff;
+        text-align: center;
+        margin: 0;
+        font-size: 16px;
+        letter-spacing: 0.8px;
+        text-shadow: none;
+        line-height: 1.4;
+        animation: fadeSlideIn 0.8s ease-out 0.4s both;
+      }
+      #book .page-cover .cover-sub {
+        font-weight: 700;
+        color: #ffd700;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin: 0;
+        font-size: 18px;
+        text-shadow: none;
+        animation: fadeSlideIn 0.8s ease-out 0.6s both;
+      }
+      #book .page-cover .cover-tagline {
+        color: #ffffff;
+        font-size: 14px;
+        margin: 0;
+        text-align: center;
+        max-width: 320px;
+        font-weight: 500;
+        text-shadow: none;
+        animation: fadeSlideIn 0.8s ease-out 0.8s both;
+        line-height: 1.5;
+      }
+      #book .page-cover .cover-rule {
+        width: 76px;
+        height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(201, 168, 76, 0), #c9a84c, rgba(201, 168, 76, 0));
+        margin: 2px 0 4px;
+      }
+      #book .page-cover .back-title {
+        color: #ffffff;
+        font-weight: 700;
+        line-height: 1.45;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.7);
+        font-size: 16px;
+        animation: fadeSlideIn 0.8s ease-out 0.3s both;
+      }
+      #book .page-cover .back-sub {
+        color: #ffd700;
+        margin: 0;
+        letter-spacing: 0.3px;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.7);
+        font-size: 15px;
+        animation: fadeSlideIn 0.8s ease-out 0.5s both;
+      }
+      #book .page-cover .back-contact {
+        color: #ffffff;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        font-size: 14px;
+        animation: fadeSlideIn 0.8s ease-out 0.7s both;
+      }
+      
+      /* Back cover animations */
+      @keyframes fadeSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      #book .page-cover .cover-logo {
+        animation: fadeScaleIn 0.8s ease-out 0.1s both;
+      }
+      
+      #book .page-cover .cover-rule {
+        animation: expandWidth 0.6s ease-out 0.6s both;
+      }
+      
+      @keyframes fadeScaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
+      @keyframes expandWidth {
+        from {
+          width: 0;
+          opacity: 0;
+        }
+        to {
+          width: 76px;
+          opacity: 1;
+        }
+      }
+        line-height: 1.6;
+      }
+
+      /* ===== Handbook core layout and typography ===== */
+      #handbook #book {
+        width: 100%;
+        margin: 0 auto;
+      }
+      #handbook #book .page {
+        box-sizing: border-box;
+        background: linear-gradient(180deg, #ffffff 0%, #f9fbfe 100%);
+        border: 1px solid #d7e3ef;
+        border-radius: 12px;
+        padding: 22px 20px;
+        color: #334155;
+        overflow: hidden;
+      }
+      #handbook #book .ch {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      #handbook #book .icon-box {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #c9a84c, #d4b55a);
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(201, 168, 76, 0.3);
+      }
+      #handbook #book .section-title {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #0f2a4d;
+        text-transform: uppercase;
+      }
+      #handbook #book .divider {
+        height: 2px;
+        background: linear-gradient(90deg, #c9a84c, rgba(201, 168, 76, 0.2), transparent);
+        margin: 16px 0 20px;
+        border-radius: 1px;
+      }
+      #handbook #book .sub-heading {
+        margin: 0 0 8px;
+        font-size: 15px;
+        line-height: 1.3;
+        font-weight: 700;
+        color: #102a43;
+      }
+      #handbook #book .bt,
+      #handbook #book .u,
+      #handbook #book .story-text {
+        margin: 0 0 6px;
+        font-size: 10.8px;
+        line-height: 1.45;
+        color: #334155;
+      }
+      #handbook #book .story-page {
+        display: flex;
+        flex-direction: column;
+      }
+      #handbook #book .story-footer {
+        margin-top: auto;
+        padding-top: 8px;
+        border-top: 1px solid #d7e3ef;
+      }
+      #handbook #book .sfn {
+        font-size: 12px;
+        font-weight: 700;
+        color: #0f2a4d;
+      }
+      #handbook #book .sfr {
+        font-size: 10.5px;
+        color: #475569;
+      }
+      #handbook #book .sfc {
+        font-size: 9.5px;
+        color: #94a3b8;
+      }
+      #handbook #book .profile-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #ffffff 0%, #faf8f3 50%, #f8f9fa 100%);
+        position: relative;
+        overflow: hidden;
+      }
+      #handbook #book .profile-page::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
+        z-index: 0;
+      }
+      #handbook #book .profile-photo-wrap {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 5px solid #c9a84c;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f8f4e8, #f1ead5);
+        margin-bottom: 24px;
+        box-shadow: 0 16px 48px rgba(15, 42, 77, 0.25), 0 8px 20px rgba(201, 168, 76, 0.4);
+        position: relative;
+        z-index: 1;
+        transition: transform 0.3s ease;
+      }
+      #handbook #book .profile-photo-wrap:hover {
+        transform: scale(1.03);
+      }
+      #handbook #book .profile-photo-wrap::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #c9a84c, #e6b866, #f2c373, #c9a84c);
+        z-index: -1;
+        opacity: 0.4;
+        animation: rotate 3s linear infinite;
+      }
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      #handbook #book .profile-photo-wrap img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 20%;
+      }
+      #handbook #book .profile-name {
+        font-size: 26px;
+        line-height: 1.2;
+        font-weight: 800;
+        color: #0f2a4d;
+        margin-bottom: 12px;
+        letter-spacing: -0.03em;
+        position: relative;
+        z-index: 1;
+      }
+      #handbook #book .profile-role {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #ffffff;
+        text-transform: uppercase;
+        margin-top: 0;
+        padding: 8px 20px;
+        background: linear-gradient(135deg, #c9a84c, #d4b55a);
+        border-radius: 20px;
+        border: 2px solid #e6b866;
+        display: inline-block;
+        box-shadow: 0 4px 12px rgba(201, 168, 76, 0.4);
+        position: relative;
+        z-index: 1;
+      }
+      #handbook #book .profile-rule {
+        width: 120px;
+        height: 3px;
+        border-radius: 999px;
+        margin-top: 20px;
+        margin-bottom: 16px;
+        background: linear-gradient(90deg, rgba(201, 168, 76, 0), #c9a84c, #e6b866, #c9a84c, rgba(201, 168, 76, 0));
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Team page */
+      #handbook #book .team-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        margin-top: 20px;
+        padding: 0 10px;
+      }
+      /* Last card (5th member) spans full width and centers */
+      #handbook #book .team-grid .team-card:nth-child(5) {
+        grid-column: 1 / -1;
+        justify-self: center;
+        max-width: calc(50% - 7px);
+      }
+      #handbook #book .team-card {
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #fefcf7 0%, #faf8f3 100%);
+        padding: 20px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        min-height: 160px;
+        max-height: 160px;
+      }
+      #handbook #book .team-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #d4a853, #e6b866, #d4a853);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      #handbook #book .team-card:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-3px);
+        border-color: #d4a853;
+      }
+      #handbook #book .team-card:hover::before {
+        opacity: 1;
+      }
+      #handbook #book .team-initial,
+      #handbook #book .team-photo {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        border: 3px solid #d4a853;
+        background: linear-gradient(135deg, #d4a853, #e6b866);
+        color: #ffffff;
+        font-size: 24px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 12px rgba(212, 168, 83, 0.25);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+      #handbook #book .team-photo {
+        object-fit: cover;
+        object-position: center 18%;
+        background: #d4a853;
+      }
+      #handbook #book .team-initial::after,
+      #handbook #book .team-photo::after {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #d4a853, #e6b866, #f2c373);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      #handbook #book .team-card:hover .team-initial,
+      #handbook #book .team-card:hover .team-photo {
+        transform: scale(1.08);
+        box-shadow: 0 6px 16px rgba(212, 168, 83, 0.35);
+      }
+      #handbook #book .team-card:hover .team-initial::after,
+      #handbook #book .team-card:hover .team-photo::after {
+        opacity: 0.3;
+      }
+      #handbook #book .tname {
+        margin: 0 0 6px 0;
+        color: #1a202c;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        text-align: center;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      #handbook #book .trole {
+        margin: 0;
+        color: #d4a853;
+        font-size: 11px;
+        line-height: 1.3;
+        font-weight: 600;
+        text-align: center;
+        text-transform: none;
+        letter-spacing: 0.2px;
+        padding: 3px 8px;
+        background: rgba(212, 168, 83, 0.1);
+        border-radius: 10px;
+        border: 1px solid rgba(212, 168, 83, 0.2);
+      }
+
+      /* Handbook controls */
+      #handbook .controls {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px;
+        border-radius: 999px;
+        background: #ffffff;
+        border: 1px solid #d7e3ef;
+        box-shadow: 0 8px 20px rgba(15, 42, 77, 0.08);
+      }
+      #handbook .controls button {
+        border: 0;
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: #0f2a4d;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      #handbook .controls button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      #handbook .page-counter {
+        min-width: 72px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: #475569;
+      }
     </style>
   </head>
   <body class="bg-white text-gray-700 antialiased">
@@ -755,7 +1311,7 @@
                 >
               </div>
               <h1
-                class="font-heading text-5xl sm:text-6xl lg:text-7xl font-extrabold hero-charcoal mb-5 leading-tight relative z-50"
+                class="hero-title font-heading text-5xl sm:text-6xl lg:text-7xl font-extrabold hero-charcoal mb-5 leading-tight relative z-50"
               >
                 Your Premier Source of
                 <span class="text-accent">Credit Intelligence</span>
@@ -1728,49 +2284,13 @@
             <div id="book">
               <!-- PAGE 1: COVER -->
               <div class="page page-cover" data-density="hard">
-                <div
-                  style="
-                    position: relative;
-                    z-index: 1;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 10px;
-                    text-align: center;
-                  "
-                >
-                  <img
-                    src="images/logo.png"
-                    alt="FFCC Logo"
-                    style="
-                      width: 64px;
-                      height: 64px;
-                      object-fit: contain;
-                      margin-bottom: 4px;
-                      border-radius: 8px;
-                    "
-                    onerror="this.style.display = 'none'"
-                  />
-                  <span
-                    style="
-                      border: 1.5px solid #f0a800;
-                      color: #f0a800;
-                      font-size: 8px;
-                      letter-spacing: 3px;
-                      text-transform: uppercase;
-                      padding: 4px 18px;
-                      border-radius: 99px;
-                    "
-                    >Est. 2003</span
-                  >
-                  <p class="cover-title">
-                    FORBES FINANCIAL CONSULTANCY CORPORATION
-                  </p>
+                <div class="cover-inner">
+                  <img src="images/logo.png" alt="FFCC Logo" class="cover-logo" onerror="this.style.display = 'none'" />
+                  <span class="est-badge">Est. 2003</span>
+                  <p class="cover-title">FORBES FINANCIAL CONSULTANCY CORPORATION</p>
                   <div class="cover-rule"></div>
                   <p class="cover-sub">Digital Handbook</p>
-                  <p class="cover-tagline">
-                    Your Trusted Partner in Financial Solutions
-                  </p>
+                  <p class="cover-tagline">Your Trusted Partner in Financial Solutions</p>
                 </div>
               </div>
 
@@ -2330,7 +2850,7 @@
                   <div class="team-card">
                     <img
                       class="team-photo"
-                      src="images/assets/handbook/Picture20.png"
+                      src="images/sir%20noel.png"
                       alt="Noel J. Domingo"
                       onerror="
                         this.outerHTML = '<div class=\'team-initial\'>N</div>'
@@ -2342,7 +2862,7 @@
                   <div class="team-card">
                     <img
                       class="team-photo"
-                      src="images/assets/handbook/Picture5-removebg-preview.png"
+                      src="images/jobert.png"
                       alt="Joebert Grey Reyes"
                       onerror="
                         this.outerHTML = '<div class=\'team-initial\'>J</div>'
@@ -2354,7 +2874,7 @@
                   <div class="team-card">
                     <img
                       class="team-photo"
-                      src="images/assets/handbook/0a74a348d8764f4c9c518f091a0c520b4fa33f6c-removebg-preview.png"
+                      src="images/ruts.png"
                       alt="Ruch Salas"
                       onerror="
                         this.outerHTML = '<div class=\'team-initial\'>R</div>'
@@ -2366,7 +2886,7 @@
                   <div class="team-card">
                     <img
                       class="team-photo"
-                      src="images/assets/handbook/Picture3-removebg-preview.png"
+                      src="images/jk.png"
                       alt="Jan Kris Ann Fernandez"
                       onerror="
                         this.outerHTML = '<div class=\'team-initial\'>J</div>'
@@ -2378,7 +2898,7 @@
                   <div class="team-card">
                     <img
                       class="team-photo"
-                      src="images/assets/handbook/Picture4-removebg-preview.png"
+                      src="images/aubrey.png"
                       alt="Aubrey Lim"
                       onerror="
                         this.outerHTML = '<div class=\'team-initial\'>A</div>'
@@ -2387,16 +2907,6 @@
                     <div class="tname">Aubrey Lim</div>
                     <div class="trole">Operations Manager</div>
                   </div>
-                  <div class="team-card">
-                    <div class="team-initial">N</div>
-                    <div class="tname">Nikki</div>
-                    <div class="trole">Management</div>
-                  </div>
-                  <div class="team-card">
-                    <div class="team-initial">J</div>
-                    <div class="tname">Jane</div>
-                    <div class="trole">Management</div>
-                  </div>
                 </div>
               </div>
 
@@ -2404,7 +2914,7 @@
               <div class="page profile-page">
                 <div class="profile-photo-wrap">
                   <img
-                    src="images/assets/handbook/Picture20.png"
+                    src="images/sir%20noel.png"
                     alt="Noel J. Domingo"
                     onerror="this.style.display = 'none'"
                   />
@@ -2497,27 +3007,11 @@
 
               <!-- PAGE 16: BACK COVER -->
               <div class="page page-cover" data-density="hard">
-                <div
-                  style="
-                    position: relative;
-                    z-index: 1;
-                    text-align: center;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 8px;
-                  "
-                >
+                <div class="cover-inner">
                   <img
                     src="images/logo.png"
                     alt="FFCC Logo"
-                    style="
-                      width: 48px;
-                      height: 48px;
-                      object-fit: contain;
-                      margin-bottom: 8px;
-                      border-radius: 8px;
-                    "
+                    class="cover-logo"
                     onerror="this.style.display = 'none'"
                   />
                   <p class="back-title">
@@ -2673,6 +3167,25 @@
 
         pageFlip.on("flip", updateCounter);
         pageFlip.on("init", updateCounter);
+        
+        // Re-trigger cover animations on flip
+        pageFlip.on("flip", function(e) {
+          var currentPage = pageFlip.getCurrentPageIndex();
+          var coverPages = document.querySelectorAll('.page-cover');
+          
+          // Reset and re-trigger animations for cover pages
+          coverPages.forEach(function(page) {
+            var elements = page.querySelectorAll('.cover-logo, .est-badge, .cover-title, .cover-sub, .cover-tagline, .back-title, .back-sub, .back-contact, .cover-rule');
+            elements.forEach(function(el) {
+              // Remove animation
+              el.style.animation = 'none';
+              // Force reflow
+              void el.offsetWidth;
+              // Re-add animation
+              el.style.animation = null;
+            });
+          });
+        });
 
         document
           .getElementById("prev-btn")
@@ -2722,6 +3235,31 @@
               });
           });
         }
+        
+        // Handbook section scroll animation trigger
+        function checkHandbookVisibility() {
+          var handbookSection = document.getElementById('handbook');
+          if (!handbookSection) return;
+          
+          var rect = handbookSection.getBoundingClientRect();
+          var windowHeight = window.innerHeight || document.documentElement.clientHeight;
+          
+          // Check if handbook section is in viewport
+          if (rect.top <= windowHeight * 0.75 && rect.bottom >= 0) {
+            var handbookReveals = handbookSection.querySelectorAll('.reveal');
+            handbookReveals.forEach(function(el, index) {
+              setTimeout(function() {
+                el.classList.add('active');
+              }, index * 200);
+            });
+            // Remove listener after animation triggered
+            window.removeEventListener('scroll', checkHandbookVisibility);
+          }
+        }
+        
+        // Check on load and on scroll
+        window.addEventListener('scroll', checkHandbookVisibility);
+        checkHandbookVisibility();
       });
     </script>
   </body>

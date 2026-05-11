@@ -46,6 +46,10 @@
     .dropdown-menu { z-index: 51; }
     .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.8s ease, transform 0.8s ease; }
     .reveal.active { opacity:1; transform:translateY(0); }
+    /* Ensure numbers on accent badges are readable (black) */
+    .bg-accent.text-accent,
+    .bg-accent .text-accent,
+    .bg-accent > .text-accent { color: #000 !important; -webkit-text-fill-color: #000 !important; }
   </style>
 </head>
 <body class="bg-white text-gray-700 antialiased">
