@@ -52,22 +52,22 @@
     /* Hero carousel */
     .hero-slide { position:absolute; inset:0; opacity:0; transition:opacity 1s ease;  }
     .hero-slide.active { opacity:1; }
-    .hero-gradient { background: radial-gradient(circle at center, rgba(1, 17, 49, 0.295), rgba(7, 33, 109, 0.432)); }
+    .hero-gradient { background: radial-gradient(circle at center, rgba(1, 17, 49, 0.308), rgba(7, 32, 109, 0.39)); }
 
-    /* Honeycomb */
-    .honeycomb { display:flex; flex-wrap:wrap; justify-content:center; margin:0 auto; max-width:750px; }
-    .honeycomb-cell { position:relative; width:140px; height:162px; margin:4px 2px; clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%); background:#fff; display:flex; align-items:center; justify-content:center; transition:transform 0.3s ease, box-shadow 0.3s ease; overflow:hidden; }
-    .honeycomb-cell::before { content:''; position:absolute; inset:3px; clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%); background:#f8fafc; z-index:0; }
-    .honeycomb-cell:hover { transform:scale(1.08); }
-    .honeycomb-cell img { position:relative; z-index:1; max-width:70%; max-height:50%; object-fit:contain; filter:grayscale(30%); transition:filter 0.3s ease; }
-    .honeycomb-cell:hover img { filter:grayscale(0%); }
-    .honeycomb-row { display:flex; justify-content:center; width:100%; }
-    .honeycomb-row.offset { margin-top:-40px; margin-left:72px; }
-
-    @media(max-width:640px) {
-      .honeycomb-cell { width:110px; height:127px; }
-      .honeycomb-row.offset { margin-left:57px; margin-top:-31px; }
-    }
+    /* Client Logo Carousel */
+    .carousel-overflow { overflow: hidden; }
+    .carousel-row { display: flex; gap: 20px; width: max-content; margin-bottom: 20px; }
+    .logo-card { width: 160px; height: 90px; flex-shrink: 0; background: #fff; border: 1px solid #eee; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 14px; }
+    .logo-card img { max-width: 100%; max-height: 100%; object-fit: contain; filter: grayscale(20%); transition: filter 0.3s ease; }
+    .logo-card:hover img { filter: grayscale(0%); }
+    @keyframes scrollLeft  { from { transform: translateX(0); }    to { transform: translateX(-50%); } }
+    @keyframes scrollRight { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+    .row-1 { animation: scrollLeft  22s linear infinite; }
+    .row-2 { animation: scrollRight 26s linear infinite; }
+    .row-3 { animation: scrollLeft  30s linear infinite; }
+    .carousel-overflow:hover .row-1,
+    .carousel-overflow:hover .row-2,
+    .carousel-overflow:hover .row-3 { animation-play-state: paused; }
 
     /* ── Embedded Handbook Flipbook ── */
     #handbook .page { background:linear-gradient(135deg,#fefefe 0%,#f8f6f4 100%); overflow:hidden; display:flex; flex-direction:column; padding:36px; }
@@ -364,7 +364,7 @@
     </div>
   </section>
 
-  <!-- ====== CLIENTS SECTION (HONEYCOMB) ====== -->
+  <!-- ====== CLIENTS SECTION (CAROUSEL) ====== -->
   <section class="py-20 lg:py-28 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16 reveal">
@@ -375,37 +375,49 @@
         <p class="text-gray-500 text-lg max-w-2xl mx-auto">Trusted by leading financial institutions and corporations across the Philippines</p>
       </div>
 
-      <!-- Company Logo Featured -->
-      <div class="flex justify-center mb-12 reveal">
-        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 inline-flex items-center gap-4">
-          <img src="images/logo.png" alt="FFCC Logo" class="w-16 h-16 rounded-lg object-contain" />
-          <div>
-            <p class="text-primary-900 font-bold text-lg leading-tight">FORBES FINANCIAL</p>
-            <p class="text-accent text-xs tracking-widest uppercase">Consultancy Corporation</p>
-          </div>
+      <!-- Scrolling Logo Carousel -->
+      <div class="carousel-overflow reveal">
+        <!-- Row 1 → scrolls left -->
+        <div class="carousel-row row-1">
+          <div class="logo-card"><img src="images/client/Cocogen.jpg" alt="Cocogen Insurance" /></div>
+          <div class="logo-card"><img src="images/client/Asialink.jpg" alt="Asialink Finance" /></div>
+          <div class="logo-card"><img src="images/client/manulife.jpg" alt="Manulife" /></div>
+          <div class="logo-card"><img src="images/client/Pru-Life-UK.jpg" alt="Pru-Life UK" /></div>
+          <div class="logo-card"><img src="images/client/wisefund.png" alt="Wisefund Finance" /></div>
+          <!-- duplicate for seamless loop -->
+          <div class="logo-card"><img src="images/client/Cocogen.jpg" alt="Cocogen Insurance" /></div>
+          <div class="logo-card"><img src="images/client/Asialink.jpg" alt="Asialink Finance" /></div>
+          <div class="logo-card"><img src="images/client/manulife.jpg" alt="Manulife" /></div>
+          <div class="logo-card"><img src="images/client/Pru-Life-UK.jpg" alt="Pru-Life UK" /></div>
+          <div class="logo-card"><img src="images/client/wisefund.png" alt="Wisefund Finance" /></div>
         </div>
-      </div>
-
-      <!-- Honeycomb Layout -->
-      <div class="reveal">
-        <!-- Row 1: 4 cells -->
-        <div class="honeycomb-row">
-          <div class="honeycomb-cell"><img src="images/client/Cocogen.jpg" alt="Cocogen Insurance" /></div>
-          <div class="honeycomb-cell"><img src="images/client/Asialink.jpg" alt="Asialink Finance" /></div>
-          <div class="honeycomb-cell"><img src="images/client/manulife.jpg" alt="Manulife" /></div>
-          <div class="honeycomb-cell"><img src="images/client/Pru-Life-UK.jpg" alt="Pru-Life UK" /></div>
+        <!-- Row 2 ← scrolls right -->
+        <div class="carousel-row row-2">
+          <div class="logo-card"><img src="images/client/q2hrsolution.png" alt="Q2HR Solutions" /></div>
+          <div class="logo-card"><img src="images/client/global-dominion.png" alt="Global Dominion" /></div>
+          <div class="logo-card"><img src="images/client/Picture15.png" alt="Avvanz" /></div>
+          <div class="logo-card"><img src="images/client/gooddeal.jpg" alt="GD Express" /></div>
+          <div class="logo-card"><img src="images/client/southasialink.png" alt="South Asialink" /></div>
+          <!-- duplicate -->
+          <div class="logo-card"><img src="images/client/q2hrsolution.png" alt="Q2HR Solutions" /></div>
+          <div class="logo-card"><img src="images/client/global-dominion.png" alt="Global Dominion" /></div>
+          <div class="logo-card"><img src="images/client/Picture15.png" alt="Avvanz" /></div>
+          <div class="logo-card"><img src="images/client/gooddeal.jpg" alt="GD Express" /></div>
+          <div class="logo-card"><img src="images/client/southasialink.png" alt="South Asialink" /></div>
         </div>
-        <!-- Row 2: 3 cells (offset) -->
-        <div class="honeycomb-row offset">
-          <div class="honeycomb-cell"><img src="images/client/wisefund.png" alt="Wisefund Finance" /></div>
-          <div class="honeycomb-cell"><img src="images/client/q2hrsolution.png" alt="Q2HR Solutions" /></div>
-          <div class="honeycomb-cell"><img src="images/client/global-dominion.png" alt="Global Dominion" /></div>
-        </div>
-        <!-- Row 3: 3 cells -->
-        <div class="honeycomb-row">
-          <div class="honeycomb-cell"><img src="images/client/Picture15.png" alt="Avvanz" /></div>
-          <div class="honeycomb-cell"><img src="images/client/southasialink.png" alt="SAFC" /></div>
-          <div class="honeycomb-cell"><img src="images/client/gooddeal.jpg" alt="GD Express" /></div>
+        <!-- Row 3 → scrolls left (slower) -->
+        <div class="carousel-row row-3">
+          <div class="logo-card"><img src="images/client/southasialink.png" alt="South Asialink" /></div>
+          <div class="logo-card"><img src="images/client/Cocogen.jpg" alt="Cocogen Insurance" /></div>
+          <div class="logo-card"><img src="images/client/manulife.jpg" alt="Manulife" /></div>
+          <div class="logo-card"><img src="images/client/Pru-Life-UK.jpg" alt="Pru-Life UK" /></div>
+          <div class="logo-card"><img src="images/client/wisefund.png" alt="Wisefund Finance" /></div>
+          <!-- duplicate -->
+          <div class="logo-card"><img src="images/client/southasialink.png" alt="South Asialink" /></div>
+          <div class="logo-card"><img src="images/client/Cocogen.jpg" alt="Cocogen Insurance" /></div>
+          <div class="logo-card"><img src="images/client/manulife.jpg" alt="Manulife" /></div>
+          <div class="logo-card"><img src="images/client/Pru-Life-UK.jpg" alt="Pru-Life UK" /></div>
+          <div class="logo-card"><img src="images/client/wisefund.png" alt="Wisefund Finance" /></div>
         </div>
       </div>
 

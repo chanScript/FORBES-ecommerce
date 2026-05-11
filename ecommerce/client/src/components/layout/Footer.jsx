@@ -42,7 +42,7 @@ export default function Footer() {
               <li><Link to="/marketplace/vehicle" className="hover:text-primary-accent transition-colors">Browse Vehicles</Link></li>
               <li><Link to="/browse?category=RealEstate" className="hover:text-primary-accent transition-colors">Browse Properties</Link></li>
               <li><Link to="/sell" className="hover:text-primary-accent transition-colors">Sell Your Listing</Link></li>
-              <li><Link to="/register" className="hover:text-primary-accent transition-colors">Create Account</Link></li>
+           
             </ul>
           </div>
 
@@ -56,7 +56,6 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-
         <div className="mt-8 border-t border-gray-200 pt-6 text-center text-xs text-secondary-muted">
           &copy; {new Date().getFullYear()} Ecommerce. All rights reserved.
         </div>
