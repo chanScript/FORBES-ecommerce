@@ -137,6 +137,78 @@
       .honeycomb-row.offset { margin-left:68px; margin-top:-34px; }
     }
 
+    /* ========== SCROLLING LOGO CAROUSEL ========== */
+    .carousel-overflow {
+      overflow: hidden;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+
+    .carousel-row {
+      display: flex;
+      gap: 16px;
+      width: max-content;
+    }
+
+    .carousel-row.row-1 {
+      animation: scrollLeft 28s linear infinite;
+    }
+    .carousel-row.row-2 {
+      animation: scrollRight 32s linear infinite;
+    }
+    .carousel-row.row-3 {
+      animation: scrollLeft 24s linear infinite;
+    }
+
+    .carousel-row:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes scrollLeft {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @keyframes scrollRight {
+      0%   { transform: translateX(-50%); }
+      100% { transform: translateX(0); }
+    }
+
+    .logo-card {
+      flex-shrink: 0;
+      width: 180px;
+      height: 100px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .logo-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      transform: translateY(-2px);
+    }
+
+    .logo-card img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: grayscale(20%);
+      transition: filter 0.3s ease;
+    }
+
+    .logo-card:hover img {
+      filter: grayscale(0%);
+    }
+
     /* ========== HERO ENTRANCE ANIMATIONS - DISABLED ========== */
     @keyframes fadeUpIn {
       from {
