@@ -11,8 +11,8 @@
       theme: {
         extend: {
           colors: {
-            primary: { 50:'#eef2ff',100:'#dce7ff',200:'#b8ccff',300:'#8aaaf5',400:'#5c82ec',500:'#3660d9',600:'#2449b8',700:'#1c3899',800:'#163083',900:'#1a3978',950:'#0e2358' },
-            accent: { DEFAULT:'#F0A800', light:'#F5BA30', dark:'#D08900' },
+            primary: { 50:'#f0f5ff',100:'#e0eafc',200:'#c7d6f8',300:'#a3b8fc',400:'#7a95f8',500:'#5b73f0',600:'#3b4fe4',700:'#2d3dca',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
+            accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
             success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
           },
         },
@@ -24,9 +24,19 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; padding-top: 96px !important; }
+    #navbar { 
+      position: fixed !important; 
+      top: 0 !important; 
+      width: 100% !important; 
+      z-index: 1000 !important; 
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(8px) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+      border-bottom: 1px solid rgba(229, 231, 235, 1) !important;
+    }
     .font-heading { font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif; }
-    .text-gradient { background: linear-gradient(135deg, #F0A800, #F5BA30); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .text-gradient { background: linear-gradient(135deg, #c9a84c, #d4b96a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .nav-scrolled { background-color: rgba(255,255,255,0.97) !important; box-shadow: 0 1px 12px rgba(0,0,0,0.08); }
     .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
     .mobile-menu.open { max-height: 800px; }
@@ -40,12 +50,12 @@
     .toast.show { transform: translateX(0); }
   </style>
 </head>
-<body class="bg-white text-gray-800 antialiased">
+<body class="bg-white text-gray-700 antialiased">
   <!-- ====== NAVIGATION (rendered by app.js) ====== -->
   <div id="navbar-container"></div>
 
   <!-- ====== HERO ====== -->
-  <section class="relative pt-32 pb-20 bg-primary-900 overflow-hidden">
+  <section class="relative pt-32 pb-20 bg-white overflow-hidden">
     <div class="absolute inset-0">
       <div class="absolute top-20 right-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl"></div>
       <div class="absolute bottom-20 left-10 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl"></div>
@@ -54,19 +64,19 @@
       <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
         <span class="text-accent text-sm font-medium">Join Our Team</span>
       </div>
-      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">Career <span class="text-gradient">Opportunities</span></h1>
-      <p class="text-gray-400 text-lg max-w-2xl mx-auto">Be part of a dynamic team committed to excellence in financial consultancy. Discover opportunities to grow your career with Forbes Financial.</p>
+      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-900 mb-4">Join Our <span class="text-gradient">Team</span></h1>
+      <p class="text-gray-500 text-lg max-w-2xl mx-auto">Be part of a dynamic team committed to integrity, excellence, and innovation in financial consultancy. Discover opportunities to grow your career with Forbes Financial.</p>
     </div>
   </section>
 
   <!-- ====== NO POSITIONS (Empty State) ====== -->
-  <section class="py-20 lg:py-28 bg-white">
+  <section class="py-20 lg:py-28 bg-white border-t border-gray-100">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
       <div class="bg-gray-50 border border-gray-200 rounded-2xl p-12">
         <div class="w-20 h-20 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
           <i data-lucide="briefcase" class="w-10 h-10 text-accent"></i>
         </div>
-        <h2 class="font-heading text-2xl font-bold text-primary-900 mb-3">No Open Positions</h2>
+        <h2 class="font-heading text-2xl font-bold text-accent mb-3">No Open Positions</h2>
         <p class="text-gray-500 mb-8">We don't have any open positions at the moment. Please check back later or send us your resume for future opportunities.</p>
         <a href="#apply" class="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg shadow-accent/25">
           Send Your Resume
@@ -80,7 +90,7 @@
   <section id="apply" class="py-20 lg:py-28 bg-gray-50 scroll-mt-24">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 reveal">
       <div class="text-center mb-12">
-        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900 mb-4">Don't See a Perfect Fit?</h2>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-accent mb-4">Don't See a Perfect Fit?</h2>
         <p class="text-gray-500 text-lg">We're always looking for talented individuals. Send us your resume and we'll keep you in mind for future opportunities.</p>
       </div>
 
