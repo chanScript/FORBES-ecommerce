@@ -1,0 +1,2 @@
+-- AlterTable (columns already exist in the database)
+-- This migration marks the completion of adding seller name and phone fields
