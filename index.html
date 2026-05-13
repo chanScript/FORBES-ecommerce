@@ -48,6 +48,10 @@
        /* Main style*/
       body {
         font-family: "DM Sans", system-ui, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
       }
       #navbar {
         position: fixed !important;
@@ -1463,8 +1467,8 @@
     </section>
 
     <!-- ====== ABOUT SECTION (CLASSIC ELEGANCE) ====== -->
-    <section class="py-24 lg
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-24 lg:py-32 bg-white overflow-hidden">
+      <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <!-- Left Column: Elegant Typography & Content -->
           <div class="reveal">
@@ -1574,7 +1578,7 @@
           <div class="relative reveal mt-12 lg:mt-0">
             <!-- Main Image -->
             <div
-              class="relative rounded-bl-[4rem] rounded-tr-[4rem] overflow-hidden shadow-2xl border-4 border-white z-10 w-full md:w-11/12 ml-auto"
+              class="relative rounded-bl-[4rem] rounded-tr-[4rem] overflow-hidden shadow-2xl border-4 border-white z-10 w-full md:w-10/12 ml-auto lg:mr-6"
             >
               <img
                 src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1000&q=80"
@@ -1587,12 +1591,12 @@
 
             <!-- Decorative Gold Frame -->
             <div
-              class="absolute top-8 -right-4 w-full md:w-11/12 h-[500px] border-2 border-accent rounded-bl-[4rem] rounded-tr-[4rem] z-0 hidden md:block"
+              class="absolute top-8 -right-2 w-full md:w-10/12 h-[500px] border-2 border-accent rounded-bl-[4rem] rounded-tr-[4rem] z-0 hidden md:block"
             ></div>
 
             <!-- Elegant TITAN Overlay Box -->
             <div
-              class="md:absolute -bottom-10 left-0 bg-primary-900 text-white p-8 md:p-10 rounded-2xl shadow-xl z-20 w-full md:w-4/5"
+              class="md:absolute -bottom-10 left-0 bg-primary-900 text-white p-8 md:p-10 rounded-2xl shadow-xl z-20 w-full md:w-4/5 lg:ml-4"
             >
               <div class="flex items-center gap-3 mb-6">
                 <i data-lucide="shield-check" class="w-6 h-6 text-accent"></i>
@@ -3130,7 +3134,7 @@
     </section>
 
     <!-- ====== FOOTER (rendered by app.js) ====== -->
-    <div id="footer-container"></div>
+    <div id="footer-container" class="mt-auto"></div>
 
     <script src="js/app.js"></script>
     <script src="js/script.js"></script>
