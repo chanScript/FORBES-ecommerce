@@ -52,6 +52,11 @@
     /* Timeline */
     .timeline-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #c9a84c, #1e3a5f); transform: translateX(-50%); }
     @media (max-width: 768px) { .timeline-line { left: 1rem; } }
+
+    /* Ensure numbers on accent badges are readable (black) */
+    .bg-accent.text-accent,
+    .bg-accent .text-accent,
+    .bg-accent > .text-accent { color: #000 !important; -webkit-text-fill-color: #000 !important; }
   </style>
 </head>
 <body class="bg-white text-gray-700 antialiased">

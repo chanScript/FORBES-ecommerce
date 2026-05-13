@@ -11,8 +11,8 @@
       theme: {
         extend: {
           colors: {
-            primary: { 50:'#eef2ff',100:'#dce7ff',200:'#b8ccff',300:'#8aaaf5',400:'#5c82ec',500:'#3660d9',600:'#2449b8',700:'#1c3899',800:'#163083',900:'#1a3978',950:'#0e2358' },
-            accent: { DEFAULT:'#F0A800', light:'#F5BA30', dark:'#D08900' },
+            primary: { 50:'#f0f5ff',100:'#e0eafc',200:'#c7d6f8',300:'#a3b8fc',400:'#7a95f8',500:'#5b73f0',600:'#3b4fe4',700:'#2d3dca',800:'#1e3a5f',900:'#0f172a',950:'#0a1128' },
+            accent: { DEFAULT:'#c9a84c', light:'#d4b96a', dark:'#b08d2f' },
             success:'#2ECC71', warning:'#FFCC00', error:'#E53935',
           },
         },
@@ -24,7 +24,17 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; padding-top: 96px !important; }
+    #navbar { 
+      position: fixed !important; 
+      top: 0 !important; 
+      width: 100% !important; 
+      z-index: 1000 !important; 
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(8px) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+      border-bottom: 1px solid rgba(229, 231, 235, 1) !important;
+    }
     .font-heading { font-family: 'Plus Jakarta Sans', 'DM Sans', system-ui, sans-serif; }
     .text-gradient { background: linear-gradient(135deg, #F0A800, #F5BA30); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .nav-scrolled { background-color: rgba(255,255,255,0.97) !important; box-shadow: 0 1px 12px rgba(0,0,0,0.08); }
@@ -38,14 +48,19 @@
     .reveal.active { opacity:1; transform:translateY(0); }
     .process-step { counter-increment: step; }
     .process-step::before { content: counter(step); }
+    /* Ensure badge numbers are readable on accent backgrounds */
+    .bg-accent.text-accent {
+      color: #000000 !important;
+      -webkit-text-fill-color: #000000 !important;
+    }
   </style>
 </head>
-<body class="bg-white text-gray-800 antialiased">
+<body class="bg-white text-gray-700 antialiased">
   <!-- ====== NAVIGATION (rendered by app.js) ====== -->
   <div id="navbar-container"></div>
 
   <!-- ====== HERO ====== -->
-  <section class="relative pt-32 pb-20 bg-primary-900 overflow-hidden">
+  <section class="relative pt-32 pb-20 bg-white overflow-hidden">
     <div class="absolute inset-0">
       <div class="absolute top-20 right-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl"></div>
       <div class="absolute bottom-20 left-10 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl"></div>
@@ -54,8 +69,8 @@
       <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-1.5 mb-6">
         <span class="text-accent text-sm font-medium">What We Offer</span>
       </div>
-      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">Our <span class="text-gradient">Services</span></h1>
-      <p class="text-gray-400 text-lg max-w-2xl mx-auto">Comprehensive solutions designed with professionalism, integrity, and accuracy</p>
+      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-900 mb-4">Our <span class="text-gradient">Services</span></h1>
+      <p class="text-gray-500 text-lg max-w-2xl mx-auto">Comprehensive solutions designed with professionalism, integrity, and accuracy</p>
     </div>
   </section>
 
@@ -68,23 +83,23 @@
             <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
               <i data-lucide="search" class="w-6 h-6 text-accent"></i>
             </div>
-            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900">Credit Investigation</h2>
+            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-accent">Credit Investigation</h2>
           </div>
           <p class="text-gray-600 leading-relaxed mb-6">FFCC provides comprehensive and systematic credit investigation services designed to support informed, risk-aware lending and business decisions. Our structured verification processes help financial institutions, lenders, and corporate clients assess credibility, capacity, and character with accuracy and confidence.</p>
           <p class="text-gray-500 leading-relaxed mb-8">Through thorough field and data validation, we ensure that critical borrower and business information is properly authenticated, reducing exposure to fraud, misrepresentation, and credit risk.</p>
 
-          <h3 class="font-heading text-xl font-bold text-primary-900 mb-4">Services Include:</h3>
+          <h3 class="font-heading text-xl font-bold text-accent mb-4">Services Include:</h3>
           <div class="space-y-4 mb-8">
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Business Verification</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Business Verification</h4>
               <p class="text-gray-500 text-sm ml-7">Validation of business existence, operations, legitimacy, ownership structure, and operational capacity to ensure accuracy of declared information.</p>
             </div>
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Employment Verification</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Employment Verification</h4>
               <p class="text-gray-500 text-sm ml-7">Confirmation of employment status, tenure, position, and compensation details to assess income stability and repayment capability.</p>
             </div>
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Residence Verification</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Residence Verification</h4>
               <p class="text-gray-500 text-sm ml-7">Physical or documented confirmation of residential address and occupancy status to validate identity and borrower traceability.</p>
             </div>
           </div>
@@ -92,7 +107,7 @@
 
         <!-- Process Steps -->
         <div>
-          <h3 class="font-heading text-xl font-bold text-primary-900 mb-6">Our Process</h3>
+          <h3 class="font-heading text-xl font-bold text-accent mb-6">Our Process</h3>
           <div class="bg-gradient-to-br from-primary-900 to-primary-800 rounded-2xl p-8 shadow-xl" style="counter-reset: step;">
             <div class="space-y-5">
               <div class="process-step flex items-start gap-4">
@@ -120,7 +135,7 @@
                 <div><p class="text-gray-300 text-sm">Field CI/Branch CA (Original Signed Documents/or CR)</p></div>
               </div>
               <div class="process-step flex items-start gap-4">
-                <div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-primary-900 font-bold text-sm">7</div>
+                <div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-accent font-bold text-sm">7</div>
                 <div><p class="text-gray-300 text-sm">CI Releasing Officer (Release Original Signed Documents to Client)</p></div>
               </div>
             </div>
@@ -131,7 +146,7 @@
   </section>
 
   <!-- ====== BACKGROUND INVESTIGATION ====== -->
-  <section id="background-investigation" class="py-20 lg:py-28 bg-gray-50 scroll-mt-24">
+  <section id="background-investigation" class="py-20 lg:py-28 bg-gray-50 border-y border-gray-100 scroll-mt-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-16 items-start reveal">
         <div>
@@ -139,40 +154,40 @@
             <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
               <i data-lucide="file-search" class="w-6 h-6 text-accent"></i>
             </div>
-            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900">Background Investigation</h2>
+            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-accent">Background Investigation</h2>
           </div>
           <p class="text-gray-600 leading-relaxed mb-6">FFCC delivers comprehensive background investigation services designed to provide reliable, fact-based insights on individuals and corporate entities. Our structured due diligence processes help financial institutions, corporations, and decision-makers mitigate risk, prevent fraud, and maintain regulatory compliance.</p>
 
-          <h3 class="font-heading text-xl font-bold text-primary-900 mb-4">Services Include:</h3>
+          <h3 class="font-heading text-xl font-bold text-accent mb-4">Services Include:</h3>
           <div class="space-y-4 mb-8">
             <div class="bg-white border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Consumer Report</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Consumer Report</h4>
               <p class="text-gray-500 text-sm ml-7">A detailed credit and background profile of an individual including financial standing, credit behavior, and relevant public records.</p>
             </div>
             <div class="bg-white border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Individual Background Report</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Individual Background Report</h4>
               <p class="text-gray-500 text-sm ml-7">Comprehensive verification of personal history, affiliations, reputation checks for employment, partnership, or credit assessment.</p>
             </div>
             <div class="bg-white border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Corporate Background Report</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Corporate Background Report</h4>
               <p class="text-gray-500 text-sm ml-7">In-depth due diligence on corporate entities, including registration status, ownership structure, operational legitimacy, and risk indicators.</p>
             </div>
             <div class="bg-white border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Express Corporate Validation</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Express Corporate Validation</h4>
               <p class="text-gray-500 text-sm ml-7">Rapid confirmation of a company's existence, registration details, and basic operational legitimacy for time-sensitive transactions.</p>
             </div>
           </div>
         </div>
 
         <div>
-          <h3 class="font-heading text-xl font-bold text-primary-900 mb-6">Our Process</h3>
+          <h3 class="font-heading text-xl font-bold text-accent mb-6">Our Process</h3>
           <div class="bg-gradient-to-br from-primary-900 to-primary-800 rounded-2xl p-8 shadow-xl">
             <div class="space-y-5">
-              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-primary-900 font-bold text-sm">1</div><p class="text-gray-300 text-sm">MIS (Account Endorsement &amp; Data Extraction via Email)</p></div>
+              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-accent font-bold text-sm">1</div><p class="text-gray-300 text-sm">MIS (Account Endorsement &amp; Data Extraction via Email)</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">2</div><p class="text-gray-300 text-sm">Operations Team (Dispatching of Account)</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">3</div><p class="text-gray-300 text-sm">Report Analyst (Phone Verification/Data Encoding)</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">4</div><p class="text-gray-300 text-sm">Field Analyst (Ocular Inspection/Field Report)</p></div>
-              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-primary-900 font-bold text-sm">5</div><p class="text-gray-300 text-sm">Quality Assurance (Completion and Submission of Reports to Client)</p></div>
+              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-accent font-bold text-sm">5</div><p class="text-gray-300 text-sm">Quality Assurance (Completion and Submission of Reports to Client)</p></div>
             </div>
           </div>
         </div>
@@ -189,28 +204,28 @@
             <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
               <i data-lucide="building-2" class="w-6 h-6 text-accent"></i>
             </div>
-            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900">Appraisal Services</h2>
+            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-accent">Appraisal Services</h2>
           </div>
           <p class="text-gray-600 leading-relaxed mb-6">Professional and independent appraisal services to support accurate asset valuation for lending, investment, acquisition, and risk management purposes. Our appraisal process is conducted with objectivity, technical competence, and adherence to recognized valuation standards.</p>
 
-          <h3 class="font-heading text-xl font-bold text-primary-900 mb-4">Services Include:</h3>
+          <h3 class="font-heading text-xl font-bold text-accent mb-4">Services Include:</h3>
           <div class="space-y-4">
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="home" class="w-5 h-5 text-accent"></i>Real Estate Appraisal</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="home" class="w-5 h-5 text-accent"></i>Real Estate Appraisal</h4>
               <p class="text-gray-500 text-sm ml-7">Comprehensive valuation of residential, commercial, industrial, agricultural, and special-use properties. Assessment considers market comparables, property condition, location, legal documentation, highest and best use analysis, and prevailing market trends.</p>
             </div>
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="car" class="w-5 h-5 text-accent"></i>Vehicle Appraisal</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="car" class="w-5 h-5 text-accent"></i>Vehicle Appraisal</h4>
               <p class="text-gray-500 text-sm ml-7">Professional evaluation of motor vehicles for loan collateral, resale, insurance, asset verification, or financial reporting purposes. Assessment includes physical condition, mileage, depreciation factors, market demand, and documentation validation.</p>
             </div>
           </div>
         </div>
 
         <div>
-          <h3 class="font-heading text-xl font-bold text-primary-900 mb-6">Our Process</h3>
+          <h3 class="font-heading text-xl font-bold text-accent mb-6">Our Process</h3>
           <div class="bg-gradient-to-br from-primary-900 to-primary-800 rounded-2xl p-8 shadow-xl">
             <div class="space-y-4">
-              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-primary-900 font-bold text-xs">1</div><p class="text-gray-300 text-sm">Appraisal Request (From Client via Email)</p></div>
+              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-accent font-bold text-xs">1</div><p class="text-gray-300 text-sm">Appraisal Request (From Client via Email)</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-xs">2</div><p class="text-gray-300 text-sm">Document Collection</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-xs">3</div><p class="text-gray-300 text-sm">Initial Review and Schedule</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-xs">4</div><p class="text-gray-300 text-sm">Request CTC of Title from Registry of Deeds</p></div>
@@ -221,7 +236,7 @@
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-xs">9</div><p class="text-gray-300 text-sm">Appraisal Report Preparation</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-xs">10</div><p class="text-gray-300 text-sm">Internal Review and Quality Check</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-xs">11</div><p class="text-gray-300 text-sm">Report Submission</p></div>
-              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-primary-900 font-bold text-xs">12</div><p class="text-gray-300 text-sm">Archiving and Closure</p></div>
+              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-accent font-bold text-xs">12</div><p class="text-gray-300 text-sm">Archiving and Closure</p></div>
             </div>
           </div>
         </div>
@@ -230,7 +245,7 @@
   </section>
 
   <!-- ====== LIAISON SERVICES ====== -->
-  <section id="liaison-services" class="py-20 lg:py-28 bg-gray-50 scroll-mt-24">
+  <section id="liaison-services" class="py-20 lg:py-28 bg-gray-50 border-y border-gray-100 scroll-mt-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-16 items-start reveal">
         <div>
@@ -238,33 +253,33 @@
             <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
               <i data-lucide="file-text" class="w-6 h-6 text-accent"></i>
             </div>
-            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900">Liaison Services</h2>
+            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-accent">Liaison Services</h2>
           </div>
           <p class="text-gray-600 leading-relaxed mb-6">FFCC provides professional and reliable liaison services to facilitate smooth, accurate, and timely processing of regulatory and documentation requirements related to mortgage and motor vehicle transactions.</p>
 
-          <h3 class="font-heading text-xl font-bold text-primary-900 mb-4">Services Include:</h3>
+          <h3 class="font-heading text-xl font-bold text-accent mb-4">Services Include:</h3>
           <div class="space-y-4">
             <div class="bg-white border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>REM Mortgage Annotation</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>REM Mortgage Annotation</h4>
               <p class="text-gray-500 text-sm ml-7">Processing and facilitation of Real Estate Mortgage (REM) annotation with the appropriate Registry of Deeds, ensuring proper recording of mortgage liens and compliance with documentary requirements.</p>
             </div>
             <div class="bg-white border border-gray-100 rounded-xl p-5">
-              <h4 class="font-semibold text-primary-900 mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>LTO Encumbrance &amp; Registration Renewal</h4>
+              <h4 class="font-semibold text-accent mb-1 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>LTO Encumbrance &amp; Registration Renewal</h4>
               <p class="text-gray-500 text-sm ml-7">Assistance in processing motor vehicle encumbrance registration, cancellation, and annual registration renewal with the Land Transportation Office (LTO).</p>
             </div>
           </div>
         </div>
 
         <div>
-          <h3 class="font-heading text-xl font-bold text-primary-900 mb-6">Our Process</h3>
+          <h3 class="font-heading text-xl font-bold text-accent mb-6">Our Process</h3>
           <div class="bg-gradient-to-br from-primary-900 to-primary-800 rounded-2xl p-8 shadow-xl">
             <div class="space-y-5">
-              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-primary-900 font-bold text-sm">1</div><p class="text-gray-300 text-sm">Account Endorsement</p></div>
+              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-accent font-bold text-sm">1</div><p class="text-gray-300 text-sm">Account Endorsement</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">2</div><p class="text-gray-300 text-sm">Document Checking</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">3</div><p class="text-gray-300 text-sm">Annotation (for REM)</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">4</div><p class="text-gray-300 text-sm">Encumbrance (LTO)</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">5</div><p class="text-gray-300 text-sm">Final Document Checking</p></div>
-              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-primary-900 font-bold text-sm">6</div><p class="text-gray-300 text-sm">Document Submission</p></div>
+              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-accent font-bold text-sm">6</div><p class="text-gray-300 text-sm">Document Submission</p></div>
             </div>
           </div>
         </div>
@@ -281,56 +296,56 @@
             <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
               <i data-lucide="trending-up" class="w-6 h-6 text-accent"></i>
             </div>
-            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900">Loan Marketing</h2>
+            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-accent">Loan Marketing</h2>
           </div>
           <p class="text-gray-600 leading-relaxed mb-8">FFCC provides comprehensive loan marketing and client acquisition services designed to connect borrowers with suitable financing solutions across a wide range of financial products.</p>
 
-          <h3 class="font-heading text-xl font-bold text-primary-900 mb-4">Services Include:</h3>
+          <h3 class="font-heading text-xl font-bold text-accent mb-4">Services Include:</h3>
           <div class="grid sm:grid-cols-2 gap-4">
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
               <i data-lucide="car" class="w-5 h-5 text-accent mb-2"></i>
-              <h4 class="font-semibold text-primary-900 text-sm">Auto Loans</h4>
+              <h4 class="font-semibold text-accent text-sm">Auto Loans</h4>
               <p class="text-gray-500 text-xs mt-1">Car, Truck — New, Pre-Owned, Refinancing</p>
             </div>
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
               <i data-lucide="bike" class="w-5 h-5 text-accent mb-2"></i>
-              <h4 class="font-semibold text-primary-900 text-sm">Motorcycle Loan</h4>
+              <h4 class="font-semibold text-accent text-sm">Motorcycle Loan</h4>
               <p class="text-gray-500 text-xs mt-1">Brand New, Pre-Owned, Refinancing</p>
             </div>
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
               <i data-lucide="tv" class="w-5 h-5 text-accent mb-2"></i>
-              <h4 class="font-semibold text-primary-900 text-sm">Appliance &amp; Gadget Loan</h4>
+              <h4 class="font-semibold text-accent text-sm">Appliance &amp; Gadget Loan</h4>
               <p class="text-gray-500 text-xs mt-1">Consumer financing programs</p>
             </div>
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
               <i data-lucide="home" class="w-5 h-5 text-accent mb-2"></i>
-              <h4 class="font-semibold text-primary-900 text-sm">Real Estate Mortgage</h4>
+              <h4 class="font-semibold text-accent text-sm">Real Estate Mortgage</h4>
               <p class="text-gray-500 text-xs mt-1">Acquisition, Refinancing, Equity Take-Out</p>
             </div>
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
               <i data-lucide="plane" class="w-5 h-5 text-accent mb-2"></i>
-              <h4 class="font-semibold text-primary-900 text-sm">OFW &amp; Seaman's Loan</h4>
+              <h4 class="font-semibold text-accent text-sm">OFW &amp; Seaman's Loan</h4>
               <p class="text-gray-500 text-xs mt-1">Specialized financing for overseas workers</p>
             </div>
             <div class="bg-gray-50 border border-gray-100 rounded-xl p-5">
               <i data-lucide="briefcase" class="w-5 h-5 text-accent mb-2"></i>
-              <h4 class="font-semibold text-primary-900 text-sm">Business Loan</h4>
+              <h4 class="font-semibold text-accent text-sm">Business Loan</h4>
               <p class="text-gray-500 text-xs mt-1">Working capital and expansion financing</p>
             </div>
           </div>
         </div>
 
         <div>
-          <h3 class="font-heading text-xl font-bold text-primary-900 mb-6">Our Process</h3>
+          <h3 class="font-heading text-xl font-bold text-accent mb-6">Our Process</h3>
           <div class="bg-gradient-to-br from-primary-900 to-primary-800 rounded-2xl p-8 shadow-xl">
             <div class="space-y-5">
-              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-primary-900 font-bold text-sm">1</div><p class="text-gray-300 text-sm">Applicant Inquiry</p></div>
+              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-accent font-bold text-sm">1</div><p class="text-gray-300 text-sm">Applicant Inquiry</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">2</div><p class="text-gray-300 text-sm">Interview</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">3</div><p class="text-gray-300 text-sm">Documentation</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">4</div><p class="text-gray-300 text-sm">Appraisal (for REM)</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">5</div><p class="text-gray-300 text-sm">Credit Investigation</p></div>
               <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-lg flex items-center justify-center text-accent font-bold text-sm">6</div><p class="text-gray-300 text-sm">Credit Approval</p></div>
-              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-primary-900 font-bold text-sm">7</div><p class="text-gray-300 text-sm">Loan Release</p></div>
+              <div class="flex items-start gap-4"><div class="flex-shrink-0 w-8 h-8 bg-accent rounded-lg flex items-center justify-center text-accent font-bold text-sm">7</div><p class="text-gray-300 text-sm">Loan Release</p></div>
             </div>
           </div>
         </div>
@@ -339,43 +354,43 @@
   </section>
 
   <!-- ====== COLLECTION SERVICES ====== -->
-  <section id="collection-services" class="py-20 lg:py-28 bg-gray-50 scroll-mt-24">
+  <section id="collection-services" class="py-20 lg:py-28 bg-gray-50 border-y border-gray-100 scroll-mt-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="max-w-4xl reveal">
         <div class="flex items-center gap-3 mb-6">
           <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
             <i data-lucide="wallet" class="w-6 h-6 text-accent"></i>
           </div>
-          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-primary-900">Collection Services</h2>
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-accent">Collection Services</h2>
         </div>
         <p class="text-gray-600 leading-relaxed mb-4">FFCC provides professional debt collection and recovery services to help financial institutions and businesses recover delinquent or past-due accounts. Our team uses structured recovery strategies, borrower engagement, and account monitoring to resolve outstanding obligations efficiently and professionally.</p>
         <div class="bg-accent/10 border border-accent/20 rounded-xl p-4 mb-8">
-          <p class="text-primary-900 font-semibold text-sm flex items-center gap-2">
+          <p class="text-accent font-semibold text-sm flex items-center gap-2">
             <i data-lucide="info" class="w-5 h-5 text-accent"></i>
             Our services operate on a "No Collection – No Pay" basis, meaning clients only pay when successful recovery is achieved.
           </p>
         </div>
 
-        <h3 class="font-heading text-xl font-bold text-primary-900 mb-4">Services Include:</h3>
+        <h3 class="font-heading text-xl font-bold text-accent mb-4">Services Include:</h3>
         <div class="grid sm:grid-cols-2 gap-4">
           <div class="bg-white border border-gray-100 rounded-xl p-5">
-            <h4 class="font-semibold text-primary-900 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Debt Recovery &amp; Payment Negotiation</h4>
+            <h4 class="font-semibold text-accent mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Debt Recovery &amp; Payment Negotiation</h4>
             <p class="text-gray-500 text-sm">Coordinating with borrowers to settle outstanding balances through payment arrangements or settlements.</p>
           </div>
           <div class="bg-white border border-gray-100 rounded-xl p-5">
-            <h4 class="font-semibold text-primary-900 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Delinquent Account Management</h4>
+            <h4 class="font-semibold text-accent mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Delinquent Account Management</h4>
             <p class="text-gray-500 text-sm">Monitoring and follow-up of past-due accounts to improve recovery rates.</p>
           </div>
           <div class="bg-white border border-gray-100 rounded-xl p-5">
-            <h4 class="font-semibold text-primary-900 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Asset &amp; Collateral Recovery</h4>
+            <h4 class="font-semibold text-accent mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Asset &amp; Collateral Recovery</h4>
             <p class="text-gray-500 text-sm">Repossession and recovery of secured assets such as vehicles or other collateral.</p>
           </div>
           <div class="bg-white border border-gray-100 rounded-xl p-5">
-            <h4 class="font-semibold text-primary-900 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Loan Restructuring Assistance</h4>
+            <h4 class="font-semibold text-accent mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Loan Restructuring Assistance</h4>
             <p class="text-gray-500 text-sm">Facilitating compromise agreements, loan restructuring, or repayment plans.</p>
           </div>
           <div class="bg-white border border-gray-100 rounded-xl p-5 sm:col-span-2">
-            <h4 class="font-semibold text-primary-900 mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Legal Recovery Support</h4>
+            <h4 class="font-semibold text-accent mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-accent"></i>Legal Recovery Support</h4>
             <p class="text-gray-500 text-sm">Assistance with legal actions such as small money claims, BP22 cases, and writ of replevin when necessary.</p>
           </div>
         </div>
@@ -386,11 +401,11 @@
   <!-- ====== CTA ====== -->
   <section class="py-20 bg-primary-900 relative overflow-hidden">
     <div class="absolute inset-0">
-      <div class="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+      <div class="absolute top-0 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
     </div>
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
       <h2 class="font-heading text-3xl sm:text-4xl font-bold text-white mb-6">Get in Touch With Us</h2>
-      <p class="text-gray-400 text-lg mb-8">Discover the people behind our success and how we can help your business make informed financial decisions.</p>
+      <p class="text-gray-300 text-lg mb-8">Discover the people behind our success and how we can help your business make informed financial decisions.</p>
       <a href="contact.html" class="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-primary-900 px-8 py-3.5 rounded-lg font-semibold text-sm uppercase tracking-wide transition-all shadow-lg shadow-accent/25">
         Request Service
         <i data-lucide="arrow-right" class="w-4 h-4"></i>
