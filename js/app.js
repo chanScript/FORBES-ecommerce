@@ -179,7 +179,7 @@
           </div>
           <div>
               <div class="flex items-center space-x-3 mb-6">
-              <img src="images/dpo.png" alt="FFCC Logo" class="w-25 h-25 object-contain" />
+              <img src="images/0-02-06-48035e4d02b40eb5bee34f36a02a2827caaa90d80c6a01f6ceecfd77bacccea3_6ac9e4a2206c54d7.png" alt="FFCC Badge" class="w-40 h-40 object-contain" />
              
             </div>
           </div>
@@ -230,6 +230,9 @@
     renderFooter();
     renderBackToTop();
     renderToast();
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
   }
 
   // Run as soon as DOM is ready
