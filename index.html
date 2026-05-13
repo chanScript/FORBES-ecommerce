@@ -802,10 +802,12 @@
         position: absolute;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
+        width: 100%;
+        height: 100%;
         background: linear-gradient(160deg, rgba(15, 42, 77, 0.75) 0%, rgba(27, 63, 105, 0.65) 65%, rgba(16, 39, 69, 0.75) 100%);
         z-index: 1;
+        border-radius: inherit;
+        pointer-events: none;
       }
       #book .page-cover .cover-inner {
         position: relative;
@@ -818,9 +820,13 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 12px;
         max-width: 100%;
-        margin: auto;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        box-sizing: border-box;
       }
       #book .page-cover .cover-logo {
         width: 80px;
@@ -948,8 +954,6 @@
           opacity: 1;
         }
       }
-        line-height: 1.6;
-      }
 
       /* ===== Handbook core layout and typography ===== */
       #handbook #book {
@@ -958,6 +962,8 @@
       }
       #handbook #book .page {
         box-sizing: border-box;
+        width: 100%;
+        height: 100%;
         background: linear-gradient(180deg, #ffffff 0%, #f9fbfe 100%);
         border: 1px solid #d7e3ef;
         border-radius: 12px;
@@ -1455,7 +1461,7 @@
     </section>
 
     <!-- ====== ABOUT SECTION (CLASSIC ELEGANCE) ====== -->
-    <section class="py-24 lg:py-32 bg-white border-t border-gray-100 relative">
+    <section class="py-24 lg
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <!-- Left Column: Elegant Typography & Content -->
@@ -3111,6 +3117,10 @@
 
     <!-- PDF export library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- html2canvas CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- page-flip CDN -->
     <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
     <script>
@@ -3118,19 +3128,64 @@
         var bookEl = document.getElementById("book");
         if (!bookEl || typeof St === "undefined") return;
 
-        // Clone all pages BEFORE page-flip processes them — used for PDF generation
-        var pdfContainer = document.createElement("div");
-        pdfContainer.id = "book-pdf";
-        pdfContainer.style.cssText =
-          'position:fixed;left:-9999px;top:0;width:840px;background:#fff;font-family:"DM Sans",system-ui,sans-serif;';
-        bookEl.querySelectorAll(".page").forEach(function (pg) {
-          var wrap = document.createElement("div");
-          wrap.style.cssText =
-            "width:840px;min-height:1122px;page-break-after:always;overflow:hidden;position:relative;box-sizing:border-box;";
-          wrap.appendChild(pg.cloneNode(true));
-          pdfContainer.appendChild(wrap);
-        });
-        document.body.appendChild(pdfContainer);
+        function buildPdfContainer() {
+          var existing = document.getElementById("book-pdf");
+          if (existing) {
+            existing.remove();
+          }
+          var pdfContainer = document.createElement("div");
+          pdfContainer.id = "book-pdf";
+          pdfContainer.style.cssText =
+            'position:fixed;left:-9999px;top:0;pointer-events:none;width:100%;background:#fff;font-family:"DM Sans",system-ui,sans-serif;';
+          bookEl.querySelectorAll(".page").forEach(function (pg) {
+            var clonedPage = pg.cloneNode(true);
+            
+            // Set explicit inline styles for visibility
+            clonedPage.style.cssText = 'width:210mm;height:297mm;padding:20px;box-sizing:border-box;background:#fff;display:block;page-break-after:always;margin:0;';
+            
+            // Ensure all text elements are visible
+            clonedPage.querySelectorAll("*").forEach(function(el) {
+              var computedStyle = window.getComputedStyle(el);
+              
+              // Force colors to be visible
+              var color = computedStyle.color;
+              if (color && color !== 'rgba(0, 0, 0, 0)') {
+                el.style.color = color;
+              }
+              
+              var bgColor = computedStyle.backgroundColor;
+              if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)') {
+                el.style.backgroundColor = bgColor;
+              }
+              
+              // Preserve text properties
+              el.style.fontSize = el.style.fontSize || computedStyle.fontSize;
+              el.style.fontWeight = el.style.fontWeight || computedStyle.fontWeight;
+              el.style.lineHeight = el.style.lineHeight || computedStyle.lineHeight;
+            });
+            
+            pdfContainer.appendChild(clonedPage);
+          });
+          
+          document.body.appendChild(pdfContainer);
+          return pdfContainer;
+        }
+
+        function waitForPdfAssets(container) {
+          var images = Array.prototype.slice.call(container.querySelectorAll("img"));
+          var imagePromises = images.map(function (img) {
+            if (img.complete) return Promise.resolve();
+            return new Promise(function (resolve) {
+              img.onload = resolve;
+              img.onerror = resolve;
+            });
+          });
+          var fontsReady =
+            document.fonts && document.fonts.ready
+              ? document.fonts.ready
+              : Promise.resolve();
+          return Promise.all(imagePromises.concat(fontsReady));
+        }
 
         var pageFlip = new St.PageFlip(bookEl, {
           width: 420,
@@ -3206,7 +3261,7 @@
         var dlBtn = document.getElementById("handbook-dl-btn");
         if (dlBtn) {
           dlBtn.addEventListener("click", function () {
-            if (typeof html2pdf === "undefined") {
+            if (typeof html2canvas === "undefined" || typeof jspdf === "undefined") {
               alert(
                 "PDF library not loaded. Please check your internet connection and try again.",
               );
@@ -3214,25 +3269,109 @@
             }
             dlBtn.disabled = true;
             dlBtn.textContent = "Generating PDF\u2026";
-            html2pdf()
-              .set({
-                margin: 0,
-                filename: "FFCC-Digital-Handbook.pdf",
-                image: { type: "jpeg", quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, logging: false },
-                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-                pagebreak: { mode: ["css", "legacy"] },
-              })
-              .from(document.getElementById("book-pdf"))
-              .save()
-              .then(function () {
+            
+            var pages = bookEl.querySelectorAll(".page");
+            if (pages.length === 0) {
+              alert("No pages found to export.");
+              dlBtn.disabled = false;
+              dlBtn.innerHTML = '<i data-lucide="download" style="display:inline-block;width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i> Download Handbook';
+              if (typeof lucide !== "undefined") lucide.createIcons();
+              return;
+            }
+            
+            // CSS styles to inject for proper rendering
+            var cssRules = `.page{box-sizing:border-box;width:100%;background:linear-gradient(180deg,#ffffff 0%,#f9fbfe 100%);border:1px solid #d7e3ef;border-radius:12px;padding:22px 20px;color:#334155;overflow:hidden;}.page-cover{background:linear-gradient(135deg,#0f2a4d 0%,#1a3a52 100%);position:relative;}.cover-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;gap:12px;}.cover-logo{max-width:80px;height:auto;opacity:0.95;}.est-badge{font-size:11px;font-weight:700;letter-spacing:1px;color:#c9a84c;text-transform:uppercase;}.cover-title{font-size:24px;font-weight:700;color:#ffffff;letter-spacing:0.5px;}.cover-sub{font-size:16px;font-weight:600;color:#c9a84c;}.cover-tagline{font-size:13px;color:#d4b55a;font-style:italic;}.cover-rule{width:40px;height:2px;background:linear-gradient(90deg,#c9a84c,rgba(201,168,76,0.2));margin:8px 0;}.ch{display:flex;align-items:center;gap:12px;margin-bottom:12px;}.icon-box{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#c9a84c,#d4b55a);color:#ffffff;}.section-title{font-size:16px;font-weight:700;letter-spacing:0.5px;color:#0f2a4d;text-transform:uppercase;}.divider{height:2px;background:linear-gradient(90deg,#c9a84c,rgba(201,168,76,0.2),transparent);margin:16px 0 20px;}.sub-heading{margin:0 0 8px;font-size:15px;line-height:1.3;font-weight:700;color:#102a43;}.bt,.u,.story-text{margin:0 0 6px;font-size:10.8px;line-height:1.45;color:#334155;}.story-page{display:flex;flex-direction:column;}.story-footer{margin-top:auto;padding-top:8px;border-top:1px solid #d7e3ef;}.sfn{font-size:12px;font-weight:700;color:#0f2a4d;}.sfr{font-size:10.5px;color:#475569;}.sfc{font-size:9.5px;color:#94a3b8;}.profile-page{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:50px 20px;background:linear-gradient(135deg,#ffffff 0%,#faf8f3 50%,#f8f9fa 100%);}.profile-photo-wrap{width:120px;height:120px;border-radius:50%;border:6px solid #c9a84c;overflow:hidden;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(201,168,76,0.25);}.profile-photo-wrap img{width:100%;height:100%;object-fit:cover;}.profile-avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;margin-bottom:24px;border:6px solid #c9a84c;box-shadow:0 8px 24px rgba(201,168,76,0.25);}.profile-name{font-size:18px;font-weight:700;color:#0f2a4d;margin-bottom:12px;letter-spacing:0.3px;}.profile-role{font-size:11px;font-weight:700;color:#ffffff;background:linear-gradient(135deg,#c9a84c,#d4b55a);padding:8px 16px;border-radius:20px;display:inline-block;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;}.profile-rule{width:50px;height:2px;background:linear-gradient(90deg,#c9a84c,rgba(201,168,76,0.2));margin:0 auto 12px;}.team-page{display:flex;flex-direction:column;}.team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px;padding:0 8px;}.team-grid .team-card:nth-child(5){grid-column:1/-1;justify-self:center;max-width:calc(50% - 7px);}.team-card{border:1px solid #e2e8f0;border-radius:18px;background:linear-gradient(135deg,#fefcf7 0%,#faf8f3 100%);padding:16px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.08);min-height:150px;}.team-photo,.team-initial{width:70px;height:70px;border-radius:50%;border:3px solid #d4a853;background:linear-gradient(135deg,#d4a853,#e6b866);color:#ffffff;font-size:22px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px;object-fit:cover;object-position:center 18%;}.tname{margin:0 0 6px;font-size:14px;font-weight:700;color:#1a202c;line-height:1.2;text-align:center;}.trole{margin:0;font-size:10px;font-weight:600;color:#d4a853;text-align:center;padding:3px 8px;background:rgba(212,168,83,0.1);border-radius:10px;border:1px solid rgba(212,168,83,0.2);}.vm-page{display:flex;flex-direction:column;gap:20px;}.vm-item{border-left:3px solid #c9a84c;padding-left:12px;}.vm-title{font-size:13px;font-weight:700;color:#0f2a4d;margin-bottom:4px;}.vm-desc{font-size:10px;color:#475569;line-height:1.4;}.highlight-page{display:grid;grid-template-columns:1fr 1fr;gap:12px;}.highlight-item{background:linear-gradient(135deg,#fafbfc 0%,#f3f4f6 100%);padding:12px;border-radius:8px;border-left:3px solid #c9a84c;}.highlight-number{font-size:18px;font-weight:700;color:#c9a84c;}.highlight-label{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:0.3px;}.values-page{display:flex;flex-direction:column;gap:16px;}.value-block{background:linear-gradient(135deg,#f9fafb 0%,#f3f4f6 100%);padding:14px;border-radius:8px;border-top:2px solid #c9a84c;}.value-icon{font-size:20px;margin-bottom:6px;}.value-title{font-size:12px;font-weight:700;color:#0f2a4d;margin-bottom:4px;}.value-desc{font-size:9px;color:#475569;line-height:1.4;}.detail-page{display:flex;flex-direction:column;gap:14px;}.detail-item{border-bottom:1px solid #e2e8f0;padding-bottom:12px;}.detail-item:last-child{border-bottom:none;}.detail-label{font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.3px;}.detail-value{font-size:11px;color:#0f2a4d;margin-top:3px;line-height:1.4;}.back-title{font-size:18px;font-weight:700;color:#ffffff;}.back-sub{font-size:12px;color:#d4b55a;margin-top:4px;}.back-contact{font-size:10px;color:#c9a84c;margin-top:20px;line-height:1.6;}`;
+            
+            // Use jsPDF
+            var PDF = jspdf.jsPDF;
+            var pdfDoc = new PDF({
+              orientation: "portrait",
+              unit: "mm",
+              format: "a4"
+            });
+            
+            // Create temporary container for rendering
+            var tempContainer = document.createElement("div");
+            tempContainer.style.cssText = 'position:fixed;left:-10000px;top:0;width:800px;background:#fff;';
+            
+            // Add CSS to container
+            var styleTag = document.createElement("style");
+            styleTag.textContent = cssRules;
+            tempContainer.appendChild(styleTag);
+            
+            document.body.appendChild(tempContainer);
+            
+            var pageIndex = 0;
+            var processPage = function() {
+              if (pageIndex >= pages.length) {
+                // All pages processed, save PDF
+                document.body.removeChild(tempContainer);
+                pdfDoc.save("FFCC-Digital-Handbook.pdf");
                 dlBtn.disabled = false;
-                dlBtn.innerHTML =
-                  '<i data-lucide="download" style="display:inline-block;width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i> Download Handbook';
-                if (typeof lucide !== "undefined") {
-                  lucide.createIcons();
-                }
+                dlBtn.innerHTML = '<i data-lucide="download" style="display:inline-block;width:16px;height:16px;vertical-align:middle;margin-right:6px;"></i> Download Handbook';
+                if (typeof lucide !== "undefined") lucide.createIcons();
+                return;
+              }
+              
+              var originalPage = pages[pageIndex];
+              var clonedPage = originalPage.cloneNode(true);
+              
+              // Set explicit styles for visibility and proper rendering
+              clonedPage.style.cssText = 'width:800px;min-height:1130px;padding:20px;box-sizing:border-box;background:#fff;display:block;margin:0;font-family:"DM Sans",system-ui,sans-serif;';
+              
+              // Force all content to be visible
+              clonedPage.querySelectorAll("*").forEach(function(el) {
+                el.style.display = el.style.display === 'none' ? 'block' : el.style.display;
+                el.style.visibility = 'visible';
+                el.style.opacity = '1';
               });
+              
+              tempContainer.appendChild(clonedPage);
+              
+              // Wait for content to render
+              setTimeout(function() {
+                html2canvas(clonedPage, {
+                  scale: 2,
+                  useCORS: true,
+                  logging: false,
+                  backgroundColor: "#ffffff",
+                  allowTaint: true,
+                  imageTimeout: 10000,
+                  width: 800,
+                  height: 1130,
+                  windowHeight: 1130,
+                  windowWidth: 800
+                }).then(function(canvas) {
+                  try {
+                    var imgData = canvas.toDataURL("image/jpeg", 0.98);
+                    var imgWidth = 210; // A4 width in mm
+                    var imgHeight = (canvas.height * imgWidth) / canvas.width;
+                    
+                    if (pageIndex > 0) {
+                      pdfDoc.addPage([210, 297]); // A4 size
+                    }
+                    
+                    pdfDoc.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
+                  } catch(e) {
+                    console.error("Error adding image to PDF", e);
+                  }
+                  
+                  // Remove the cloned page
+                  tempContainer.removeChild(clonedPage);
+                  pageIndex++;
+                  
+                  // Process next page
+                  setTimeout(processPage, 300);
+                }).catch(function(err) {
+                  console.error("Error processing page", err);
+                  tempContainer.removeChild(clonedPage);
+                  pageIndex++;
+                  setTimeout(processPage, 300);
+                });
+              }, 150);
+            };
+            
+            processPage();
           });
         }
         
